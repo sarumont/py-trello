@@ -1,0 +1,4 @@
+A basic API into Trello
+
+Required Python modules:
+	httplib2 (http://code.google.com/p/httplib2/)
