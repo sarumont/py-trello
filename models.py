@@ -17,12 +17,3 @@ class AuthenticationRequired(Exception):
 
 	def __str__(self):
 		print "Authentication required. Please call login() with your credentials"
-		
-		
-class MyClass(object):
-	"""Docstring for MyClass """
-
-	def __init__(self):
-		"""@todo: to be defined """
-		
-		
