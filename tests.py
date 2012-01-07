@@ -1,4 +1,3 @@
-from models import AuthenticationError,AuthenticationRequired
 from trello import Trello
 import unittest
 import os
@@ -25,11 +24,11 @@ class TrelloTestCase(unittest.TestCase):
 	def test10_board_attrs(self):
 		boards = self._trello.list_boards()
 		for b in boards:
-			self.assertIsNotNone(b['id'], msg="_id not provided")
-			self.assertIsNotNone(b['name'], msg="name not provided")
-			self.assertIsNotNone(b['desc'], msg="desc not provided")
-			self.assertIsNotNone(b['closed'], msg="closed not provided")
-			self.assertIsNotNone(b['url'], msg="url not provided")
+			self.assertIsNotNone(b.id, msg="id not provided")
+			self.assertIsNotNone(b.name, msg="name not provided")
+			self.assertIsNotNone(b.description, msg="description not provided")
+			self.assertIsNotNone(b.closed, msg="closed not provided")
+			self.assertIsNotNone(b.url, msg="url not provided")
 	
 	def test20_add_card(self):
 		pass

@@ -1,30 +1,13 @@
 import exceptions
 
-class AuthenticationError(Exception):
-	"""Exception representing an authentication error"""
+class ResourceUnavailable(Exception):
+	"""Exception representing a failed request to a resource"""
 
-	def __init__(self):
+	def __init__(self, msg):
 		Exception.__init__(self)
-	
-	def __str__(self):
-		print "Could not log in with given credentials"
-
-class AuthenticationRequired(Exception):
-	"""Signify that authentication is required"""
-
-	def __init__(self):
-		Exception.__init__(self)
+		self._msg = msg
 
 	def __str__(self):
-		print "Authentication required. Please call login() with your credentials"
-
-class NoSuchObjectError(Exception):
-	"""Exception when something cannot be found"""
-
-	def __init__(self, obj, id):
-		Exception.__init__(self)
-		self._obj = obj
-		self._id = id
-
-	def __str__(self):
-		print "No such %s: %s" % (self._obj, self._id, )
+		print "Resource unavailable: %s" % (self._msg, )
+		
+		
