@@ -20,18 +20,38 @@ class Trello:
 		"""Log out of Trello. This method is idempotent."""
 
 		# TODO: refactor
-		if not self._cookie:
-			return
+		pass
+		#if not self._cookie:
+			#return
 
-		headers = {'Cookie': self._cookie, 'Accept': 'application/json'}
-		response, content = self._client.request(
-				'https://trello.com/logout',
-				'GET',
-				headers = headers,
-				)
+		#headers = {'Cookie': self._cookie, 'Accept': 'application/json'}
+		#response, content = self._client.request(
+				#'https://trello.com/logout',
+				#'GET',
+				#headers = headers,
+				#)
 
-		# TODO: error checking
-		self._cookie = None
+		## TODO: error checking
+		#self._cookie = None
+
+	def build_url(self, path, query = {}):
+		"""
+		Builds a Trello URL.
+
+		:path: URL path
+		:params: dict of key-value pairs for the query string
+		"""
+		url = 'https://api.trello.com/1'
+		if path[0:1] != '/':
+			url += '/'
+		url += path
+		url += '?'
+		url += "key="+self._key
+		url += "&token="+self._token
+
+		for k,v in query.iteritems():
+			url += "&"+urlencode(k)+"="+urlencode(v)
+		return url
 
 	def list_boards(self):
 		"""
@@ -47,7 +67,7 @@ class Trello:
 		"""
 		headers = {'Accept': 'application/json'}
 		response, content = self._client.request(
-				'https://trello.com/1/members/me/boards/all?key='+self._key+'&token='+self._token,
+				self.build_url( "/members/me/boards/all" ),
 				'GET',
 				headers = headers,
 				)
