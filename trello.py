@@ -100,11 +100,24 @@ class Board():
 		self.trello = trello
 		self.id = board_id
 		
-	def lists(self):
+	def all_lists(self):
 		"""Returns all lists on this board"""
+		return self.get_lists('all')
+
+	def open_lists(self):
+		"""Returns all open lists on this board"""
+		return self.get_lists('open')
+
+	def closed_lists(self):
+		"""Returns all closed lists on this board"""
+		return self.get_lists('closed')
+
+	def get_lists(self, filter):
 
 		headers = {'Accept': 'application/json'}
-		url = self.trello.build_url('/boards/'+self.id+'/lists/all')
+		url = self.trello.build_url(
+				'/boards/'+self.id+'/lists',
+				{'cards': 'none', 'filter': filter})
 		response, content = self.trello.client.request(url, 'GET', headers = headers)
 
 		# error checking
@@ -117,8 +130,6 @@ class Board():
 			l = List(self, obj['id'])
 			l.name = obj['name']
 			l.closed = obj['closed']
-			# TODO: cards are here - possibly cache in the future (when notifications are in the
-			# API?)
 			lists.append(l)
 
 		return lists
