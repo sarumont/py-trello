@@ -3,110 +3,116 @@ from urllib import urlencode
 from models import AuthenticationError,AuthenticationRequired
 import json
 
-client = Http()
-cookie = ""
+class Trello:
 
-def login(username, password):
-	"""Log into Trello
-	
-	:username: Trello username or e-mail
-	:password: Trello password
-	"""
-	body = {'user': username, 'password': password, 'returnUrl': '/'}
-	headers = {'Content-type': 'application/x-www-form-urlencoded', 'Accept': 'application/json'}
-	response, content = client.request(
-			'https://trello.com/authenticate',
-			'POST',
-			headers = headers,
-			body = urlencode(body))
+	def __init__(self, username, password):
+		self._client = Http()
+		self._cookie = None
+		self._username = username
+		self._password = password
+		self.login()
 
-	if response and response['set-cookie']:
-		# auth was successful
-		cookie = response['set-cookie']
-	else:
-		raise AuthenticationError()
+	def login(self):
+		"""Log into Trello"""
+		body = {
+				'user': self._username,
+				'password': self._password,
+				'returnUrl': '/'}
+		headers = {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Accept': 'application/json'}
+		response, content = self._client.request(
+				'https://trello.com/authenticate',
+				'POST',
+				headers = headers,
+				body = urlencode(body))
 
-def list_boards():
-	"""
-	Returns all boards for your Trello user
+		if response and response['set-cookie']:
+			# auth was successful
+			self._cookie = response['set-cookie']
+		else:
+			raise AuthenticationError()
 
-	:return: a list of Python objects representing the Trello boards. Each board has the 
-	following noteworthy attributes:
-		- _id: the board's identifier
-		- name: Name of the board
-		- closed: Boolean representing whether this board is closed or not
-	Other attributes include: 
-		invitations, memberships, idMembersWatching, prefs, 
-		nActionsSinceLastView, idOrganization
+	def list_boards(self):
+		"""
+		Returns all boards for your Trello user
 
-	@todo: the JSON response contains the values needed to dereference idFoo; be nice and expose 
-	these, too
-	"""
-	if not cookie:
-		raise AuthenticationRequired()
+		:return: a list of Python objects representing the Trello boards. Each board has the 
+		following noteworthy attributes:
+			- _id: the board's identifier
+			- name: Name of the board
+			- closed: Boolean representing whether this board is closed or not
+		Other attributes include: 
+			invitations, memberships, idMembersWatching, prefs, 
+			nActionsSinceLastView, idOrganization
 
-	headers = {'Cookie': cookie, 'Accept': 'application/json'}
-	response, content = client.request(
-			'https://trello.com/data/me/boards',
-			'GET',
-			headers = headers,
-			)
+		@todo: the JSON response contains the values needed to dereference idFoo; be nice and expose 
+		these, too
+		"""
+		if not self._cookie:
+			raise AuthenticationRequired()
 
-	# TODO: error checking
+		headers = {'Cookie': self._cookie, 'Accept': 'application/json'}
+		response, content = self._client.request(
+				'https://trello.com/data/me/boards',
+				'GET',
+				headers = headers,
+				)
 
-	json_obj = json.loads(content)
-	return json_obj.boards
+		# TODO: error checking
 
-def add_card(board_id, name):
-	"""Adds a card to the first list in the given board
-	
-	:board_id: @todo
-	:name: @todo
-	:returns: @todo
-	"""
+		json_obj = json.loads(content)
+		return json_obj['boards']
 
-	if not cookie:
-		raise AuthenticationRequired()
+	def add_card(self, board_id, name):
+		"""Adds a card to the first list in the given board
 
-	headers = {'Cookie': cookie, 'Accept': 'application/json'}
-	response, content = client.request(
-			'https://trello.com/data/board/'+board_id+'/current',
-			'GET',
-			headers = headers,
-			)
+		:board_id: @todo
+		:name: @todo
+		:returns: @todo
+		"""
 
-	# TODO: error checking
+		if not self._cookie:
+			raise AuthenticationRequired()
 
-	json_obj = json.loads(content)
+		headers = {'Cookie': self._cookie, 'Accept': 'application/json'}
+		response, content = self._client.request(
+				'https://trello.com/data/board/'+board_id+'/current',
+				'GET',
+				headers = headers,
+				)
 
-	# get first list
-	list_id = ""
-	for board in json_obj.boards:
-		if board.lists:
-			list_id = board.lists[0]._id
-	
-	# TODO: ensure list was found
-	request = {
-			'token': cookie, #TODO: not right - extract token
-			'method': 'create',
-			'data': {
-				'attrs': {
-					'name': name,
-					'pos': 65536,
-					'closed': false,
-					'idBoard': board_id,
-					"idList": list_id,
-					},
-				'idParents': [ board_id, list_id ],
+		# TODO: error checking
+
+		json_obj = json.loads(content)
+
+		# get first list
+		list_id = ""
+		for board in json_obj.boards:
+			if board.lists:
+				list_id = board.lists[0]._id
+
+		# TODO: ensure list was found
+		request = {
+				'token': self._cookie, #TODO: not right - extract token
+				'method': 'create',
+				'data': {
+					'attrs': {
+						'name': name,
+						'pos': 65536,
+						'closed': false,
+						'idBoard': board_id,
+						"idList": list_id,
+						},
+					'idParents': [ board_id, list_id ],
+					}
 				}
-			}
 
-	response, content = client.request(
-			'https://trello.com/api/card',
-			'POST',
-			headers = headers,
-			body = json.dumps(request),
-			)
+		response, content = self._client.request(
+				'https://trello.com/api/card',
+				'POST',
+				headers = headers,
+				body = json.dumps(request),
+				)
 
-	# TODO: error checking
-
+		# TODO: error checking
