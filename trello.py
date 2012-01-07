@@ -49,8 +49,8 @@ class Trello:
 		url += "key="+self.key
 		url += "&token="+self.token
 
-		for k,v in query.iteritems():
-			url += "&"+urlencode(k)+"="+urlencode(v)
+		if len(query) > 0:
+			url += "&"+urlencode(query)
 		return url
 
 	def list_boards(self):
