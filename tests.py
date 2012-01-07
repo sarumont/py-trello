@@ -29,9 +29,26 @@ class TrelloTestCase(unittest.TestCase):
 			self.assertIsNotNone(b.description, msg="description not provided")
 			self.assertIsNotNone(b.closed, msg="closed not provided")
 			self.assertIsNotNone(b.url, msg="url not provided")
-	
-	def test20_add_card(self):
-		pass
+
+	def test20_board_lists(self):
+		boards = self._trello.list_boards()
+		for b in boards:
+			try:
+				b.lists()
+			except Exception as e:
+				self.fail("Caught Exception getting lists")
+
+	def test30_list_attrs(self):
+		boards = self._trello.list_boards()
+		for b in boards:
+			for l in b.lists():
+				self.assertIsNotNone(l.id, msg="id not provided")
+				self.assertIsNotNone(l.name, msg="name not provided")
+				self.assertIsNotNone(l.closed, msg="closed not provided")
+			break # only need to test one board's lists
+
+	#def test30_add_card(self):
+		#pass
 		#boards = self._trello.list_boards()
 		#board_id = None
 		#for b in boards:
