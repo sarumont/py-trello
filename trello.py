@@ -18,7 +18,7 @@ def login(username, password):
 			'https://trello.com/authenticate',
 			'POST',
 			headers = headers,
-			body = urllib.urlencode(body))
+			body = urlencode(body))
 
 	if response and response['set-cookie']:
 		# auth was successful
@@ -99,6 +99,7 @@ def add_card(board_id, name):
 					},
 				'idParents': [ board_id, list_id ],
 				}
+			}
 
 	response, content = client.request(
 			'https://trello.com/api/card',
