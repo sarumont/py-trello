@@ -33,6 +33,21 @@ class Trello:
 		else:
 			raise AuthenticationError()
 
+	def logout(self):
+		"""Log out of Trello. This method is idempotent."""
+		if not self._cookie:
+			return
+
+		headers = {'Cookie': self._cookie, 'Accept': 'application/json'}
+		response, content = self._client.request(
+				'https://trello.com/logout',
+				'GET',
+				headers = headers,
+				)
+
+		# TODO: error checking
+		self._cookie = None
+
 	def list_boards(self):
 		"""
 		Returns all boards for your Trello user
