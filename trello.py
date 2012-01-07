@@ -1,6 +1,6 @@
 from httplib2 import Http
 from urllib import urlencode
-from models import AuthenticationError,AuthenticationRequired
+from models import AuthenticationError,AuthenticationRequired,NoSuchObjectError
 import json
 
 class Trello:
@@ -30,6 +30,15 @@ class Trello:
 		if response and response['set-cookie']:
 			# auth was successful
 			self._cookie = response['set-cookie']
+
+			# grab the token out of the cookie
+			start = self._cookie.find('token')
+			end = self._cookie.find(' ', start)
+			parts = self._cookie[start:(end-1)].split('=')
+			self._token = parts[1]
+			print self._token
+			print self._cookie
+
 		else:
 			raise AuthenticationError()
 
@@ -102,20 +111,23 @@ class Trello:
 		json_obj = json.loads(content)
 
 		# get first list
-		list_id = ""
-		for board in json_obj.boards:
-			if board.lists:
-				list_id = board.lists[0]._id
+		list_id = None
+		for board in json_obj['boards']:
+			if board['_id'] == board_id:
+				if 'lists' in board:
+					list_id = board['lists'][0]['_id']
 
-		# TODO: ensure list was found
+		if not list_id:
+			raise NoSuchObjectError('board', board_id)
+
 		request = {
-				'token': self._cookie, #TODO: not right - extract token
+				'token': self._token,
 				'method': 'create',
 				'data': {
 					'attrs': {
 						'name': name,
 						'pos': 65536,
-						'closed': false,
+						'closed': False,
 						'idBoard': board_id,
 						"idList": list_id,
 						},
@@ -123,6 +135,7 @@ class Trello:
 					}
 				}
 
+		headers = {'Cookie': self._cookie, 'Accept': 'application/json', 'Content-Type': 'application/json'}
 		response, content = self._client.request(
 				'https://trello.com/api/card',
 				'POST',
@@ -132,5 +145,6 @@ class Trello:
 
 		# TODO: error checking
 		json_obj = json.loads(content)
+		print content
 		return json_obj['_id']
 
