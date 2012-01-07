@@ -38,5 +38,10 @@ class TrelloTestCase(unittest.TestCase):
 		card_id = self._trello.add_card(board_id, "test card from Python")
 		self.assertIsNotNone(card_id)
 
+def suite():
+	tests = ['test01_list_boards', 'test10_board_attrs', 'test20_add_card']
+	return unittest.TestSuite(map(TrelloTestCase, tests))
+
+
 if __name__ == "__main__":
 	unittest.main()
