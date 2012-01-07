@@ -15,40 +15,11 @@ class Trello:
 		self._client = Http()
 		self._key = api_key
 		self._token = oauth_token
-		self.login()
-
-	def login(self):
-		"""Log into Trello"""
-		body = {
-				'user': self._username,
-				'password': self._password,
-				'returnUrl': '/'}
-		headers = {
-				'Content-type': 'application/x-www-form-urlencoded',
-				'Accept': 'application/json'}
-		response, content = self._client.request(
-				'https://trello.com/authenticate',
-				'POST',
-				headers = headers,
-				body = urlencode(body))
-
-		if response and response['set-cookie']:
-			# auth was successful
-			self._cookie = response['set-cookie']
-
-			# grab the token out of the cookie
-			start = self._cookie.find('token')
-			end = self._cookie.find(' ', start)
-			parts = self._cookie[start:(end-1)].split('=')
-			self._token = parts[1]
-			print self._token
-			print self._cookie
-
-		else:
-			raise AuthenticationError()
 
 	def logout(self):
 		"""Log out of Trello. This method is idempotent."""
+
+		# TODO: refactor
 		if not self._cookie:
 			return
 
@@ -68,22 +39,15 @@ class Trello:
 
 		:return: a list of Python objects representing the Trello boards. Each board has the 
 		following noteworthy attributes:
-			- _id: the board's identifier
+			- id: the board's identifier
 			- name: Name of the board
+			- desc: Description of the board
 			- closed: Boolean representing whether this board is closed or not
-		Other attributes include: 
-			invitations, memberships, idMembersWatching, prefs, 
-			nActionsSinceLastView, idOrganization
-
-		@todo: the JSON response contains the values needed to dereference idFoo; be nice and expose 
-		these, too
+			- url: URL to the board
 		"""
-		if not self._cookie:
-			raise AuthenticationRequired()
-
-		headers = {'Cookie': self._cookie, 'Accept': 'application/json'}
+		headers = {'Accept': 'application/json'}
 		response, content = self._client.request(
-				'https://trello.com/data/me/boards',
+				'https://trello.com/1/members/me/boards/all?key='+self._key+'&token='+self._token,
 				'GET',
 				headers = headers,
 				)
@@ -91,7 +55,7 @@ class Trello:
 		# TODO: error checking
 
 		json_obj = json.loads(content)
-		return json_obj['boards']
+		return json_obj
 
 	def add_card(self, board_id, name):
 		"""Adds a card to the first list in the given board
