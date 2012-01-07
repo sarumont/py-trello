@@ -82,9 +82,9 @@ class Trello:
 	def add_card(self, board_id, name):
 		"""Adds a card to the first list in the given board
 
-		:board_id: @todo
-		:name: @todo
-		:returns: @todo
+		:board_id: identifier for the board to which the card is to be added
+		:name: name for the new card
+		:returns: the id for the new card
 		"""
 
 		if not self._cookie:
@@ -131,3 +131,6 @@ class Trello:
 				)
 
 		# TODO: error checking
+		json_obj = json.loads(content)
+		return json_obj['_id']
+
