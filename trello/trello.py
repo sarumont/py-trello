@@ -1,6 +1,6 @@
 from httplib2 import Http
 from urllib import urlencode
-from models import ResourceUnavailable
+from trello import ResourceUnavailable
 import json
 
 class Trello(object):

@@ -1,4 +1,4 @@
-from trello import Trello
+from trello.trello import Trello
 import unittest
 import os
 
