@@ -62,6 +62,9 @@ class TrelloTestCase(unittest.TestCase):
 				self.assertIsNotNone(l.name, msg="name not provided")
 				self.assertIsNotNone(l.closed, msg="closed not provided")
 			break # only need to test one board's lists
+	
+	def test40_list_cards(self):
+		pass
 
 	#def test30_add_card(self):
 		#pass
