@@ -3,7 +3,7 @@ from urllib import urlencode
 from models import ResourceUnavailable
 import json
 
-class Trello:
+class Trello(object):
 
 	def __init__(self, api_key, oauth_token):
 		"""
@@ -86,7 +86,7 @@ class Trello:
 		return boards
 
 
-class Board():
+class Board(object):
 	"""Class representing a Trello board. Board attributes are stored as normal Python attributes;
 	access to all sub-objects, however, is always an API call (Lists, Cards).
 	"""
@@ -134,7 +134,7 @@ class Board():
 
 		return lists
 
-class List():
+class List(object):
 	"""Class representing a Trello list. List attributes are stored on the object, but access to 
 	sub-objects (Cards) require an API call"""
 
