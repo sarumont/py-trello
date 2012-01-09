@@ -99,6 +99,22 @@ class Board(object):
 		"""
 		self.trello = trello
 		self.id = board_id
+
+	def fetch(self):
+		"""Fetch all attributes for this board"""
+		headers = {'Accept': 'application/json'}
+		url = self.trello.build_url('/boards/'+self.id)
+		response, content = self.trello.client.request(url, 'GET', headers = headers)
+
+		# error checking
+		if response.status != 200:
+			raise ResourceUnavailable(url)
+
+		json_obj = json.loads(content)
+		self.name = json_obj['name']
+		self.description = json_obj['desc']
+		self.closed = json_obj['closed']
+		self.url = json_obj['url']
 		
 	def all_lists(self):
 		"""Returns all lists on this board"""
@@ -146,65 +162,26 @@ class List(object):
 		"""
 		self.board = board
 		self.id = list_id
+
+	def fetch(self):
+		"""Fetch all attributes for this list"""
+		headers = {'Accept': 'application/json'}
+		url = self.board.trello.build_url('/lists/'+self.id)
+		response, content = self.board.trello.client.request(url, 'GET', headers = headers)
+
+		# error checking
+		if response.status != 200:
+			raise ResourceUnavailable(url)
+
+		json_obj = json.loads(content)
+		self.name = json_obj['name']
+		self.closed = json_obj['closed']
 	
-		
 
-# TODO: uncomment, add to List class
-#def add_card(self, board_id, name):
-	#"""Adds a card to the first list in the given board
+	def add_card(self, name):
+		"""Add a card to this list
 
-	#:board_id: identifier for the board to which the card is to be added
-	#:name: name for the new card
-	#:returns: the id for the new card
-	#"""
-
-	#headers = {'Accept': 'application/json'}
-	#response, content = self.client.request(
-			#'https://trello.com/data/board/'+board_id+'/current',
-			#'GET',
-			#headers = headers,
-			#)
-
-	## TODO: error checking
-
-	#json_obj = json.loads(content)
-
-	## get first list
-	#list_id = None
-	#for board in json_obj['boards']:
-		#if board['_id'] == board_id:
-			#if 'lists' in board:
-				#list_id = board['lists'][0]['_id']
-
-	#if not list_id:
-		#raise NoSuchObjectError('board', board_id)
-
-	#request = {
-			#'token': self.token,
-			#'method': 'create',
-			#'data': {
-				#'attrs': {
-					#'name': name,
-					#'pos': 65536,
-					#'closed': False,
-					#'idBoard': board_id,
-					#"idList": list_id,
-					#},
-				#'idParents': [ board_id, list_id ],
-				#}
-			#}
-
-	#headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
-	#url = self.build_url('cards')
-	#response, content = self.client.request(
-			#url,
-			#'POST',
-			#headers = headers,
-			#body = json.dumps(request),
-			#)
-	#if response.status != 200:
-		#raise ResourceUnavailable(url)
-
-	#json_obj = json.loads(content)
-	#print content
-	#return json_obj['_id']
+		:name: name for the card
+		:return: the card
+		"""
+		pass
