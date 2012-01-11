@@ -1,4 +1,4 @@
-from trello.client import Trello
+from client import Trello
 import unittest
 import os
 
@@ -66,21 +66,34 @@ class TrelloTestCase(unittest.TestCase):
 	def test40_list_cards(self):
 		pass
 
-	#def test30_add_card(self):
-		#pass
-		#boards = self._trello.list_boards()
-		#board_id = None
-		#for b in boards:
-			#if b['name'] == os.environ['TRELLO_TEST_BOARD_NAME']:
-				#board_id = b['_id']
-				#break
-		#card_id = self._trello.add_card(board_id, "test card from Python")
-		#self.assertIsNotNone(card_id)
+	def test50_add_card(self):
+		boards = self._trello.list_boards()
+		board_id = None
+		for b in boards:
+			if b.name != os.environ['TRELLO_TEST_BOARD_NAME']:
+				continue
+
+			for l in b.open_lists():
+				try:
+					name = "Testing from Python"
+					description = "Description goes here"
+					card = l.add_card(name, description)
+				except Exception as e:
+					print str(e)
+					self.fail("Caught Exception adding card")
+
+				self.assertIsNotNone(card, msg="card is None")
+				self.assertIsNotNone(card.id, msg="id not provided")
+				self.assertEquals(card.name, name)
+				self.assertEquals(card.description, description)
+				self.assertIsNotNone(card.closed, msg="closed not provided")
+				self.assertIsNotNone(card.url, msg="url not provided")
+				break
+			break
 
 def suite():
 	tests = ['test01_list_boards', 'test10_board_attrs', 'test20_add_card']
 	return unittest.TestSuite(map(TrelloTestCase, tests))
-
 
 if __name__ == "__main__":
 	unittest.main()

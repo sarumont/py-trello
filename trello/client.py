@@ -177,11 +177,58 @@ class List(object):
 		self.name = json_obj['name']
 		self.closed = json_obj['closed']
 	
-
-	def add_card(self, name):
+	def add_card(self, name, desc = None):
 		"""Add a card to this list
 
 		:name: name for the card
 		:return: the card
 		"""
+		headers = {'Accept': 'application/json', 'Content-type': 'application/json'}
+		url = self.board.trello.build_url('/lists/'+self.id+'/cards')
+		request = {'name': name, 'idList': self.id, 'desc': desc}
+		response, content = self.board.trello.client.request(
+				url,
+				'POST',
+				headers = headers,
+				body = json.dumps(request))
+
+		# error checking
+		if response.status != 200:
+			raise ResourceUnavailable(url)
+
+		json_obj = json.loads(content)
+
+		card = Card(self, json_obj['id'])
+		card.name = json_obj['name']
+		card.description = json_obj['description']
+		card.closed = json_obj['closed']
+		card.url = json_obj['url']
 		pass
+
+class Card(object):
+	""" Class representing a Trello card. Card attributes are stored on the object"""
+
+	def __init__(self, trello_list, card_id):
+		"""Constructor
+
+		:trello_list: reference to the parent list
+		:card_id: ID for this card
+		"""
+		self.trello_list = trello_list
+		self.id = card_id
+
+	def fetch(self):
+		"""Fetch all attributes for this card"""
+		headers = {'Accept': 'application/json'}
+		url = self.board.trello.build_url('/cards/'+self.id, {'badges': False})
+		response, content = self.board.trello.client.request(url, 'GET', headers = headers)
+
+		# error checking
+		if response.status != 200:
+			raise ResourceUnavailable(url)
+
+		json_obj = json.loads(content)
+		self.name = json_obj['name']
+		self.description = json_obj['description']
+		self.closed = json_obj['closed']
+		self.url = json_obj['url']
