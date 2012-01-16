@@ -185,7 +185,7 @@ class List(object):
 		"""
 		headers = {'Accept': 'application/json', 'Content-type': 'application/json'}
 		url = self.board.trello.build_url('/lists/'+self.id+'/cards')
-		request = {'name': name, 'idList': self.id, 'desc': desc}
+		request = {'name': name, 'idList': self.id, 'desc': desc, 'key': self.board.trello.key, 'token': self.board.trello.token}
 		response, content = self.board.trello.client.request(
 				url,
 				'POST',
