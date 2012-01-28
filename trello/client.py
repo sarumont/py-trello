@@ -60,7 +60,7 @@ class Trello(object):
 			url += '/'
 		url += path
 
-		if self.oauth_token:
+		if hasattr(self, 'oauth_token'):
 			url += '?'
 			url += "key="+self.oauth_token.key
 			url += "&token="+self.oauth_consumer.key
@@ -230,7 +230,7 @@ class List(object):
 		"""
 		headers = {'Accept': 'application/json', 'Content-type': 'application/json'}
 		url = self.board.trello.build_url('/lists/'+self.id+'/cards')
-		request = {'name': name, 'idList': self.id, 'desc': desc, 'key': self.board.trello.key, 'token': self.board.trello.token}
+		request = {'name': name, 'idList': self.id, 'desc': desc}
 		response, content = self.board.trello.client.request(
 				url,
 				'POST',
@@ -245,8 +245,8 @@ class List(object):
 
 		card = Card(self, json_obj['id'])
 		card.name = json_obj['name']
-		if 'description' in json_obj:
-			card.description = json_obj['description']
+		if 'desc' in json_obj:
+			card.description = json_obj['desc']
 		card.closed = json_obj['closed']
 		card.url = json_obj['url']
 		return card
