@@ -6,6 +6,15 @@ allow caching (assuming a connection was available to invalidate the cache as ap
 I've created a Trello Board for feature requests, discussion and some development tracking. It can
 be found [here] (https://trello.com/board/py-trello/4f145d87b2f9f15d6d027b53 "Trello")
 
+## py-oauth2
+
+py-oauth2 works if you apply the patch found [here] (https://github.com/tylerwilliams/python-oauth2/commit/e97b6a678ea6df38f0f1c33a5a7450714a72c38b "GitHub"). To use 3-legged authentication, construct your Trello client as follows:
+
+    client = Trello(api_key = '...', api_secret = '...', token = '...', token_secret = '...')
+
+Where `token` and `token_secret` come from the 3-legged OAuth process. `api_key` and `api_secret`
+are your Trello API credentials ([generated here] (https://trello.com/1/appKey/generate "Trello").
+
 ## Required Python modules
 * httplib2 (http://code.google.com/p/httplib2/)
 
