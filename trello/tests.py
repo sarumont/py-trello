@@ -64,6 +64,17 @@ class TrelloTestCase(unittest.TestCase):
 			break # only need to test one board's lists
 	
 	def test40_list_cards(self):
+		boards = self._trello.list_boards()
+		for b in boards:
+			for l in b.all_lists():
+				for c in l.list_cards():
+					self.assertIsNotNone(c.id, msg="id not provided")
+					self.assertIsNotNone(c.name, msg="name not provided")
+					self.assertIsNotNone(c.description, msg="description not provided")
+					self.assertIsNotNone(c.closed, msg="closed not provided")
+					self.assertIsNotNone(c.url, msg="url not provided")
+				break
+			break
 		pass
 
 	def test50_add_card(self):
@@ -90,6 +101,8 @@ class TrelloTestCase(unittest.TestCase):
 				self.assertIsNotNone(card.url, msg="url not provided")
 				break
 			break
+		if not card:
+			self.fail("No card created")
 
 def suite():
 	tests = ['test01_list_boards', 'test10_board_attrs', 'test20_add_card']
