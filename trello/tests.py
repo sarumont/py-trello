@@ -86,6 +86,31 @@ class TrelloTestCase(unittest.TestCase):
 
 			for l in b.open_lists():
 				try:
+					name = "Testing from Python - no desc"
+					card = l.add_card(name)
+				except Exception as e:
+					print str(e)
+					self.fail("Caught Exception adding card")
+
+				self.assertIsNotNone(card, msg="card is None")
+				self.assertIsNotNone(card.id, msg="id not provided")
+				self.assertEquals(card.name, name)
+				self.assertIsNotNone(card.closed, msg="closed not provided")
+				self.assertIsNotNone(card.url, msg="url not provided")
+				break
+			break
+		if not card:
+			self.fail("No card created")
+
+	def test51_add_card(self):
+		boards = self._trello.list_boards()
+		board_id = None
+		for b in boards:
+			if b.name != os.environ['TRELLO_TEST_BOARD_NAME']:
+				continue
+
+			for l in b.open_lists():
+				try:
 					name = "Testing from Python"
 					description = "Description goes here"
 					card = l.add_card(name, description)

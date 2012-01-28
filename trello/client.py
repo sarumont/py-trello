@@ -99,8 +99,7 @@ class Trello(object):
 		for b in json_obj:
 			board = Board(self, b['id'])
 			board.name = b['name']
-			if 'desc' in b:
-				board.description = b['desc']
+			board.description = b['desc']
 			board.closed = b['closed']
 			board.url = b['url']
 			boards.append(board)
@@ -134,8 +133,7 @@ class Board(object):
 
 		json_obj = json.loads(content)
 		self.name = json_obj['name']
-		if 'desc' in json_obj:
-			self.description = json_obj['desc']
+		self.description = json_obj['desc']
 		self.closed = json_obj['closed']
 		self.url = json_obj['url']
 		
@@ -214,8 +212,7 @@ class List(object):
 		for c in json_obj:
 			card = Card(self, c['id'])
 			card.name = c['name']
-			if 'desc' in c:
-				card.description = c['desc']
+			card.description = c['desc']
 			card.closed = c['closed']
 			card.url = c['url']
 			cards.append(card)
@@ -242,15 +239,12 @@ class List(object):
 			raise ResourceUnavailable(url)
 
 		json_obj = json.loads(content)
-
 		card = Card(self, json_obj['id'])
 		card.name = json_obj['name']
-		if 'desc' in json_obj:
-			card.description = json_obj['desc']
+		card.description = json_obj['desc']
 		card.closed = json_obj['closed']
 		card.url = json_obj['url']
 		return card
-
 
 class Card(object):
 	""" Class representing a Trello card. Card attributes are stored on the object"""
@@ -276,7 +270,6 @@ class Card(object):
 
 		json_obj = json.loads(content)
 		self.name = json_obj['name']
-		if 'description' in json_obj:
-			self.description = json_obj['description']
+		self.description = json_obj['desc']
 		self.closed = json_obj['closed']
 		self.url = json_obj['url']
