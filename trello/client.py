@@ -78,7 +78,8 @@ class Trello(object):
 		for b in json_obj:
 			board = Board(self, b['id'])
 			board.name = b['name']
-			board.description = b['desc']
+			if 'desc' in b:
+				board.description = b['desc']
 			board.closed = b['closed']
 			board.url = b['url']
 			boards.append(board)
@@ -112,7 +113,8 @@ class Board(object):
 
 		json_obj = json.loads(content)
 		self.name = json_obj['name']
-		self.description = json_obj['desc']
+		if 'desc' in json_obj:
+			self.description = json_obj['desc']
 		self.closed = json_obj['closed']
 		self.url = json_obj['url']
 		
@@ -176,7 +178,29 @@ class List(object):
 		json_obj = json.loads(content)
 		self.name = json_obj['name']
 		self.closed = json_obj['closed']
-	
+
+	def list_cards(self):
+		headers = {'Accept': 'application/json'}
+		url = self.board.trello.build_url('/lists/'+self.id+'/cards')
+		response, content = self.board.trello.client.request(url, 'GET', headers = headers)
+
+		# error checking
+		if response.status != 200:
+			raise ResourceUnavailable(url)
+
+		json_obj = json.loads(content)
+		cards = list()
+		for c in json_obj:
+			card = Card(self, c['id'])
+			card.name = c['name']
+			if 'desc' in c:
+				card.description = c['desc']
+			card.closed = c['closed']
+			card.url = c['url']
+			cards.append(card)
+
+		return cards
+
 	def add_card(self, name, desc = None):
 		"""Add a card to this list
 
@@ -200,10 +224,12 @@ class List(object):
 
 		card = Card(self, json_obj['id'])
 		card.name = json_obj['name']
-		card.description = json_obj['description']
+		if 'description' in json_obj:
+			card.description = json_obj['description']
 		card.closed = json_obj['closed']
 		card.url = json_obj['url']
-		pass
+		return card
+
 
 class Card(object):
 	""" Class representing a Trello card. Card attributes are stored on the object"""
@@ -229,6 +255,7 @@ class Card(object):
 
 		json_obj = json.loads(content)
 		self.name = json_obj['name']
-		self.description = json_obj['description']
+		if 'description' in json_obj:
+			self.description = json_obj['description']
 		self.closed = json_obj['closed']
 		self.url = json_obj['url']
