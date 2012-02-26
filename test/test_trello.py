@@ -1,16 +1,16 @@
-from client import Trello
+from trello import TrelloClient
 import unittest
 import os
 
-class TrelloTestCase(unittest.TestCase):
+class TrelloClientTestCase(unittest.TestCase):
 
 	"""
-	Tests for Trello API. Note these test are in order to preserve dependencies, as an API 
+	Tests for TrelloClient API. Note these test are in order to preserve dependencies, as an API 
 	integration cannot be tested independently.
 	"""
 
 	def setUp(self):
-		self._trello = Trello(os.environ['TRELLO_API_KEY'], os.environ['TRELLO_TOKEN'])
+		self._trello = TrelloClient(os.environ['TRELLO_API_KEY'], os.environ['TRELLO_TOKEN'])
 
 	def tearDown(self):	
 		#self._trello.logout()
@@ -131,7 +131,7 @@ class TrelloTestCase(unittest.TestCase):
 
 def suite():
 	tests = ['test01_list_boards', 'test10_board_attrs', 'test20_add_card']
-	return unittest.TestSuite(map(TrelloTestCase, tests))
+	return unittest.TestSuite(map(TrelloClientTestCase, tests))
 
 if __name__ == "__main__":
 	unittest.main()
