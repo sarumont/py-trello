@@ -25,3 +25,7 @@ To run the tests, run `python tests.py`. Three environment variables must be set
 * TRELLO_TOKEN: your Trello OAuth token
 * TRELLO_TEST_BOARD_COUNT: the number of boards in your Trello account
 * TRELLO_TEST_BOARD_NAME: name of the board to test card manipulation on. Must be unique, or the first match will be used
+
+And run (from `py-trello/`):
+
+	PYTHONPATH=. python test/test_trello.py
