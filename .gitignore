@@ -1,4 +1,6 @@
+build
 test_env
+deploy.sh
 *egg-info
 dist
 *pyc
