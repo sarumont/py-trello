@@ -4,10 +4,10 @@ from setuptools import setup, find_packages
 
 setup(
 	name = "py-trello",
-	version = "0.1",
+	version = "0.1.1",
 
 	description = 'Python wrapper around the Trello API',
-	long_description = open('README.md').read(),
+	long_description = open('README.rst').read(),
 	author = 'Richard Kolkovich',
 	author_email = 'richard@sigil.org',
 	url = 'https://trello.com/board/py-trello/4f145d87b2f9f15d6d027b53',

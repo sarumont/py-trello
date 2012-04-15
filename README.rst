@@ -37,3 +37,8 @@ To run the tests, run `python tests.py`. Three environment variables must be set
 And run (from `py-trello/`):
 
 	PYTHONPATH=. python test/test_trello.py
+
+Contributors
+============
+
+`Adrien Lemaire <https://github.com/Fandekasp>`_
