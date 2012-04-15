@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
 	name = "py-trello",
-	version = "0.1.1",
+	version = "0.1.2",
 
 	description = 'Python wrapper around the Trello API',
 	long_description = open('README.rst').read(),
