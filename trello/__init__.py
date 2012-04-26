@@ -144,10 +144,10 @@ class Board(object):
 		"""
 		self.client = client
 		self.id = board_id
-        self.name = name
+		self.name = name
 
-    def __repr__(self):
-        return '<Board %s>' % self.name
+	def __repr__(self):
+		return '<Board %s>' % self.name
 
 	def fetch(self):
 		"""Fetch all attributes for this board"""
@@ -198,12 +198,12 @@ class List(object):
 		self.board = board
 		self.client = board.client
 		self.id = list_id
-        self.name = name
+		self.name = name
 
-    def __repr__(self):
-        return '<List %s>' % self.name
+	def __repr__(self):
+		return '<List %s>' % self.name
 
-	def fetch(self):
+        def fetch(self):
 		"""Fetch all attributes for this list"""
 		json_obj = self.client.fetch_json('/lists/'+self.id)
 		self.name = json_obj['name']
@@ -254,10 +254,10 @@ class Card(object):
 		self.trello_list = trello_list
 		self.client = trello_list.client
 		self.id = card_id
-        self.name = name
+		self.name = name
 
-    def __repr__(self):
-        return '<Card %s>' % self.name
+	def __repr__(self):
+		return '<Card %s>' % self.name
 
 	def fetch(self):
 		"""Fetch all attributes for this card"""
