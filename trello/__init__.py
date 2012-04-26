@@ -100,8 +100,7 @@ class TrelloClient(object):
 		json_obj = self.fetch_json('/members/me/boards/all')
 		boards = list()
 		for obj in json_obj:
-			board = Board(self, obj['id'])
-			board.name = obj['name']
+			board = Board(self, obj['id'], name = obj['name'])
 			board.description = obj.get('desc','')
 			board.closed = obj['closed']
 			board.url = obj['url']
@@ -137,7 +136,7 @@ class Board(object):
 	access to all sub-objects, however, is always an API call (Lists, Cards).
 	"""
 
-	def __init__(self, client, board_id):
+	def __init__(self, client, board_id, name=''):
 		"""Constructor.
 		
 		:trello: Reference to a Trello object
@@ -145,6 +144,10 @@ class Board(object):
 		"""
 		self.client = client
 		self.id = board_id
+        self.name = name
+
+    def __repr__(self):
+        return '<Board %s>' % self.name
 
 	def fetch(self):
 		"""Fetch all attributes for this board"""
@@ -176,8 +179,7 @@ class Board(object):
 				query_params = {'cards': 'none', 'filter': list_filter})
 		lists = list()
 		for obj in json_obj:
-			l = List(self, obj['id'])
-			l.name = obj['name']
+			l = List(self, obj['id'], name=obj['name'])
 			l.closed = obj['closed']
 			lists.append(l)
 
@@ -187,7 +189,7 @@ class List(object):
 	"""Class representing a Trello list. List attributes are stored on the object, but access to 
 	sub-objects (Cards) require an API call"""
 
-	def __init__(self, board, list_id):
+	def __init__(self, board, list_id, name=''):
 		"""Constructor
 
 		:board: reference to the parent board
@@ -196,6 +198,10 @@ class List(object):
 		self.board = board
 		self.client = board.client
 		self.id = list_id
+        self.name = name
+
+    def __repr__(self):
+        return '<List %s>' % self.name
 
 	def fetch(self):
 		"""Fetch all attributes for this list"""
@@ -208,8 +214,7 @@ class List(object):
 		json_obj = self.client.fetch_json('/lists/'+self.id+'/cards')
 		cards = list()
 		for c in json_obj:
-			card = Card(self, c['id'])
-			card.name = c['name']
+			card = Card(self, c['id'], name = c['name'])
 			card.description = c.get('desc','')
 			card.closed = c['closed']
 			card.url = c['url']
@@ -240,7 +245,7 @@ class Card(object):
 	the object
 	"""
 
-	def __init__(self, trello_list, card_id):
+	def __init__(self, trello_list, card_id, name=''):
 		"""Constructor
 
 		:trello_list: reference to the parent list
@@ -249,6 +254,10 @@ class Card(object):
 		self.trello_list = trello_list
 		self.client = trello_list.client
 		self.id = card_id
+        self.name = name
+
+    def __repr__(self):
+        return '<Card %s>' % self.name
 
 	def fetch(self):
 		"""Fetch all attributes for this card"""
