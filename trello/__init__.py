@@ -100,7 +100,7 @@ class TrelloClient(object):
 		json_obj = self.fetch_json('/members/me/boards/all')
 		boards = list()
 		for obj in json_obj:
-			board = Board(self, obj['id'], name=obj['name'])
+			board = Board(self, obj['id'], name=obj['name'].encode('utf-8'))
 			board.description = obj['desc']
 			board.closed = obj['closed']
 			board.url = obj['url']
@@ -179,7 +179,7 @@ class Board(object):
 				query_params = {'cards': 'none', 'filter': list_filter})
 		lists = list()
 		for obj in json_obj:
-			l = List(self, obj['id'], name=obj['name'])
+			l = List(self, obj['id'], name=obj['name'].encode('utf-8'))
 			l.closed = obj['closed']
 			lists.append(l)
 
@@ -214,7 +214,7 @@ class List(object):
 		json_obj = self.client.fetch_json('/lists/'+self.id+'/cards')
 		cards = list()
 		for c in json_obj:
-			card = Card(self, c['id'], name=c['name'])
+			card = Card(self, c['id'], name=c['name'].encode('utf-8'))
 			card.description = c['desc']
 			card.closed = c['closed']
 			card.url = c['url']
