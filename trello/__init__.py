@@ -100,30 +100,29 @@ class TrelloClient(object):
         json_obj = self.fetch_json('/members/me/boards/all')
         boards = list()
         for obj in json_obj:
-            board = Board(self, obj['id'], name=obj['name'].encode('utf-8'))
+            board             = Board(self, obj['id'], name=obj['name'].encode('utf-8'))
             board.description = obj['desc']
-            board.closed = obj['closed']
-            board.url = obj['url']
+            board.closed      = obj['closed']
+            board.url         = obj['url']
             boards.append(board)
 
         return boards
 
-    def fetch_json(
-            self,
-            uri_path,
-            http_method = 'GET',
-            headers = {},
-            query_params = {},
-            post_args = {}):
+    def fetch_json(self,
+                   uri_path,
+                   http_method = 'GET',
+                   headers = {},
+                   query_params = {},
+                   post_args = {}):
         """ Fetch some JSON from Trello """
 
         headers['Accept'] = 'application/json'
         url = self.build_url(uri_path, query_params)
         response, content = self.client.request(
-                url,
-                http_method,
-                headers = headers,
-                body = json.dumps(post_args))
+                                url,
+                                http_method,
+                                headers = headers,
+                                body = json.dumps(post_args))
 
         # error checking
         if response.status != 200:
@@ -143,19 +142,19 @@ class Board(object):
         :board_id: ID for the board
         """
         self.client = client
-        self.id = board_id
-        self.name = name
+        self.id     = board_id
+        self.name   = name
 
     def __repr__(self):
         return '<Board %s>' % self.name
 
     def fetch(self):
         """Fetch all attributes for this board"""
-        json_obj = self.client.fetch_json('/boards/'+self.id)
-        self.name = json_obj['name']
+        json_obj         = self.client.fetch_json('/boards/'+self.id)
+        self.name        = json_obj['name']
         self.description = json_obj['desc']
-        self.closed = json_obj['closed']
-        self.url = json_obj['url']
+        self.closed      = json_obj['closed']
+        self.url         = json_obj['url']
 
     def save(self):
         pass
@@ -175,8 +174,8 @@ class Board(object):
     def get_lists(self, list_filter):
         # error checking
         json_obj = self.client.fetch_json(
-                '/boards/'+self.id+'/lists',
-                query_params = {'cards': 'none', 'filter': list_filter})
+                       '/boards/'+self.id+'/lists',
+                       query_params = {'cards': 'none', 'filter': list_filter})
         lists = list()
         for obj in json_obj:
             l = List(self, obj['id'], name=obj['name'].encode('utf-8'))
@@ -195,18 +194,18 @@ class List(object):
         :board: reference to the parent board
         :list_id: ID for this list
         """
-        self.board = board
+        self.board  = board
         self.client = board.client
-        self.id = list_id
-        self.name = name
+        self.id     = list_id
+        self.name   = name
 
     def __repr__(self):
         return '<List %s>' % self.name
 
     def fetch(self):
         """Fetch all attributes for this list"""
-        json_obj = self.client.fetch_json('/lists/'+self.id)
-        self.name = json_obj['name']
+        json_obj    = self.client.fetch_json('/lists/'+self.id)
+        self.name   = json_obj['name']
         self.closed = json_obj['closed']
 
     def list_cards(self):
@@ -214,10 +213,10 @@ class List(object):
         json_obj = self.client.fetch_json('/lists/'+self.id+'/cards')
         cards = list()
         for c in json_obj:
-            card = Card(self, c['id'], name=c['name'].encode('utf-8'))
+            card             = Card(self, c['id'], name=c['name'].encode('utf-8'))
             card.description = c['desc']
-            card.closed = c['closed']
-            card.url = c['url']
+            card.closed      = c['closed']
+            card.url         = c['url']
             cards.append(card)
         return cards
 
@@ -228,15 +227,16 @@ class List(object):
         :return: the card
         """
         json_obj = self.client.fetch_json(
-                '/lists/'+self.id+'/cards',
-                http_method = 'POST',
-                headers = {'Content-type': 'application/json'},
-                post_args = {'name': name, 'idList': self.id, 'desc': desc},)
-        card = Card(self, json_obj['id'])
-        card.name = json_obj['name']
+                       '/lists/'+self.id+'/cards',
+                       http_method = 'POST',
+                       headers = {'Content-type': 'application/json'},
+                       post_args = {'name': name, 'idList': self.id, 'desc': desc},)
+
+        card             = Card(self, json_obj['id'])
+        card.name        = json_obj['name']
         card.description = json_obj['desc']
-        card.closed = json_obj['closed']
-        card.url = json_obj['url']
+        card.closed      = json_obj['closed']
+        card.url         = json_obj['url']
         return card
 
 class Card(object):
@@ -252,9 +252,9 @@ class Card(object):
         :card_id: ID for this card
         """
         self.trello_list = trello_list
-        self.client = trello_list.client
-        self.id = card_id
-        self.name = name
+        self.client      = trello_list.client
+        self.id          = card_id
+        self.name        = name
 
     def __repr__(self):
         return '<Card %s>' % self.name
@@ -262,9 +262,17 @@ class Card(object):
     def fetch(self):
         """Fetch all attributes for this card"""
         json_obj = self.client.fetch_json(
-                '/cards/'+self.id,
-                query_params = {'badges': False})
-        self.name = json_obj['name']
+                       '/cards/'+self.id,
+                       query_params = {'badges': False})
+
+        self.name        = json_obj['name']
         self.description = json_obj['desc']
-        self.closed = json_obj['closed']
-        self.url = json_obj['url']
+        self.closed      = json_obj['closed']
+        self.url         = json_obj['url']
+        self.member_ids  = json_obj['idMembers']
+        self.short_id    = json_obj['idShort']
+        self.list_id     = json_obj['idList']
+        self.board_id    = json_obj['idBoard']
+        self.attachments = json_obj['attachments']
+        self.labels      = json_obj['labels']
+        self.badges      = json_obj['badges']
