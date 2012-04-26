@@ -268,3 +268,10 @@ class Card(object):
 		self.description = json_obj.get('desc','')
 		self.closed = json_obj['closed']
 		self.url = json_obj['url']
+        self.member_ids = json_obj['idMembers']
+        self.short_id = json_obj['idShort']
+        self.list_id = json_obj['idList']
+        self.board_id = json_obj['idBoard']
+        self.attachments = json_obj['attachments']
+        self.labels = json_obj['labels']
+        self.badges = json_obj['badges']
