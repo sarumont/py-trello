@@ -12,7 +12,7 @@ py-oauth2
 
 py-oauth2 works if you `apply this patch <https://github.com/tylerwilliams/python-oauth2/commit/e97b6a678ea6df38f0f1c33a5a7450714a72c38b>`_. To use 3-legged authentication, construct your Trello client as follows:
 
-    client = Trello(api_key = '...', api_secret = '...', token = '...', token_secret = '...')
+    client = TrelloClient(api_key = '...', api_secret = '...', token = '...', token_secret = '...')
 
 Where `token` and `token_secret` come from the 3-legged OAuth process. `api_key` and `api_secret`
 are your Trello API credentials (`generated here <https://trello.com/1/appKey/generate>`_).
