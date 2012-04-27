@@ -1,5 +1,6 @@
 from httplib2 import Http
 from urllib import urlencode
+from datetime import datetime
 import exceptions
 import json
 import oauth2 as oauth
@@ -310,3 +311,9 @@ class Card(object):
                        '/cards/'+self.id+'/actions',
                        query_params = {'filter': action_filter})
         self.actions = json_obj
+    
+    @property
+    def create_date(self):
+        self.fetch_actions()
+        date_str = self.actions[0]['date'][:-5]
+        return datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S')
