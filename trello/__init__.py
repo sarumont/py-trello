@@ -184,6 +184,31 @@ class Board(object):
 
         return lists
 
+    def all_cards(self):
+        """Returns all cards on this board"""
+        return self.get_cards('all')
+
+    def open_cards(self):
+        """Returns all open cards on this board"""
+        return self.get_cards('open')
+
+    def closed_cards(self):
+        """Returns all closed cards on this board"""
+        return self.get_cards('closed')
+
+    def get_cards(self, card_filter):
+        # error checking
+        json_obj = self.client.fetch_json(
+                       '/boards/'+self.id+'/cards',
+                       query_params = {'filter': card_filter})
+        cards = list()
+        for obj in json_obj:
+            c = Card(self, obj['id'], name=obj['name'].encode('utf-8'))
+            c.closed = obj['closed']
+            cards.append(c)
+
+        return cards
+
 class List(object):
     """Class representing a Trello list. List attributes are stored on the object, but access to 
     sub-objects (Cards) require an API call"""
