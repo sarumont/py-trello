@@ -151,7 +151,7 @@ class Board(object):
     def fetch(self):
         """Fetch all attributes for this board"""
         json_obj         = self.client.fetch_json('/boards/'+self.id)
-        self.name        = json_obj['name']
+        self.name        = json_obj['name'].encode('utf-8')
         self.description = json_obj['desc']
         self.closed      = json_obj['closed']
         self.url         = json_obj['url']
@@ -230,7 +230,7 @@ class List(object):
     def fetch(self):
         """Fetch all attributes for this list"""
         json_obj    = self.client.fetch_json('/lists/'+self.id)
-        self.name   = json_obj['name']
+        self.name   = json_obj['name'].encode('utf-8')
         self.closed = json_obj['closed']
 
     def list_cards(self):
@@ -258,7 +258,7 @@ class List(object):
                        post_args = {'name': name, 'idList': self.id, 'desc': desc},)
 
         card             = Card(self, json_obj['id'])
-        card.name        = json_obj['name']
+        card.name        = json_obj['name'].encode('utf-8')
         card.description = json_obj['desc']
         card.closed      = json_obj['closed']
         card.url         = json_obj['url']
@@ -290,7 +290,7 @@ class Card(object):
                        '/cards/'+self.id,
                        query_params = {'badges': False})
 
-        self.name        = json_obj['name']
+        self.name        = json_obj['name'].encode('utf-8')
         self.description = json_obj['desc']
         self.closed      = json_obj['closed']
         self.url         = json_obj['url']
@@ -301,3 +301,10 @@ class Card(object):
         self.attachments = json_obj['attachments']
         self.labels      = json_obj['labels']
         self.badges      = json_obj['badges']
+
+    def fetch_actions(self, action_filter):
+        """Fetch actions for this card"""
+        json_obj = self.client.fetch_json(
+                       '/cards/'+self.id+'/actions',
+                       query_params = {'filter': action_filter})
+        self.actions = json_obj
