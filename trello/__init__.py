@@ -302,8 +302,11 @@ class Card(object):
         self.labels      = json_obj['labels']
         self.badges      = json_obj['badges']
 
-    def fetch_actions(self, action_filter):
-        """Fetch actions for this card"""
+    def fetch_actions(self, action_filter='createCard'):
+        """Fetch actions for this card
+           can give more argv to action_filter, split for ','
+           json_obj is list
+        """
         json_obj = self.client.fetch_json(
                        '/cards/'+self.id+'/actions',
                        query_params = {'filter': action_filter})
