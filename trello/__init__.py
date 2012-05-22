@@ -139,16 +139,16 @@ class Board(object):
 
 	def __init__(self, client, board_id, name=''):
 		"""Constructor.
-		
+
 		:trello: Reference to a Trello object
 		:board_id: ID for the board
 		"""
 		self.client = client
 		self.id = board_id
-        self.name = name
+		self.name = name
 
-    def __repr__(self):
-        return '<Board %s>' % self.name
+	def __repr__(self):
+		return '<Board %s>' % self.name
 
 	def fetch(self):
 		"""Fetch all attributes for this board"""
@@ -160,7 +160,7 @@ class Board(object):
 
 	def save(self):
 		pass
-		
+
 	def all_lists(self):
 		"""Returns all lists on this board"""
 		return self.get_lists('all')
@@ -186,30 +186,30 @@ class Board(object):
 
 		return lists
 
-    def all_cards(self):
-        """Returns all cards on this board"""
-        return self.get_cards('all')
+	def all_cards(self):
+		"""Returns all cards on this board"""
+		return self.get_cards('all')
 
-    def open_cards(self):
-        """Returns all open cards on this board"""
-        return self.get_cards('open')
+	def open_cards(self):
+		"""Returns all open cards on this board"""
+		return self.get_cards('open')
 
-    def closed_cards(self):
-        """Returns all closed cards on this board"""
-        return self.get_cards('closed')
+	def closed_cards(self):
+		"""Returns all closed cards on this board"""
+		return self.get_cards('closed')
 
-    def get_cards(self, card_filter):
-        # error checking
-        json_obj = self.client.fetch_json(
-                       '/boards/'+self.id+'/cards',
-                       query_params = {'filter': card_filter})
-        cards = list()
-        for obj in json_obj:
-            c = Card(self, obj['id'], name=obj['name'].encode('utf-8'))
-            c.closed = obj['closed']
-            cards.append(c)
+	def get_cards(self, card_filter):
+		# error checking
+		json_obj = self.client.fetch_json(
+				'/boards/'+self.id+'/cards',
+				query_params = {'filter': card_filter})
+		cards = list()
+		for obj in json_obj:
+			c = Card(self, obj['id'], name=obj['name'].encode('utf-8'))
+			c.closed = obj['closed']
+			cards.append(c)
 
-        return cards
+		return cards
 
 class List(object):
 	"""Class representing a Trello list. List attributes are stored on the object, but access to 
@@ -224,10 +224,10 @@ class List(object):
 		self.board = board
 		self.client = board.client
 		self.id = list_id
-        self.name = name
+		self.name = name
 
-    def __repr__(self):
-        return '<List %s>' % self.name
+	def __repr__(self):
+		return '<List %s>' % self.name
 
 	def fetch(self):
 		"""Fetch all attributes for this list"""
@@ -280,10 +280,10 @@ class Card(object):
 		self.trello_list = trello_list
 		self.client = trello_list.client
 		self.id = card_id
-        self.name = name
+		self.name = name
 
-    def __repr__(self):
-        return '<Card %s>' % self.name
+	def __repr__(self):
+		return '<Card %s>' % self.name
 
 	def fetch(self):
 		"""Fetch all attributes for this card"""
@@ -294,26 +294,28 @@ class Card(object):
 		self.description = json_obj.get('desc','')
 		self.closed = json_obj['closed']
 		self.url = json_obj['url']
-        self.member_ids = json_obj['idMembers']
-        self.short_id = json_obj['idShort']
-        self.list_id = json_obj['idList']
-        self.board_id = json_obj['idBoard']
-        self.attachments = json_obj['attachments']
-        self.labels = json_obj['labels']
-        self.badges = json_obj['badges']
+		self.member_ids = json_obj['idMembers']
+		self.short_id = json_obj['idShort']
+		self.list_id = json_obj['idList']
+		self.board_id = json_obj['idBoard']
+		self.attachments = json_obj['attachments']
+		self.labels = json_obj['labels']
+		self.badges = json_obj['badges']
 
-    def fetch_actions(self, action_filter='createCard'):
-        """Fetch actions for this card
-           can give more argv to action_filter, split for ','
-           json_obj is list
-        """
-        json_obj = self.client.fetch_json(
-                       '/cards/'+self.id+'/actions',
-                       query_params = {'filter': action_filter})
-        self.actions = json_obj
-    
-    @property
-    def create_date(self):
-        self.fetch_actions()
-        date_str = self.actions[0]['date'][:-5]
-        return datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S')
+	def fetch_actions(self, action_filter='createCard'):
+		"""
+		Fetch actions for this card can give more argv to action_filter, 
+		split for ',' json_obj is list
+		"""
+		json_obj = self.client.fetch_json(
+				'/cards/'+self.id+'/actions',
+				query_params = {'filter': action_filter})
+		self.actions = json_obj
+
+	@property
+	def create_date(self):
+		self.fetch_actions()
+		date_str = self.actions[0]['date'][:-5]
+		return datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S')
+
+# vim:noexpandtab
