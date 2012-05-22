@@ -93,7 +93,7 @@ class TrelloClient(object):
 		following noteworthy attributes:
 			- id: the board's identifier
 			- name: Name of the board
-			- desc: Description of the board
+			- desc: Description of the board (optional - may be missing from the returned JSON)
 			- closed: Boolean representing whether this board is closed or not
 			- url: URL to the board
 		"""
@@ -102,7 +102,7 @@ class TrelloClient(object):
 		for obj in json_obj:
 			board = Board(self, obj['id'])
 			board.name = obj['name']
-			board.description = obj['desc']
+			board.description = obj.get('desc','')
 			board.closed = obj['closed']
 			board.url = obj['url']
 			boards.append(board)
@@ -150,7 +150,7 @@ class Board(object):
 		"""Fetch all attributes for this board"""
 		json_obj = self.client.fetch_json('/boards/'+self.id)
 		self.name = json_obj['name']
-		self.description = json_obj['desc']
+		self.description = json_obj.get('desc','')
 		self.closed = json_obj['closed']
 		self.url = json_obj['url']
 
@@ -210,7 +210,7 @@ class List(object):
 		for c in json_obj:
 			card = Card(self, c['id'])
 			card.name = c['name']
-			card.description = c['desc']
+			card.description = c.get('desc','')
 			card.closed = c['closed']
 			card.url = c['url']
 			cards.append(card)
@@ -229,7 +229,7 @@ class List(object):
 				post_args = {'name': name, 'idList': self.id, 'desc': desc},)
 		card = Card(self, json_obj['id'])
 		card.name = json_obj['name']
-		card.description = json_obj['desc']
+		card.description = json_obj.get('desc','')
 		card.closed = json_obj['closed']
 		card.url = json_obj['url']
 		return card
@@ -256,6 +256,6 @@ class Card(object):
 				'/cards/'+self.id,
 				query_params = {'badges': False})
 		self.name = json_obj['name']
-		self.description = json_obj['desc']
+		self.description = json_obj.get('desc','')
 		self.closed = json_obj['closed']
 		self.url = json_obj['url']
