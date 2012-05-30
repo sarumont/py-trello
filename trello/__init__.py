@@ -317,4 +317,11 @@ class Card(object):
 		date_str = self.actions[0]['date'][:-5]
 		return datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S')
 
+	def assign(self, member_id):
+		json_obj = self.client.fetch_json(
+			'/cards/'+self.id+"/members",
+			http_method = 'POST',
+			headers = {'Content-type': 'application/json'},
+			query_params = {'value' : member_id})
+
 # vim:noexpandtab
