@@ -5,3 +5,5 @@ deploy.sh
 dist
 *pyc
 *swp
+.project
+.pydevproject
