@@ -19,6 +19,9 @@ class ResourceUnavailable(Exception):
 	def __str__(self):
 		return "Resource unavailable: %s" % (self._msg)
 
+class Unauthorized(ResourceUnavailable):
+	pass
+
 class TrelloClient(object):
 	""" Base class for Trello API access """
 
@@ -127,6 +130,8 @@ class TrelloClient(object):
 				body = json.dumps(post_args))
 
 		# error checking
+		if response.status == 401:
+			raise Unauthorized(url)
 		if response.status != 200:
 			raise ResourceUnavailable(url)
 		return json.loads(content)
