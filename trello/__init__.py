@@ -17,7 +17,7 @@ class ResourceUnavailable(Exception):
 		self._msg = msg
 
 	def __str__(self):
-		print "Resource unavailable: %s" % (self._msg, )
+		return "Resource unavailable: %s" % (self._msg)
 
 class TrelloClient(object):
 	""" Base class for Trello API access """
