@@ -12,12 +12,13 @@ import urlparse
 class ResourceUnavailable(Exception):
 	"""Exception representing a failed request to a resource"""
 
-	def __init__(self, msg):
+	def __init__(self, msg, http_response):
 		Exception.__init__(self)
 		self._msg = msg
+		self._status = http_response.status
 
 	def __str__(self):
-		return "Resource unavailable: %s" % (self._msg)
+		return "Resource unavailable: %s (HTTP status: %s)" % (self._msg, self._status)
 
 class Unauthorized(ResourceUnavailable):
 	pass
@@ -104,13 +105,22 @@ class TrelloClient(object):
 		json_obj = self.fetch_json('/members/me/boards/all')
 		boards = list()
 		for obj in json_obj:
-			board = Board(self, obj['id'], name = obj['name'].encode('utf-8'))
-			board.description = obj.get('desc','').encode('utf-8')
-			board.closed = obj['closed']
-			board.url = obj['url']
-			boards.append(board)
+			boards.append(self._board_from_json(obj))
 
 		return boards
+	
+	def get_board(self, board_id):
+		obj = self.fetch_json('/boards/' + board_id)
+		return self._board_from_json(obj)
+
+	def get_list(self, list_id):
+		obj = self.fetch_json('/lists/' + list_id)
+		list = List(self.get_board(obj['idBoard']), obj['id'], name=obj['name'].encode('utf-8'))
+		list.closed = obj['closed']
+		return list
+
+	def get_member(self, member_id):
+		return Member(self, member_id).fetch()
 
 	def fetch_json(
 			self,
@@ -133,8 +143,15 @@ class TrelloClient(object):
 		if response.status == 401:
 			raise Unauthorized(url)
 		if response.status != 200:
-			raise ResourceUnavailable(url)
+			raise ResourceUnavailable(url, response)
 		return json.loads(content)
+
+	def _board_from_json(self, json):
+		board = Board(self, json['id'], name = json['name'].encode('utf-8'))
+		board.description = json.get('desc','').encode('utf-8')
+		board.closed = json['closed']
+		board.url = json['url']
+		return board
 
 
 class Board(object):
@@ -191,6 +208,21 @@ class Board(object):
 
 		return lists
 
+	def add_list(self, name):
+		"""Add a card to this list
+
+		:name: name for the card
+		:return: the card
+		"""
+		obj = self.client.fetch_json(
+			'/lists',
+			http_method = 'POST',
+			headers = {'Content-type': 'application/json'},
+			post_args = {'name': name, 'idBoard': self.id},)
+		list = List(self, obj['id'], name=obj['name'].encode('utf-8'))
+		list.closed = obj['closed']
+		return list 
+
 	def all_cards(self):
 		"""Returns all cards on this board"""
 		return self.get_cards('all')
@@ -210,9 +242,10 @@ class Board(object):
 				query_params = {'filter': card_filter})
 		cards = list()
 		for obj in json_obj:
-			c = Card(self, obj['id'], name=obj['name'].encode('utf-8'))
-			c.closed = obj['closed']
-			cards.append(c)
+			card = Card(self, obj['id'], name=obj['name'].encode('utf-8'))
+			card.closed = obj['closed']
+			card.member_ids = obj['idMembers']
+			cards.append(card)
 
 		return cards
 
@@ -249,6 +282,7 @@ class List(object):
 			card.description = c.get('desc','').encode('utf-8')
 			card.closed = c['closed']
 			card.url = c['url']
+			card.member_ids = c['idMembers']
 			cards.append(card)
 		return cards
 
@@ -268,6 +302,7 @@ class List(object):
 		card.description = json_obj.get('desc','')
 		card.closed = json_obj['closed']
 		card.url = json_obj['url']
+		card.member_ids = json_obj['idMembers']
 		return card
 
 class Card(object):
@@ -322,11 +357,58 @@ class Card(object):
 		date_str = self.actions[0]['date'][:-5]
 		return datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S')
 
+	def set_description(self, description):
+		self._set_remote_attribute('desc', description)
+		self.description = description
+
+	def set_closed(self, closed):
+		self._set_remote_attribute('closed', closed)
+		self.closed = closed
+
+	def delete(self):
+		# Delete this card permanently
+		self.client.fetch_json(
+			'/cards/'+self.id,
+			http_method = 'DELETE',
+			headers = {'Content-type': 'application/json'},)
+
 	def assign(self, member_id):
 		self.client.fetch_json(
 			'/cards/'+self.id+'/members',
 			http_method = 'POST',
 			headers = {'Content-type': 'application/json'},
-			query_params = {'value' : member_id})
+			post_args = {'value' : member_id, })
+
+	def _set_remote_attribute(self, attribute, value):
+		self.client.fetch_json(
+			'/cards/'+self.id+'/'+attribute,
+			http_method = 'PUT',
+			headers = {'Content-type': 'application/json'},
+			post_args = {'value': value,},)
+
+class Member(object):
+	""" 
+	Class representing a Trello member.
+	"""
+
+	def __init__(self, client, member_id):
+		self.client = client
+		self.id = member_id
+
+	def __repr__(self):
+		return '<Member %s>' % self.id
+
+	def fetch(self):
+		"""Fetch all attributes for this card"""
+		json_obj = self.client.fetch_json(
+				'/members/'+self.id,
+				query_params = {'badges': False})
+		self.status = json_obj['status'].encode('utf-8')
+		self.bio = json_obj.get('bio','')
+		self.url = json_obj.get('url','')
+		self.username = json_obj['username'].encode('utf-8')
+		self.full_name = json_obj['fullName'].encode('utf-8')
+		self.initials = json_obj['initials'].encode('utf-8')
+		return self
 
 # vim:noexpandtab
