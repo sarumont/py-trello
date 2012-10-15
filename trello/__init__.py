@@ -131,6 +131,9 @@ class TrelloClient(object):
 			post_args = {}):
 		""" Fetch some JSON from Trello """
 
+		if http_method in ("POST", "PUT", "DELETE"):
+			headers['Content-type'] = 'application/json'
+
 		headers['Accept'] = 'application/json'
 		url = self.build_url(uri_path, query_params)
 		response, content = self.client.request(
@@ -217,7 +220,6 @@ class Board(object):
 		obj = self.client.fetch_json(
 			'/lists',
 			http_method = 'POST',
-			headers = {'Content-type': 'application/json'},
 			post_args = {'name': name, 'idBoard': self.id},)
 		list = List(self, obj['id'], name=obj['name'].encode('utf-8'))
 		list.closed = obj['closed']
@@ -295,7 +297,6 @@ class List(object):
 		json_obj = self.client.fetch_json(
 				'/lists/'+self.id+'/cards',
 				http_method = 'POST',
-				headers = {'Content-type': 'application/json'},
 				post_args = {'name': name, 'idList': self.id, 'desc': desc},)
 		card = Card(self, json_obj['id'])
 		card.name = json_obj['name']
@@ -369,21 +370,18 @@ class Card(object):
 		# Delete this card permanently
 		self.client.fetch_json(
 			'/cards/'+self.id,
-			http_method = 'DELETE',
-			headers = {'Content-type': 'application/json'},)
+			http_method = 'DELETE',)
 
 	def assign(self, member_id):
 		self.client.fetch_json(
 			'/cards/'+self.id+'/members',
 			http_method = 'POST',
-			headers = {'Content-type': 'application/json'},
 			post_args = {'value' : member_id, })
 
 	def _set_remote_attribute(self, attribute, value):
 		self.client.fetch_json(
 			'/cards/'+self.id+'/'+attribute,
 			http_method = 'PUT',
-			headers = {'Content-type': 'application/json'},
 			post_args = {'value': value,},)
 
 class Member(object):
