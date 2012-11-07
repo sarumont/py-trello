@@ -305,6 +305,16 @@ class List(object):
 		card.url = json_obj['url']
 		card.member_ids = json_obj['idMembers']
 		return card
+		
+	def fetch_actions(self, action_filter):
+		"""
+		Fetch actions for this list can give more argv to action_filter, 
+		split for ',' json_obj is list
+		"""
+		json_obj = self.client.fetch_json(
+				'/lists/'+self.id+'/actions',
+				query_params = {'filter': action_filter})
+		self.actions = json_obj
 
 class Card(object):
 	""" 
