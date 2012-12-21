@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
 	name = "py-trello",
-	version = "0.1.2",
+	version = "0.1.3",
 
 	description = 'Python wrapper around the Trello API',
 	long_description = open('README.rst').read(),
@@ -20,7 +20,7 @@ setup(
 		'Operating System :: OS Independent',
 		'Programming Language :: Python',
 	],
-	install_requires = ['httplib2', ],
+	install_requires = ['httplib2', 'oauth2',],
 	packages = find_packages(),
 	include_package_data = True,
 )
