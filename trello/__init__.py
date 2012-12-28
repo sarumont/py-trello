@@ -388,6 +388,12 @@ class Card(object):
 			http_method = 'POST',
 			post_args = {'value' : member_id, })
 
+	def change_list(self, list_id):
+		self.client.fetch_json(
+			'/cards/'+self.id+'/idList',
+			http_method = 'PUT',
+			post_args = {'value' : list_id, })
+
 	def _set_remote_attribute(self, attribute, value):
 		self.client.fetch_json(
 			'/cards/'+self.id+'/'+attribute,
