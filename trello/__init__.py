@@ -412,6 +412,7 @@ class Member(object):
 				'/members/'+self.id,
 				query_params = {'badges': False})
 		self.status = json_obj['status'].encode('utf-8')
+                self.id = json_obj.get('id','')
 		self.bio = json_obj.get('bio','')
 		self.url = json_obj.get('url','')
 		self.username = json_obj['username'].encode('utf-8')
