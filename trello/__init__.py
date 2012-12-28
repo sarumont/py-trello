@@ -388,6 +388,12 @@ class Card(object):
 			http_method = 'POST',
 			post_args = {'value' : member_id, })
 
+	def change_list(self, list_id):
+		self.client.fetch_json(
+			'/cards/'+self.id+'/idList',
+			http_method = 'PUT',
+			post_args = {'value' : list_id, })
+
 	def _set_remote_attribute(self, attribute, value):
 		self.client.fetch_json(
 			'/cards/'+self.id+'/'+attribute,
@@ -412,6 +418,7 @@ class Member(object):
 				'/members/'+self.id,
 				query_params = {'badges': False})
 		self.status = json_obj['status'].encode('utf-8')
+                self.id = json_obj.get('id','')
 		self.bio = json_obj.get('bio','')
 		self.url = json_obj.get('url','')
 		self.username = json_obj['username'].encode('utf-8')
