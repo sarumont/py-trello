@@ -351,6 +351,20 @@ class Card(object):
 		self.board_id = json_obj['idBoard']
 		self.labels = json_obj['labels']
 		self.badges = json_obj['badges']
+		self.checked = json_obj['checkItemStates']
+
+		self.checklists = []
+		if self.badges['checkItems'] > 0:
+			json_obj = self.client.fetch_json(
+					'/cards/'+self.id+'/checklists',)
+			for cl in json_obj:
+				self.checklists.append(Checklist(self.client, self.checked, cl))
+
+		self.comments = []
+		if self.badges['comments'] > 0:
+			self.comments = self.client.fetch_json(
+					'/cards/'+self.id+'/actions',
+					query_params = {'filter': 'commentCard'})
 
 	def fetch_actions(self, action_filter='createCard'):
 		"""
@@ -425,5 +439,23 @@ class Member(object):
 		self.full_name = json_obj['fullName'].encode('utf-8')
 		self.initials = json_obj['initials'].encode('utf-8')
 		return self
+
+class Checklist(object):
+	""" 
+	Class representing a Trello checklist.
+	"""
+
+	def __init__(self, client, checked, obj):
+		self.client = client
+		self.id = obj['id']
+		self.items = obj['checkItems']
+		for i in self.items:
+			i['checked'] = False
+			for cis in checked:
+				if cis['idCheckItem'] == i['id'] and cis['state'] == 'complete':
+					i['checked'] = True
+
+	def __repr__(self):
+		return '<Checklist %s>' % self.id
 
 # vim:noexpandtab
