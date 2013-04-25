@@ -408,6 +408,33 @@ class Card(object):
 			http_method = 'PUT',
 			post_args = {'value' : list_id, })
 
+	def add_checklist(self, title, items, itemstates=[]):
+		
+		"""Add a checklist to this card
+
+		:title: title of the checklist
+		:items: a list of the item names
+		:itemstates: a list of the state (True/False) of each item 
+		:return: the checklist
+		"""
+		json_obj = self.client.fetch_json(
+				'/cards/'+self.id+'/checklists',
+				http_method = 'POST',
+				post_args = {'name': title},)
+		
+		cl = Checklist(self.client, [], json_obj)
+		for i, name in enumerate(items):
+			checked = False
+			if i < len(itemstates):
+				checked = itemstates[i]
+			cl.add_checklist_item(name, checked)
+		
+		self.fetch()
+		for chklst in self.checklists:
+			if cl.id == chklst.id:
+				return chklst
+		return cl
+
 	def _set_remote_attribute(self, attribute, value):
 		self.client.fetch_json(
 			'/cards/'+self.id+'/'+attribute,
@@ -448,6 +475,7 @@ class Checklist(object):
 	def __init__(self, client, checked, obj):
 		self.client = client
 		self.id = obj['id']
+		self.name = obj['name']
 		self.items = obj['checkItems']
 		for i in self.items:
 			i['checked'] = False
@@ -455,6 +483,16 @@ class Checklist(object):
 				if cis['idCheckItem'] == i['id'] and cis['state'] == 'complete':
 					i['checked'] = True
 
+	def add_checklist_item(self, name, checked=False):
+		
+		json_obj = self.client.fetch_json(
+				'/checklists/'+self.id+'/checkItems',
+				http_method = 'POST',
+				post_args = {'name': name, 'checked': checked},)
+		
+	def set_checklist_item(self, name, checked=False):
+		pass
+	
 	def __repr__(self):
 		return '<Checklist %s>' % self.id
 
