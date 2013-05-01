@@ -351,6 +351,7 @@ class Card(object):
 		self.board_id = json_obj['idBoard']
 		self.labels = json_obj['labels']
 		self.badges = json_obj['badges']
+		self.due = json_obj['due']
 		self.checked = json_obj['checkItemStates']
 
 		self.checklists = []
@@ -385,6 +386,11 @@ class Card(object):
 	def set_description(self, description):
 		self._set_remote_attribute('desc', description)
 		self.description = description
+
+	def set_due(self, due):
+		datestr = "{}Z".format(due.isoformat())
+		self._set_remote_attribute('due', datestr)
+		self.due = datestr
 
 	def set_closed(self, closed):
 		self._set_remote_attribute('closed', closed)
