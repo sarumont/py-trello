@@ -359,7 +359,7 @@ class Card(object):
 			json_obj = self.client.fetch_json(
 					'/cards/'+self.id+'/checklists',)
 			for cl in json_obj:
-				self.checklists.append(Checklist(self.client, self.checked, cl))
+				self.checklists.append(Checklist(self.client, self.checked, cl, trello_card=self.id))
 
 		self.comments = []
 		if self.badges['comments'] > 0:
@@ -388,6 +388,11 @@ class Card(object):
 		self.description = description
 
 	def set_due(self, due):
+		"""Set the due time for the card
+
+		:title: due a datetime object
+		"""
+		
 		datestr = "{}Z".format(due.isoformat())
 		self._set_remote_attribute('due', datestr)
 		self.due = datestr
@@ -428,17 +433,13 @@ class Card(object):
 				http_method = 'POST',
 				post_args = {'name': title},)
 		
-		cl = Checklist(self.client, [], json_obj)
+		cl = Checklist(self.client, [], json_obj, trello_card=self.id)
 		for i, name in enumerate(items):
 			checked = False
 			if i < len(itemstates):
 				checked = itemstates[i]
 			cl.add_checklist_item(name, checked)
 		
-		self.fetch()
-		for chklst in self.checklists:
-			if cl.id == chklst.id:
-				return chklst
 		return cl
 
 	def _set_remote_attribute(self, attribute, value):
@@ -478,8 +479,9 @@ class Checklist(object):
 	Class representing a Trello checklist.
 	"""
 
-	def __init__(self, client, checked, obj):
+	def __init__(self, client, checked, obj, trello_card=None):
 		self.client = client
+		self.trello_card = trello_card
 		self.id = obj['id']
 		self.name = obj['name']
 		self.items = obj['checkItems']
@@ -490,14 +492,44 @@ class Checklist(object):
 					i['checked'] = True
 
 	def add_checklist_item(self, name, checked=False):
-		
+		"""Add a checklist item to this checklist
+
+		:name: name of the checklist item
+		:checked: True if item state should be checked, False otherwise
+		:return: the checklist item json object
+		"""
 		json_obj = self.client.fetch_json(
 				'/checklists/'+self.id+'/checkItems',
 				http_method = 'POST',
 				post_args = {'name': name, 'checked': checked},)
+		json_obj['checked'] = checked
+		self.items.append(json_obj)
+		return json_obj
 		
-	def set_checklist_item(self, name, checked=False):
-		pass
+	def set_checklist_item(self, name, checked):		
+		"""Set the state of an item on this checklist
+
+		:name: name of the checklist item
+		:checked: True if item state should be checked, False otherwise
+		"""
+
+		# Locate the id of the checklist item
+		try:
+			[id] = [i['id'] for i in self.items if i['name'] == name]
+		except ValueError:
+			return
+		 
+		json_obj = self.client.fetch_json(
+				'/cards/'+self.trello_card+\
+				'/checklist/'+self.id+\
+				'/checkItem/'+id,
+				http_method = 'PUT',
+				post_args = {'state': 'complete' if checked else 'incomplete'})
+		
+		[index] = [ix for ix,i in enumerate(self.items) if i['id'] == id]
+		json_obj['checked'] = checked
+		self.items[index] = json_obj 
+		return json_obj
 	
 	def __repr__(self):
 		return '<Checklist %s>' % self.id
