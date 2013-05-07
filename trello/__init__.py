@@ -441,6 +441,7 @@ class Card(object):
 				checked = False
 			cl.add_checklist_item(name, checked)
 		
+		self.fetch()
 		return cl
 
 	def _set_remote_attribute(self, attribute, value):
