@@ -523,7 +523,7 @@ class Checklist(object):
 		json_obj = self.client.fetch_json(
 				'/cards/'+self.trello_card+\
 				'/checklist/'+self.id+\
-				'/checkItem/'+id,
+				'/checkItem/'+self.items[ix]['id'],
 				http_method = 'PUT',
 				post_args = {'state': 'complete' if checked else 'incomplete'})
 		
