@@ -435,9 +435,10 @@ class Card(object):
 		
 		cl = Checklist(self.client, [], json_obj, trello_card=self.id)
 		for i, name in enumerate(items):
-			checked = False
-			if i < len(itemstates):
+			try:
 				checked = itemstates[i]
+			except IndexError:
+				checked = False
 			cl.add_checklist_item(name, checked)
 		
 		return cl
