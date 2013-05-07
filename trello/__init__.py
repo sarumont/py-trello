@@ -516,7 +516,7 @@ class Checklist(object):
 
 		# Locate the id of the checklist item
 		try:
-			[id] = [i['id'] for i in self.items if i['name'] == name]
+			[ix] = [i for i in range(len(self.items)) if self.items[i]['name'] == name]
 		except ValueError:
 			return
 		 
@@ -527,9 +527,8 @@ class Checklist(object):
 				http_method = 'PUT',
 				post_args = {'state': 'complete' if checked else 'incomplete'})
 		
-		[index] = [ix for ix,i in enumerate(self.items) if i['id'] == id]
 		json_obj['checked'] = checked
-		self.items[index] = json_obj 
+		self.items[ix] = json_obj 
 		return json_obj
 	
 	def __repr__(self):
