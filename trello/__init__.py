@@ -144,7 +144,7 @@ class TrelloClient(object):
 
 		# error checking
 		if response.status == 401:
-			raise Unauthorized(url)
+			raise Unauthorized(url, response)
 		if response.status != 200:
 			raise ResourceUnavailable(url, response)
 		return json.loads(content)
