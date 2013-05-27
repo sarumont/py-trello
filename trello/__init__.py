@@ -78,8 +78,8 @@ class TrelloClient(object):
 
 		if hasattr(self, 'oauth_token'):
 			url += '?'
-			url += "key="+self.oauth_token.key
-			url += "&token="+self.oauth_consumer.key
+			url += "key="+self.oauth_consumer.key
+			url += "&token="+self.oauth_token.key
 		else:
 			url += '?'
 			url += "key="+self.api_key
