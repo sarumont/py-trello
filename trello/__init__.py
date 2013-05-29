@@ -112,6 +112,13 @@ class TrelloClient(object):
 	def get_board(self, board_id):
 		obj = self.fetch_json('/boards/' + board_id)
 		return self._board_from_json(obj)
+		
+	def add_board(self, board_name):
+		obj = self.fetch_json('/boards', http_method = 'POST', post_args = {'name':board_name})
+		board = Board(self, obj['id'], name=obj['name'].encode('utf-8'))
+		board.closed = obj['closed']
+		return board 
+
 
 	def get_list(self, list_id):
 		obj = self.fetch_json('/lists/' + list_id)
@@ -185,6 +192,14 @@ class Board(object):
 
 	def save(self):
 		pass
+
+	def close(self):
+		self.client.fetch_json(
+			'/boards/'+self.id+'/closed',
+			http_method = 'PUT',
+			post_args = {'value': 'true',},)
+		self.closed = True
+
 
 	def all_lists(self):
 		"""Returns all lists on this board"""
@@ -419,6 +434,15 @@ class Card(object):
 			http_method = 'PUT',
 			post_args = {'value' : list_id, })
 
+	def change_board(self, board_id, list_id = None):
+		args = {'value' : board_id, }
+		if list_id is not None:
+			args['idList'] = list_id
+		self.client.fetch_json(
+			'/cards/'+self.id+'/idBoard',
+			http_method = 'PUT',
+			post_args = args)
+
 	def add_checklist(self, title, items, itemstates=[]):
 		
 		"""Add a checklist to this card
@@ -468,7 +492,7 @@ class Member(object):
 				'/members/'+self.id,
 				query_params = {'badges': False})
 		self.status = json_obj['status'].encode('utf-8')
-                self.id = json_obj.get('id','')
+		self.id = json_obj.get('id','')
 		self.bio = json_obj.get('bio','')
 		self.url = json_obj.get('url','')
 		self.username = json_obj['username'].encode('utf-8')
