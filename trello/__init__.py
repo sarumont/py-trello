@@ -265,6 +265,12 @@ class Board(object):
 			cards.append(card)
 
 		return cards
+		
+	def fetch_actions(self, action_filter):
+		json_obj = self.client.fetch_json(
+			'/boards/' + self.id + '/actions',
+			query_params = {'filter': action_filter})
+		self.actions = json_obj
 
 class List(object):
 	"""Class representing a Trello list. List attributes are stored on the object, but access to 
