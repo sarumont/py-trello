@@ -414,7 +414,7 @@ class Card(object):
 		:title: due a datetime object
 		"""
 		
-		datestr = "{}Z".format(due.isoformat())
+		datestr = due.strftime('%Y-%m-%d')
 		self._set_remote_attribute('due', datestr)
 		self.due = datestr
 
@@ -433,6 +433,13 @@ class Card(object):
 			'/cards/'+self.id+'/members',
 			http_method = 'POST',
 			post_args = {'value' : member_id, })
+
+	def comment(self, comment_text):
+	    """Add a comment to a card."""
+		self.client.fetch_json(
+			'/cards/'+self.id+'/actions/comments',
+			http_method = 'POST',
+			post_args = {'text' : comment_text, })
 
 	def change_list(self, list_id):
 		self.client.fetch_json(
