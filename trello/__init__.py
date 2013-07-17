@@ -26,7 +26,7 @@ class Unauthorized(ResourceUnavailable):
 class TrelloClient(object):
 	""" Base class for Trello API access """
 
-	def __init__(self, api_key, token, api_secret = None, token_secret = None):
+	def __init__(self, api_key, token = None, api_secret = None, token_secret = None):
 		"""
 		Constructor
 
@@ -40,8 +40,14 @@ class TrelloClient(object):
 			self.oauth_token = oauth.Token(key = token, secret = token_secret)
 			self.client = oauth.Client(self.oauth_consumer, self.oauth_token)
 
-		elif api_key and token:
+		elif api_key:
 			self.client = Http()
+			
+		if token is None:
+            		self.public_only = True
+        	else:
+	            	self.public_only = False
+
 
 		self.api_key = api_key
 		self.auth_token = token
@@ -83,7 +89,8 @@ class TrelloClient(object):
 		else:
 			url += '?'
 			url += "key="+self.api_key
-			url += "&token="+self.auth_token
+			if self.public_only is False:
+				url += "&token="+self.auth_token
 
 		if len(query) > 0:
 			url += '&'+urlencode(query)
