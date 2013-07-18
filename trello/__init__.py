@@ -3,7 +3,6 @@ from urllib import urlencode
 from datetime import datetime
 import exceptions
 import json
-import oauth2 as oauth
 import os
 import random
 import time
@@ -44,13 +43,22 @@ class TrelloClient(object):
 			self.client = Http()
 			
 		if token is None:
-            		self.public_only = True
-        	else:
-	            	self.public_only = False
+			self.public_only = True
+		else:
+			self.public_only = False
 
 
 		self.api_key = api_key
 		self.auth_token = token
+
+	def info_for_all_boards(self,actions):
+		if self.public_only:
+			return None
+		else:
+			json_obj = self.fetch_json(
+					'/members/me/boards/all',
+					query_params = {'actions': actions})
+			self.all_info = json_obj
 
 	def logout(self):
 		"""Log out of Trello. This method is idempotent."""
@@ -144,10 +152,8 @@ class TrelloClient(object):
 			query_params = {},
 			post_args = {}):
 		""" Fetch some JSON from Trello """
-
 		if http_method in ("POST", "PUT", "DELETE"):
 			headers['Content-type'] = 'application/json'
-
 		headers['Accept'] = 'application/json'
 		url = self.build_url(uri_path, query_params)
 		response, content = self.client.request(
@@ -442,7 +448,6 @@ class Card(object):
 			post_args = {'value' : member_id, })
 
 	def comment(self, comment_text):
-	    """Add a comment to a card."""
 		self.client.fetch_json(
 			'/cards/'+self.id+'/actions/comments',
 			http_method = 'POST',
