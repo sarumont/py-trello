@@ -52,6 +52,7 @@ class TrelloClient(object):
 		self.auth_token = token
 
 	def info_for_all_boards(self,actions):
+		"""Use this if you want to retrieve info for all your boards in one swoop"""
 		if self.public_only:
 			return None
 		else:
