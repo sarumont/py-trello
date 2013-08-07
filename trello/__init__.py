@@ -3,6 +3,7 @@ from urllib import urlencode
 from datetime import datetime
 import exceptions
 import json
+import oauth2 as oauth
 import os
 import random
 import time
@@ -41,11 +42,11 @@ class TrelloClient(object):
 
 		elif api_key:
 			self.client = Http()
-			
+
 		if token is None:
-			self.public_only = True
-		else:
-			self.public_only = False
+            		self.public_only = True
+        	else:
+	            	self.public_only = False
 
 
 		self.api_key = api_key
@@ -60,6 +61,7 @@ class TrelloClient(object):
 					'/members/me/boards/all',
 					query_params = {'actions': actions})
 			self.all_info = json_obj
+
 
 	def logout(self):
 		"""Log out of Trello. This method is idempotent."""
@@ -124,11 +126,11 @@ class TrelloClient(object):
 			boards.append(self._board_from_json(obj))
 
 		return boards
-	
+
 	def get_board(self, board_id):
 		obj = self.fetch_json('/boards/' + board_id)
 		return self._board_from_json(obj)
-		
+
 	def add_board(self, board_name):
 		obj = self.fetch_json('/boards', http_method = 'POST', post_args = {'name':board_name})
 		board = Board(self, obj['id'], name=obj['name'].encode('utf-8'))
@@ -153,8 +155,10 @@ class TrelloClient(object):
 			query_params = {},
 			post_args = {}):
 		""" Fetch some JSON from Trello """
+
 		if http_method in ("POST", "PUT", "DELETE"):
 			headers['Content-type'] = 'application/json'
+
 		headers['Accept'] = 'application/json'
 		url = self.build_url(uri_path, query_params)
 		response, content = self.client.request(
@@ -279,7 +283,7 @@ class Board(object):
 			cards.append(card)
 
 		return cards
-		
+
 	def fetch_actions(self, action_filter):
 		json_obj = self.client.fetch_json(
 			'/boards/' + self.id + '/actions',
@@ -340,7 +344,7 @@ class List(object):
 		card.url = json_obj['url']
 		card.member_ids = json_obj['idMembers']
 		return card
-		
+
 	def fetch_actions(self, action_filter):
 		"""
 		Fetch actions for this list can give more argv to action_filter, 
@@ -427,7 +431,7 @@ class Card(object):
 
 		:title: due a datetime object
 		"""
-		
+
 		datestr = due.strftime('%Y-%m-%d')
 		self._set_remote_attribute('due', datestr)
 		self.due = datestr
@@ -449,6 +453,7 @@ class Card(object):
 			post_args = {'value' : member_id, })
 
 	def comment(self, comment_text):
+	    """Add a comment to a card."""
 		self.client.fetch_json(
 			'/cards/'+self.id+'/actions/comments',
 			http_method = 'POST',
@@ -470,7 +475,7 @@ class Card(object):
 			post_args = args)
 
 	def add_checklist(self, title, items, itemstates=[]):
-		
+
 		"""Add a checklist to this card
 
 		:title: title of the checklist
@@ -482,7 +487,7 @@ class Card(object):
 				'/cards/'+self.id+'/checklists',
 				http_method = 'POST',
 				post_args = {'name': title},)
-		
+
 		cl = Checklist(self.client, [], json_obj, trello_card=self.id)
 		for i, name in enumerate(items):
 			try:
@@ -490,7 +495,7 @@ class Card(object):
 			except IndexError:
 				checked = False
 			cl.add_checklist_item(name, checked)
-		
+
 		self.fetch()
 		return cl
 
@@ -557,7 +562,7 @@ class Checklist(object):
 		json_obj['checked'] = checked
 		self.items.append(json_obj)
 		return json_obj
-		
+
 	def set_checklist_item(self, name, checked):		
 		"""Set the state of an item on this checklist
 
@@ -570,18 +575,18 @@ class Checklist(object):
 			[ix] = [i for i in range(len(self.items)) if self.items[i]['name'] == name]
 		except ValueError:
 			return
-		 
+
 		json_obj = self.client.fetch_json(
 				'/cards/'+self.trello_card+\
 				'/checklist/'+self.id+\
 				'/checkItem/'+self.items[ix]['id'],
 				http_method = 'PUT',
 				post_args = {'state': 'complete' if checked else 'incomplete'})
-		
+
 		json_obj['checked'] = checked
 		self.items[ix] = json_obj 
 		return json_obj
-	
+
 	def __repr__(self):
 		return '<Checklist %s>' % self.id
 
