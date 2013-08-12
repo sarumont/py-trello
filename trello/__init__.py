@@ -52,6 +52,16 @@ class TrelloClient(object):
 		self.api_key = api_key
 		self.auth_token = token
 
+	def info_for_all_boards(self,actions):
+		"""Use this if you want to retrieve info for all your boards in one swoop"""
+		if self.public_only:
+			return None
+		else:
+			json_obj = self.fetch_json(
+					'/members/me/boards/all',
+					query_params = {'actions': actions})
+			self.all_info = json_obj
+
 	def logout(self):
 		"""Log out of Trello. This method is idempotent."""
 
