@@ -452,7 +452,7 @@ class Card(object):
 			post_args = {'value' : member_id, })
 
 	def comment(self, comment_text):
-	    """Add a comment to a card."""
+		"""Add a comment to a card."""
 		self.client.fetch_json(
 			'/cards/'+self.id+'/actions/comments',
 			http_method = 'POST',
