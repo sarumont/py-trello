@@ -195,11 +195,10 @@ class TrelloClient(object):
 		else:
 			using_token = token if self.auth_token is None else self.auth_token
 			url = "/tokens/%s/webhooks" % using_token
-			return self._create_hooks_from_list(self.fetch_json(url), using_token)
+			return self._existing_hook_objs(self.fetch_json(url), using_token)
 			
-
-	def _create_hooks_from_list(self, hooks, token):
-		"""Given a list of hook dicts passed from list_hooks, creates the hook objs"""
+	def _existing_hook_objs(self, hooks, token):
+		"""Given a list of hook dicts passed from list_hooks, creates the hook objects"""
 		all_hooks = []
 		for hook in hooks:
 			new_hook = WebHook(self, token, hook['id'], hook['description'], hook['idModel'],
@@ -207,10 +206,9 @@ class TrelloClient(object):
 			all_hooks.append(new_hook)
 		return all_hooks
 
-
 	def create_hook(self, callback_url, id_model, desc=None, token=None):
 		"""
-		Creates a new webhook
+		Creates a new webhook. Returns the WebHook object created.
 
 		There seems to be some sort of bug that makes you unable to create a hook
 		using httplib2, so I'm using urllib2 for that instead.
@@ -225,44 +223,17 @@ class TrelloClient(object):
 			data = urlencode({'callbackURL': callback_url, 'idModel': id_model, 
 					"description": desc})
 
-			# TODO - Either find out how to manage with httplib2, or
-			# add in error checking here
+			# TODO - error checking for invalid responses
+			# Before spending too much time doing that with urllib2, might be worth trying
+			# and getting it working with urllib2 for consistency
 			req = urllib2.Request(url, data)
 			response = urllib2.urlopen(req)
 			
-			# TODO - if it succeeds, grab its hook id, and create a WebHook object out of this
 			if response.code == 200:
-				return True
+				hook_id = json.loads(response.read())['id']
+				return WebHook(self, using_token, hook_id, desc, id_model, callback_url, True)
 			else:
 				return False
-				
-
-
-			
-
-
-
-class WebHook(object):
-	"""Class representing a Trello webhook."""
-
-	def __init__(self, client, token, hook_id=None, desc=None, id_model=None, callback_url=None, active=False):
-		"""Basic placeholder before creating a better webhook class"""
-		self.id = hook_id
-		self.desc = desc
-		self.id_model = id_model
-		self.callback_url = callback_url
-		self.active = active
-		self.client = client
-		self.token = token
-
-	def create(self):
-		pass
-
-	def delete(self):
-		"""Removes this webhook from Trello"""
-		self.client.fetch_json(
-				'/webhooks/%s' % self.id,
-				http_method = 'DELETE')
 
 
 
@@ -673,5 +644,24 @@ class Checklist(object):
 	
 	def __repr__(self):
 		return '<Checklist %s>' % self.id
+
+class WebHook(object):
+	"""Class representing a Trello webhook."""
+
+	def __init__(self, client, token, hook_id=None, desc=None, id_model=None, callback_url=None, active=False):
+		self.id = hook_id
+		self.desc = desc
+		self.id_model = id_model
+		self.callback_url = callback_url
+		self.active = active
+		self.client = client
+		self.token = token
+
+	def delete(self):
+		"""Removes this webhook from Trello"""
+		self.client.fetch_json(
+				'/webhooks/%s' % self.id,
+				http_method = 'DELETE')
+
 
 # vim:noexpandtab
