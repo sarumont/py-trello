@@ -8,6 +8,7 @@ import os
 import random
 import time
 import urlparse
+import urllib2
 
 class ResourceUnavailable(Exception):
 	"""Exception representing a failed request to a resource"""
@@ -21,6 +22,9 @@ class ResourceUnavailable(Exception):
 		return "Resource unavailable: %s (HTTP status: %s)" % (self._msg, self._status)
 
 class Unauthorized(ResourceUnavailable):
+	pass
+
+class TokenError(Exception):
 	pass
 
 class TrelloClient(object):
@@ -179,6 +183,58 @@ class TrelloClient(object):
 		board.closed = json['closed']
 		board.url = json['url']
 		return board
+	
+	def list_hooks(self, token = None):
+		"""
+		Returns a list of all hooks associated with a specific token. If you don't pass in a token,
+		it tries to use the token associated with the TrelloClient object (if it exists)
+		"""
+
+		if token is None and self.auth_token is None:
+			raise TokenError("You need to pass an auth token in to list hooks.")
+		else:
+			using_token = token if self.auth_token is None else self.auth_token
+			url = "/tokens/%s/webhooks" % using_token
+			return self._existing_hook_objs(self.fetch_json(url), using_token)
+			
+	def _existing_hook_objs(self, hooks, token):
+		"""Given a list of hook dicts passed from list_hooks, creates the hook objects"""
+		all_hooks = []
+		for hook in hooks:
+			new_hook = WebHook(self, token, hook['id'], hook['description'], hook['idModel'],
+					hook['callbackURL'], hook['active'])
+			all_hooks.append(new_hook)
+		return all_hooks
+
+	def create_hook(self, callback_url, id_model, desc=None, token=None):
+		"""
+		Creates a new webhook. Returns the WebHook object created.
+
+		There seems to be some sort of bug that makes you unable to create a hook
+		using httplib2, so I'm using urllib2 for that instead.
+		
+		"""
+		
+		if token is None and self.auth_token is None:
+			raise TokenError("You n eed to pass an auth token in to create a hook.")
+		else:
+			using_token = token if self.auth_token is None else self.auth_token
+			url = "https://trello.com/1/tokens/%s/webhooks/?key=%s" % (using_token, self.api_key)
+			data = urlencode({'callbackURL': callback_url, 'idModel': id_model, 
+					"description": desc})
+
+			# TODO - error checking for invalid responses
+			# Before spending too much time doing that with urllib2, might be worth trying
+			# and getting it working with urllib2 for consistency
+			req = urllib2.Request(url, data)
+			response = urllib2.urlopen(req)
+			
+			if response.code == 200:
+				hook_id = json.loads(response.read())['id']
+				return WebHook(self, using_token, hook_id, desc, id_model, callback_url, True)
+			else:
+				return False
+
 
 
 class Board(object):
@@ -588,5 +644,24 @@ class Checklist(object):
 	
 	def __repr__(self):
 		return '<Checklist %s>' % self.id
+
+class WebHook(object):
+	"""Class representing a Trello webhook."""
+
+	def __init__(self, client, token, hook_id=None, desc=None, id_model=None, callback_url=None, active=False):
+		self.id = hook_id
+		self.desc = desc
+		self.id_model = id_model
+		self.callback_url = callback_url
+		self.active = active
+		self.client = client
+		self.token = token
+
+	def delete(self):
+		"""Removes this webhook from Trello"""
+		self.client.fetch_json(
+				'/webhooks/%s' % self.id,
+				http_method = 'DELETE')
+
 
 # vim:noexpandtab
