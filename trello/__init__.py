@@ -410,6 +410,12 @@ class List(object):
 				query_params = {'filter': action_filter})
 		self.actions = json_obj
 
+	def _set_remote_attribute(self, attribute, value):
+		self.client.fetch_json(
+			'/lists/'+self.id+'/'+attribute,
+			http_method = 'PUT',
+			post_args = {'value': value,},)
+
 class Card(object):
 	""" 
 	Class representing a Trello card. Card attributes are stored on 
