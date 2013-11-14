@@ -416,6 +416,13 @@ class List(object):
 			http_method = 'PUT',
 			post_args = {'value': value,},)
 
+	def close(self):
+		self.client.fetch_json(
+			'/lists/'+self.id+'/closed',
+			http_method = 'PUT',
+			post_args = {'value': 'true',},)
+		self.closed = True
+
 class Card(object):
 	""" 
 	Class representing a Trello card. Card attributes are stored on 
