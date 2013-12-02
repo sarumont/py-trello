@@ -300,10 +300,10 @@ class Board(object):
 		return lists
 
 	def add_list(self, name):
-		"""Add a card to this list
+		"""Add a list to this board
 
-		:name: name for the card
-		:return: the card
+		:name: name for the list
+		:return: the list
 		"""
 		obj = self.client.fetch_json(
 			'/lists',
