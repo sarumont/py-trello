@@ -1,12 +1,26 @@
+import os
+import urlparse
+
 import oauth2 as oauth
 
 
 def test_oauth():
+    """
+    Script to obtain an OAuth token from Trello.
+
+    Must have TRELLO_API_KEY and TRELLO_API_SECRET set in your environment
+    To set the token's expiration, set TRELLO_EXPIRATION as a string in your
+    environment settings (eg. 'never'), otherwise it will default to 30 days.
+    """
     request_token_url = 'https://trello.com/1/OAuthGetRequestToken'
     authorize_url = 'https://trello.com/1/OAuthAuthorizeToken'
     access_token_url = 'https://trello.com/1/OAuthGetAccessToken'
 
-    consumer = oauth.Consumer(consumer_key, consumer_secret)
+    expiration = os.environ.get('TRELLO_EXPIRATION', None)
+    trello_key = os.environ['TRELLO_API_KEY']
+    trello_secret = os.environ['TRELLO_API_SECRET']
+
+    consumer = oauth.Consumer(trello_key, trello_secret)
     client = oauth.Client(consumer)
 
     # Step 1: Get a request token. This is a temporary token that is used for
@@ -29,9 +43,11 @@ def test_oauth():
     # below.
 
     print "Go to the following link in your browser:"
-    print "%s?oauth_token=%s&scope=read,write,comment" % (
-    authorize_url, request_token['oauth_token'])
-    print
+    print "{authorize_url}?oauth_token={oauth_token}&scope=read,write&expiration={expiration}".format(
+        authorize_url=authorize_url,
+        oauth_token=request_token['oauth_token'],
+        expiration=expiration
+    )
 
     # After the user has granted access to you, the consumer, the provider will
     # redirect you to whatever URL you have told them to redirect to. You can
