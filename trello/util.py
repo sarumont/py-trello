@@ -4,13 +4,16 @@ import urlparse
 import oauth2 as oauth
 
 
-def test_oauth():
+def create_oauth_token():
     """
     Script to obtain an OAuth token from Trello.
 
     Must have TRELLO_API_KEY and TRELLO_API_SECRET set in your environment
     To set the token's expiration, set TRELLO_EXPIRATION as a string in your
     environment settings (eg. 'never'), otherwise it will default to 30 days.
+
+    More info on token scope here:
+        https://trello.com/docs/gettingstarted/#getting-a-token-from-a-user
     """
     request_token_url = 'https://trello.com/1/OAuthGetRequestToken'
     authorize_url = 'https://trello.com/1/OAuthAuthorizeToken'
@@ -76,3 +79,7 @@ def test_oauth():
     print
     print "You may now access protected resources using the access tokens above."
     print
+
+
+if __name__ == '__main__':
+    create_oauth_token()
