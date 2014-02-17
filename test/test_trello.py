@@ -5,16 +5,13 @@ import os
 class TrelloClientTestCase(unittest.TestCase):
 
 	"""
-	Tests for TrelloClient API. Note these test are in order to preserve dependencies, as an API 
+	Tests for TrelloClient API. Note these test are in order to preserve dependencies, as an API
 	integration cannot be tested independently.
 	"""
 
 	def setUp(self):
-		self._trello = TrelloClient(os.environ['TRELLO_API_KEY'], os.environ['TRELLO_TOKEN'])
-
-	def tearDown(self):	
-		#self._trello.logout()
-		pass
+		self._trello = TrelloClient(os.environ['TRELLO_API_KEY'],
+                                    token=os.environ['TRELLO_TOKEN'])
 
 	def test01_list_boards(self):
 		self.assertEquals(
@@ -62,7 +59,7 @@ class TrelloClientTestCase(unittest.TestCase):
 				self.assertIsNotNone(l.name, msg="name not provided")
 				self.assertIsNotNone(l.closed, msg="closed not provided")
 			break # only need to test one board's lists
-	
+
 	def test40_list_cards(self):
 		boards = self._trello.list_boards()
 		for b in boards:
