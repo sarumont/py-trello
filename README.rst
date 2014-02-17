@@ -18,10 +18,10 @@ Usage
     from trello import TrelloClient
 
     client = TrelloClient(
-        api_key='...',
-        api_secret='...',
-        token='...',
-        token_secret='...'
+        api_key='your-key',  
+        api_secret='your-secret',  
+        token='your-oauth-token-key',  
+        token_secret='your-oauth-token-secret'  
     )
 
 Where `token` and `token_secret` come from the 3-legged OAuth process and
@@ -31,12 +31,12 @@ Where `token` and `token_secret` come from the 3-legged OAuth process and
 Getting your Trello OAuth Token
 ===============================
 Make sure the following environment variables are set:
-    `TRELLO_API_KEY`
-    `TRELLO_API_SECRET`
+    `TRELLO_API_KEY`  
+    `TRELLO_API_SECRET`  
 
     These are obtained from the link mentioned above.
 
-`TRELLO_EXPIRATION` is optional. Set it to a string such as 'never' or '1day'.
+`TRELLO_EXPIRATION` is optional. Set it to a string such as 'never' or '1day'.  
 Trello's default OAuth Token expiration is 30 days.
 
 Default permissions are read/write.
@@ -45,7 +45,7 @@ More info on setting the expiration here:
     https://trello.com/docs/gettingstarted/#getting-a-token-from-a-user
 
 Run
-    python ./trello/util.py
+    `python ./trello/util.py`
 
 Required Python modules
 =======================
@@ -55,9 +55,9 @@ Tests
 =====
 To run the tests, run `python tests.py`. Three environment variables must be set:
 
-* TRELLO_API_KEY: your Trello API key
-* TRELLO_TOKEN: your Trello OAuth token
-* TRELLO_TEST_BOARD_COUNT: the number of boards in your Trello account
+* TRELLO_API_KEY: your Trello API key  
+* TRELLO_TOKEN: your Trello OAuth token  
+* TRELLO_TEST_BOARD_COUNT: the number of boards in your Trello account  
 * TRELLO_TEST_BOARD_NAME: name of the board to test card manipulation on. Must be unique, or the first match will be used
 
 And run (from `py-trello/`):
