@@ -31,10 +31,11 @@ Where `token` and `token_secret` come from the 3-legged OAuth process and
 Getting your Trello OAuth Token
 ===============================
 Make sure the following environment variables are set:
+
 * `TRELLO_API_KEY`  
 * `TRELLO_API_SECRET`  
 
-    These are obtained from the link mentioned above.
+These are obtained from the link mentioned above.
 
 `TRELLO_EXPIRATION` is optional. Set it to a string such as 'never' or '1day'.  
 Trello's default OAuth Token expiration is 30 days.
@@ -42,7 +43,7 @@ Trello's default OAuth Token expiration is 30 days.
 Default permissions are read/write.
 
 More info on setting the expiration here:
-    https://trello.com/docs/gettingstarted/#getting-a-token-from-a-user
+https://trello.com/docs/gettingstarted/#getting-a-token-from-a-user
 
 Run
     `python ./trello/util.py`
