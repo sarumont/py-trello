@@ -31,8 +31,8 @@ Where `token` and `token_secret` come from the 3-legged OAuth process and
 Getting your Trello OAuth Token
 ===============================
 Make sure the following environment variables are set:
-    `TRELLO_API_KEY`  
-    `TRELLO_API_SECRET`  
+* `TRELLO_API_KEY`  
+* `TRELLO_API_SECRET`  
 
     These are obtained from the link mentioned above.
 
@@ -67,5 +67,5 @@ And run (from `py-trello/`):
 Contributors
 ============
 
-`Adrien Lemaire <https://github.com/Fandekasp>`_
-`Kyle Valade <https://github.com/kdazzle>`_
+* `Adrien Lemaire <https://github.com/Fandekasp>`_
+* `Kyle Valade <https://github.com/kdazzle>`_
