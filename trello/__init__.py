@@ -734,3 +734,5 @@ class WebHook(object):
         self.client.fetch_json(
             '/webhooks/%s' % self.id,
             http_method='DELETE')
+
+# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
