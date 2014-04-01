@@ -183,6 +183,8 @@ class TrelloClient(object):
             raise Unauthorized(url, response)
         if response.status != 200:
             raise ResourceUnavailable(url, response)
+        # XXX: httplib2 doesn't support decoding. Consider using requests:
+        content = content.decode('UTF-8')
         return json.loads(content)
 
     def _board_from_json(self, json):
