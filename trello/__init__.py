@@ -1,7 +1,10 @@
 from httplib2 import Http
 from datetime import datetime
 import json
-import oauth2 as oauth
+try:
+    import oauth2 as oauth
+except ImportError:
+    oauth = None
 
 try:
     from urllib import urlencode
@@ -42,6 +45,8 @@ class TrelloClient(object):
         """
 
         if api_key and api_secret and token and token_secret:
+            if not oauth:
+                raise RuntimeError('Requested oauth, but oauth2 module not available.')
             # oauth
             self.oauth_consumer = oauth.Consumer(key = api_key, secret = api_secret)
             self.oauth_token = oauth.Token(key = token, secret = token_secret)
