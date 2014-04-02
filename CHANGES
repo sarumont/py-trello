@@ -1,3 +1,7 @@
+unreleased
+
+- Python 3 compatilbilty for non-oauth authentication.
+
 v0.1.2
 More distribution tweaks
 
