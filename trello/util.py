@@ -20,6 +20,7 @@ def create_oauth_token():
     access_token_url = 'https://trello.com/1/OAuthGetAccessToken'
 
     expiration = os.environ.get('TRELLO_EXPIRATION', None)
+    scope = os.environ.get('TRELLO_SCOPE', 'read,write')
     trello_key = os.environ['TRELLO_API_KEY']
     trello_secret = os.environ['TRELLO_API_SECRET']
 
@@ -46,10 +47,11 @@ def create_oauth_token():
     # below.
 
     print "Go to the following link in your browser:"
-    print "{authorize_url}?oauth_token={oauth_token}&scope=read,write&expiration={expiration}".format(
+    print "{authorize_url}?oauth_token={oauth_token}&scope={scope}&expiration={expiration}".format(
         authorize_url=authorize_url,
         oauth_token=request_token['oauth_token'],
-        expiration=expiration
+        expiration=expiration,
+        scope=scope,
     )
 
     # After the user has granted access to you, the consumer, the provider will
