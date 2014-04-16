@@ -1,8 +1,22 @@
-v0.1.2
-More distribution tweaks
+v0.1.0
+Initial release
 
 v0.1.1
 Tweak distribution crap to be more Pythonic
 
-v0.1.0
-Initial release
+v0.1.2
+More distribution tweaks
+
+v0.1.5
+Require a version of httplib2 that includes the DigiCert root certs.
+Add TRELLO_SCOPE to env. variable to util.py
+add vim modelines to confirm with the broken PEP-8
+Update README
+Update README
+Update readme
+Updated the readme; updated TrelloClient argument changes in the test file
+Changed name of util.test_oauth to create_oauth_token; can run the script from command line
+Changed order of arguments for TrelloClient constructor; changed arguments for Board.get_cards; open_cards, closed_cards, etc return all card fields by default (to reduce api calls); update comments
+Added requirements.txt
+oauth script works; add option for expiration
+Code reformatting - changed tabs to whitespaces.
