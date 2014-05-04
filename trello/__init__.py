@@ -409,10 +409,10 @@ class List(object):
         cards = list()
         for c in json_obj:
             card = Card(self, c['id'], name=c['name'].encode('utf-8'))
-            card.description = c.get('desc', '').encode('utf-8')
+            card.desc = c.get('desc', '').encode('utf-8')
             card.closed = c['closed']
             card.url = c['url']
-            card.member_ids = c['idMembers']
+            card.idMembers = c['idMembers']
             cards.append(card)
         return cards
 
@@ -428,10 +428,10 @@ class List(object):
             post_args={'name': name, 'idList': self.id, 'desc': desc}, )
         card = Card(self, json_obj['id'])
         card.name = json_obj['name']
-        card.description = json_obj.get('desc', '')
+        card.desc = json_obj.get('desc', '')
         card.closed = json_obj['closed']
         card.url = json_obj['url']
-        card.member_ids = json_obj['idMembers']
+        card.idMembers = json_obj['idMembers']
         return card
 
     def fetch_actions(self, action_filter):
@@ -503,13 +503,13 @@ class Card(object):
             '/cards/' + self.id,
             query_params={'badges': False})
         self.name = json_obj['name'].encode('utf-8')
-        self.description = json_obj.get('desc', '')
+        self.desc = json_obj.get('desc', '')
         self.closed = json_obj['closed']
         self.url = json_obj['url']
-        self.member_ids = json_obj['idMembers']
-        self.short_id = json_obj['idShort']
-        self.list_id = json_obj['idList']
-        self.board_id = json_obj['idBoard']
+        self.idMembers = json_obj['idMembers']
+        self.idShort = json_obj['idShort']
+        self.idList = json_obj['idList']
+        self.idBoard = json_obj['idBoard']
         self.labels = json_obj['labels']
         self.badges = json_obj['badges']
         self.due = json_obj['due']
@@ -547,7 +547,7 @@ class Card(object):
 
     def set_description(self, description):
         self._set_remote_attribute('desc', description)
-        self.description = description
+        self.desc = description
 
     def set_due(self, due):
         """Set the due time for the card
