@@ -1,6 +1,7 @@
-from httplib2 import Http
 from datetime import datetime
 import json
+import requests
+
 try:
     import oauth2 as oauth
 except ImportError:
@@ -53,7 +54,7 @@ class TrelloClient(object):
             self.client = oauth.Client(self.oauth_consumer, self.oauth_token)
 
         elif api_key:
-            self.client = Http()
+            self.client = requests.session()
 
         if token is None:
             self.public_only = True
@@ -172,20 +173,17 @@ class TrelloClient(object):
 
         headers['Accept'] = 'application/json'
         url = self.build_url(uri_path, query_params)
-        response, content = self.client.request(
-                url,
-                http_method,
-                headers = headers,
-                body = json.dumps(post_args))
+        response = self.client.request(
+            http_method, url,
+            headers=headers,
+            data=json.dumps(post_args))
 
         # error checking
-        if response.status == 401:
+        if response.status_code == 401:
             raise Unauthorized(url, response)
-        if response.status != 200:
+        if response.status_code != 200:
             raise ResourceUnavailable(url, response)
-        # XXX: httplib2 doesn't support decoding. Consider using requests:
-        content = content.decode('UTF-8')
-        return json.loads(content)
+        return response.json()
 
     def _board_from_json(self, json):
         board = Board(self, json['id'], name = json['name'].encode('utf-8'))
