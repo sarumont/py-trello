@@ -519,7 +519,8 @@ class Card(object):
         self.idBoard = json_obj['idBoard']
         self.labels = json_obj['labels']
         self.badges = json_obj['badges']
-        self.due = json_obj['due']
+        # For consistency, due date is in YYYY-MM-DD format
+        self.due = json_obj.get('due', '')[:10]
         self.checked = json_obj['checkItemStates']
 
         self.checklists = []
