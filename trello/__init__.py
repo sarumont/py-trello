@@ -712,6 +712,29 @@ class Checklist(object):
         self.items[ix] = json_obj
         return json_obj
 
+    def rename_checklist_item(self, name, new_name):
+        """Rename the item on this checklist
+
+        :name: name of the checklist item
+        :new_name: new name of item
+        """
+
+        # Locate the id of the checklist item
+        try:
+            [ix] = [i for i in range(len(self.items)) if self.items[i]['name'] == name]
+        except ValueError:
+            return
+         
+        json_obj = self.client.fetch_json(
+                '/cards/'+self.trello_card+\
+                '/checklist/'+self.id+\
+                '/checkItem/'+self.items[ix]['id'],
+                http_method = 'PUT',
+                post_args = {'name' : new_name})
+        
+        self.items[ix] = json_obj 
+        return json_obj
+
     def __repr__(self):
         return '<Checklist %s>' % self.id
 
