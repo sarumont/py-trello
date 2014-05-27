@@ -159,7 +159,7 @@ class TrelloClient(object):
         """ Fetch some JSON from Trello """
 
         if http_method in ("POST", "PUT", "DELETE"):
-            headers['Content-type'] = 'application/json'
+            headers['Content-Type'] = 'application/json'
 
         headers['Accept'] = 'application/json'
         url = self.build_url(uri_path, query_params)
