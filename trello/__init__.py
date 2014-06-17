@@ -484,6 +484,10 @@ class Card(object):
     def description(self):
         return self.desc
 
+    @description.setter
+    def description(self, value):
+        self.desc = value
+
     def __init__(self, trello_list, card_id, name=''):
         """
         :trello_list: reference to the parent list
