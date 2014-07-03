@@ -136,6 +136,14 @@ class TrelloClientTestCase(unittest.TestCase):
         cards = board.get_cards()
         self.assertEqual(len(cards), 2, msg="Unexpected number of cards in testboard")
 
+        for card in cards:
+            if card.name == 'Testing from Python':
+                self.assertEqual(card.description, 'Description goes here')
+            elif card.name == 'Testing from Python - no desc':
+                self.assertEqual(card.description, '')
+            else:
+                self.fail(msg='Unexpected card found')
+
 
     def test60_delete_cards(self):
         boards = [board for board in self._trello.list_boards() if board.name == os.environ['TRELLO_TEST_BOARD_NAME']]
