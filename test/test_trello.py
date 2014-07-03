@@ -86,7 +86,7 @@ class TrelloClientTestCase(unittest.TestCase):
 					name = "Testing from Python - no desc"
 					card = l.add_card(name)
 				except Exception as e:
-					print str(e)
+					print(str(e))
 					self.fail("Caught Exception adding card")
 
 				self.assertIsNotNone(card, msg="card is None")
@@ -112,7 +112,7 @@ class TrelloClientTestCase(unittest.TestCase):
 					description = "Description goes here"
 					card = l.add_card(name, description)
 				except Exception as e:
-					print str(e)
+					print(str(e))
 					self.fail("Caught Exception adding card")
 
 				self.assertIsNotNone(card, msg="card is None")

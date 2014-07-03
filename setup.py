@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from setuptools import setup, find_packages
+import sys
 
 setup(
         name = "py-trello",
@@ -20,7 +21,7 @@ setup(
             'Operating System :: OS Independent',
             'Programming Language :: Python',
             ],
-        install_requires = ['httplib2 >= 0.9', 'oauth2',],
+        install_requires = ["requests", "requests-oauthlib >= 0.4.1",],
         packages = find_packages(),
         include_package_data = True,
         )       

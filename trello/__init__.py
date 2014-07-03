@@ -1,14 +1,7 @@
-from httplib2 import Http
-from urllib import urlencode
 from datetime import datetime
-import exceptions
 import json
-import oauth2 as oauth
-import os
-import random
-import time
-import urlparse
-import urllib2
+import requests
+from requests_oauthlib import OAuth1
 
 
 class ResourceUnavailable(Exception):
@@ -17,10 +10,10 @@ class ResourceUnavailable(Exception):
     def __init__(self, msg, http_response):
         Exception.__init__(self)
         self._msg = msg
-        self._status = http_response.status
+        self._status = http_response.status_code
 
     def __str__(self):
-        return "Resource unavailable: %s (HTTP status: %s)" % (
+        return "%s (HTTP status: %s)" % (
         self._msg, self._status)
 
 
@@ -46,22 +39,18 @@ class TrelloClient(object):
         :token_secret: the OAuth client secret for the given OAuth token
         """
 
-        if api_key and api_secret and token and token_secret:
-            # oauth
-            self.oauth_consumer = oauth.Consumer(key=api_key, secret=api_secret)
-            self.oauth_token = oauth.Token(key=token, secret=token_secret)
-            self.client = oauth.Client(self.oauth_consumer, self.oauth_token)
-
-        elif api_key:
-            self.client = Http()
-
-        if token is None:
-            self.public_only = True
+        # client key and secret for oauth1 session
+        if api_key or token:
+            self.oauth = OAuth1(client_key=api_key, client_secret=api_secret,
+                                resource_owner_key=token, resource_owner_secret=token_secret)
         else:
-            self.public_only = False
+            self.oauth = None
 
+        self.public_only = token is None
         self.api_key = api_key
-        self.auth_token = token
+        self.api_secret = api_secret
+        self.resource_owner_key = token
+        self.resource_owner_secret = token_secret
 
     def info_for_all_boards(self, actions):
         """
@@ -80,33 +69,6 @@ class TrelloClient(object):
         #TODO: This function.
 
         raise NotImplementedError()
-
-    def build_url(self, path, query={}):
-        """
-        Builds a Trello URL.
-
-        :path: URL path
-        :params: dict of key-value pairs for the query string
-        """
-        url = 'https://api.trello.com/1'
-        if path[0:1] != '/':
-            url += '/'
-        url += path
-
-        if hasattr(self, 'oauth_token'):
-            url += '?'
-            url += "key=" + self.oauth_consumer.key
-            url += "&token=" + self.oauth_token.key
-        else:
-            url += '?'
-            url += "key=" + self.api_key
-            if self.public_only is False:
-                url += "&token=" + self.auth_token
-
-        if len(query) > 0:
-            url += '&' + urlencode(query)
-
-        return url
 
     def list_boards(self):
         """
@@ -135,14 +97,14 @@ class TrelloClient(object):
     def add_board(self, board_name):
         obj = self.fetch_json('/boards', http_method='POST',
                               post_args={'name': board_name})
-        board = Board(self, obj['id'], name=obj['name'].encode('utf-8'))
+        board = Board(self, obj['id'], name=obj['name'])
         board.closed = obj['closed']
         return board
 
     def get_list(self, list_id):
         obj = self.fetch_json('/lists/' + list_id)
         list = List(self.get_board(obj['idBoard']), obj['id'],
-                    name=obj['name'].encode('utf-8'))
+                    name=obj['name'])
         list.closed = obj['closed']
         return list
 
@@ -153,32 +115,43 @@ class TrelloClient(object):
             self,
             uri_path,
             http_method='GET',
-            headers={},
-            query_params={},
-            post_args={}):
+            headers=None,
+            query_params=None,
+            post_args=None):
         """ Fetch some JSON from Trello """
 
+        # explicit values here to avoid mutable default values
+        if headers is None:
+            headers = {}
+        if query_params is None:
+            query_params = {}
+        if post_args is None:
+            post_args = {}
+
+        # set content type and accept headers to handle JSON
         if http_method in ("POST", "PUT", "DELETE"):
-            headers['Content-Type'] = 'application/json'
-
+            headers['Content-Type'] = 'application/json; charset=utf-8'
         headers['Accept'] = 'application/json'
-        url = self.build_url(uri_path, query_params)
-        response, content = self.client.request(
-            url,
-            http_method,
-            headers=headers,
-            body=json.dumps(post_args))
 
-        # error checking
-        if response.status == 401:
-            raise Unauthorized(url, response)
-        if response.status != 200:
-            raise ResourceUnavailable(url, response)
-        return json.loads(content)
+        # construct the full URL without query parameters
+        if uri_path[0] == '/':
+            uri_path = uri_path[1:]
+        url = 'https://api.trello.com/1/%s' % uri_path
+
+        # perform the HTTP requests, if possible uses OAuth authentication
+        response = requests.request(http_method, url, params=query_params,
+                                    headers=headers, data=json.dumps(post_args), auth=self.oauth)
+
+        if response.status_code == 401:
+            raise Unauthorized("%s at %s" % (response.text, url), response)
+        if response.status_code != 200:
+            raise ResourceUnavailable("%s at %s" % (response.text, url), response)
+
+        return response.json()
 
     def _board_from_json(self, json):
-        board = Board(self, json['id'], name=json['name'].encode('utf-8'))
-        board.description = json.get('desc', '').encode('utf-8')
+        board = Board(self, json['id'], name=json['name'])
+        board.description = json.get('desc', '')
         board.closed = json['closed']
         board.url = json['url']
         return board
@@ -188,13 +161,13 @@ class TrelloClient(object):
         Returns a list of all hooks associated with a specific token. If you don't pass in a token,
         it tries to use the token associated with the TrelloClient object (if it exists)
         """
+        token = token or self.resource_owner_key
 
-        if token is None and self.auth_token is None:
+        if token is None:
             raise TokenError("You need to pass an auth token in to list hooks.")
         else:
-            using_token = token if self.auth_token is None else self.auth_token
-            url = "/tokens/%s/webhooks" % using_token
-            return self._existing_hook_objs(self.fetch_json(url), using_token)
+            url = "/tokens/%s/webhooks" % token
+            return self._existing_hook_objs(self.fetch_json(url), token)
 
     def _existing_hook_objs(self, hooks, token):
         """
@@ -216,29 +189,22 @@ class TrelloClient(object):
         There seems to be some sort of bug that makes you unable to create a
         hook using httplib2, so I'm using urllib2 for that instead.
         """
+        token = token or self.resource_owner_key
 
-        if token is None and self.auth_token is None:
-            raise TokenError(
-                "You need to pass an auth token in to create a hook.")
+        if token is None:
+            raise TokenError("You need to pass an auth token in to create a hook.")
+
+        url = "https://trello.com/1/tokens/%s/webhooks/" % token
+        data = {'callbackURL': callback_url, 'idModel': id_model,
+                'description': desc}
+
+        response = requests.post(url, data=data, auth=self.oauth)
+
+        if response.status_code == 200:
+            hook_id = response.json()['id']
+            return WebHook(self, token, hook_id, desc, id_model, callback_url, True)
         else:
-            using_token = token if self.auth_token is None else self.auth_token
-            url = "https://trello.com/1/tokens/%s/webhooks/?key=%s" % (
-            using_token, self.api_key)
-            data = urlencode({'callbackURL': callback_url, 'idModel': id_model,
-                              "description": desc})
-
-            # TODO - error checking for invalid responses
-            # Before spending too much time doing that with urllib2, might be worth trying
-            # and getting it working with urllib2 for consistency
-            req = urllib2.Request(url, data)
-            response = urllib2.urlopen(req)
-
-            if response.code == 200:
-                hook_id = json.loads(response.read())['id']
-                return WebHook(self, using_token, hook_id, desc, id_model,
-                               callback_url, True)
-            else:
-                return False
+            return False
 
 
 class Board(object):
@@ -263,7 +229,7 @@ class Board(object):
     def fetch(self):
         """Fetch all attributes for this board"""
         json_obj = self.client.fetch_json('/boards/' + self.id)
-        self.name = json_obj['name'].encode('utf-8')
+        self.name = json_obj['name']
         self.description = json_obj.get('desc', '')
         self.closed = json_obj['closed']
         self.url = json_obj['url']
@@ -298,7 +264,7 @@ class Board(object):
             query_params={'cards': 'none', 'filter': list_filter})
         lists = list()
         for obj in json_obj:
-            l = List(self, obj['id'], name=obj['name'].encode('utf-8'))
+            l = List(self, obj['id'], name=obj['name'])
             l.closed = obj['closed']
             lists.append(l)
 
@@ -314,7 +280,7 @@ class Board(object):
             '/lists',
             http_method='POST',
             post_args={'name': name, 'idBoard': self.id}, )
-        list = List(self, obj['id'], name=obj['name'].encode('utf-8'))
+        list = List(self, obj['id'], name=obj['name'])
         list.closed = obj['closed']
         return list
 
@@ -358,9 +324,9 @@ class Board(object):
         cards = list()
         for card_json in json_obj:
             card = Card(self, card_json['id'],
-                        name=card_json['name'].encode('utf-8'))
+                        name=card_json['name'])
 
-            for card_key, card_val in card_json.iteritems():
+            for card_key, card_val in card_json.items():
                 if card_key in ['id', 'name']:
                     continue
 
@@ -400,7 +366,7 @@ class List(object):
     def fetch(self):
         """Fetch all attributes for this list"""
         json_obj = self.client.fetch_json('/lists/' + self.id)
-        self.name = json_obj['name'].encode('utf-8')
+        self.name = json_obj['name']
         self.closed = json_obj['closed']
 
     def list_cards(self):
@@ -408,8 +374,8 @@ class List(object):
         json_obj = self.client.fetch_json('/lists/' + self.id + '/cards')
         cards = list()
         for c in json_obj:
-            card = Card(self, c['id'], name=c['name'].encode('utf-8'))
-            card.description = c.get('desc', '').encode('utf-8')
+            card = Card(self, c['id'], name=c['name'])
+            card.description = c.get('desc', '')
             card.closed = c['closed']
             card.url = c['url']
             card.member_ids = c['idMembers']
@@ -506,14 +472,14 @@ class Card(object):
         json_obj = self.client.fetch_json(
             '/cards/' + self.id,
             query_params={'badges': False})
-        self.name = json_obj['name'].encode('utf-8')
+        self.name = json_obj['name']
         self.description = json_obj.get('desc', '')
         self.closed = json_obj['closed']
         self.url = json_obj['url']
-        self.member_ids = json_obj['idMembers']
-        self.short_id = json_obj['idShort']
-        self.list_id = json_obj['idList']
-        self.board_id = json_obj['idBoard']
+        self.idMembers = json_obj['idMembers']
+        self.idShort = json_obj['idShort']
+        self.idList = json_obj['idList']
+        self.idBoard = json_obj['idBoard']
         self.labels = json_obj['labels']
         self.badges = json_obj['badges']
         self.due = json_obj['due']
@@ -600,7 +566,7 @@ class Card(object):
             http_method='PUT',
             post_args=args)
 
-    def add_checklist(self, title, items, itemstates=[]):
+    def add_checklist(self, title, items, itemstates=None):
 
         """Add a checklist to this card
 
@@ -609,6 +575,9 @@ class Card(object):
         :itemstates: a list of the state (True/False) of each item
         :return: the checklist
         """
+        if itemstates is None:
+            itemstates = []
+
         json_obj = self.client.fetch_json(
             '/cards/' + self.id + '/checklists',
             http_method='POST',
@@ -649,13 +618,13 @@ class Member(object):
         json_obj = self.client.fetch_json(
             '/members/' + self.id,
             query_params={'badges': False})
-        self.status = json_obj['status'].encode('utf-8')
+        self.status = json_obj['status']
         self.id = json_obj.get('id', '')
         self.bio = json_obj.get('bio', '')
         self.url = json_obj.get('url', '')
-        self.username = json_obj['username'].encode('utf-8')
-        self.full_name = json_obj['fullName'].encode('utf-8')
-        self.initials = json_obj['initials'].encode('utf-8')
+        self.username = json_obj['username']
+        self.full_name = json_obj['fullName']
+        self.initials = json_obj['initials']
         return self
 
 
