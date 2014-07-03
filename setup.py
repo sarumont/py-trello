@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
 from setuptools import setup, find_packages
-import sys
 
 setup(
         name = "py-trello",
-        version = "0.1.5",
+        version = "0.2.0",
 
         description = 'Python wrapper around the Trello API',
         long_description = open('README.rst').read(),
@@ -20,6 +19,10 @@ setup(
             'License :: OSI Approved :: BSD License',
             'Operating System :: OS Independent',
             'Programming Language :: Python',
+            'Programming Language :: Python 2',
+            'Programming Language :: Python 2.7',
+            'Programming Language :: Python 3',
+            'Programming Language :: Python 3.3',
             ],
         install_requires = ["requests", "requests-oauthlib >= 0.4.1",],
         packages = find_packages(),
