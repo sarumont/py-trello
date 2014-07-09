@@ -370,6 +370,56 @@ class Board(object):
 
         return cards
 
+    def all_members(self):
+        """Returns all members on this board"""
+        filters = {
+            'filter': 'all',
+            'fields': 'all'
+        }
+        return self.get_members(filters)
+
+    def normal_members(self):
+        """Returns all normal members on this board"""
+        filters = {
+            'filter': 'normal',
+            'fields': 'all'
+        }
+        return self.get_members(filters)
+
+    def admin_members(self):
+        """Returns all admin members on this board"""
+        filters = {
+            'filter': 'admins',
+            'fields': 'all'
+        }
+        return self.get_members(filters)
+
+    def owner_members(self):
+        """Returns all owner members on this board"""
+        filters = {
+            'filter': 'owners',
+            'fields': 'all'
+        }
+        return self.get_members(filters)
+
+    def get_members(self, filters=None):
+        json_obj = self.client.fetch_json(
+            '/boards/' + self.id + '/members',
+            query_params=filters)
+        members = list()
+        for obj in json_obj:
+            m = Member(self.client, obj['id'])
+            m.status = obj['status'].encode('utf-8')
+            m.id = obj.get('id', '')
+            m.bio = obj.get('bio', '')
+            m.url = obj.get('url', '')
+            m.username = obj['username'].encode('utf-8')
+            m.full_name = obj['fullName'].encode('utf-8')
+            m.initials = obj['initials'].encode('utf-8')
+            members.append(m)
+
+        return members
+
     def fetch_actions(self, action_filter):
         json_obj = self.client.fetch_json(
             '/boards/' + self.id + '/actions',
