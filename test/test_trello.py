@@ -1,6 +1,7 @@
 from trello import TrelloClient
 import unittest
 import os
+import datetime
 
 class TrelloClientTestCase(unittest.TestCase):
 
@@ -121,6 +122,37 @@ class TrelloClientTestCase(unittest.TestCase):
 				self.assertEquals(card.description, description)
 				self.assertIsNotNone(card.closed, msg="closed not provided")
 				self.assertIsNotNone(card.url, msg="url not provided")
+				break
+			break
+		if not card:
+			self.fail("No card created")
+
+	def test52_add_card_set_due(self):
+		boards = self._trello.list_boards()
+		board_id = None
+		for b in boards:
+			if b.name != os.environ['TRELLO_TEST_BOARD_NAME']:
+				continue
+
+			for l in b.open_lists():
+				try:
+					name = "Testing from Python"
+					description = "Description goes here"
+					card = l.add_card(name, description)
+				except Exception as e:
+					print str(e)
+					self.fail("Caught Exception adding card")
+
+                                # Set the due date to be 3 days from now
+                                today = datetime.datetime.today()
+                                day_detla = datetime.timedelta(3)
+                                due_date = today + day_detla #
+                                card.set_due(due_date)
+                                expected_due_date = card.due
+                                # Refresh the due date from cloud
+                                card.fetch()
+                                actual_due_date = card.due[:10]
+                                self.assertEquals(expected_due_date, actual_due_date)
 				break
 			break
 		if not card:
