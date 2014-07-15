@@ -1,10 +1,8 @@
 import os
-import urlparse
 
-import oauth2 as oauth
+from requests_oauthlib import OAuth1Session
 
-
-def create_oauth_token():
+def create_oauth_token(expiration=None, scope=None, key=None, secret=None):
     """
     Script to obtain an OAuth token from Trello.
 
@@ -19,44 +17,46 @@ def create_oauth_token():
     authorize_url = 'https://trello.com/1/OAuthAuthorizeToken'
     access_token_url = 'https://trello.com/1/OAuthGetAccessToken'
 
-    expiration = os.environ.get('TRELLO_EXPIRATION', None)
-    scope = os.environ.get('TRELLO_SCOPE', 'read,write')
-    trello_key = os.environ['TRELLO_API_KEY']
-    trello_secret = os.environ['TRELLO_API_SECRET']
-
-    consumer = oauth.Consumer(trello_key, trello_secret)
-    client = oauth.Client(consumer)
+    expiration = expiration or os.environ.get('TRELLO_EXPIRATION', "30days")
+    scope = scope or os.environ.get('TRELLO_SCOPE', 'read,write')
+    trello_key = key or os.environ['TRELLO_API_KEY']
+    trello_secret = secret or os.environ['TRELLO_API_SECRET']
 
     # Step 1: Get a request token. This is a temporary token that is used for
     # having the user authorize an access token and to sign the request to obtain
     # said access token.
 
-    resp, content = client.request(request_token_url, "GET")
-    if resp['status'] != '200':
-        raise Exception("Invalid response %s." % resp['status'])
+    session = OAuth1Session(client_key=trello_key, client_secret=trello_secret)
+    response = session.fetch_request_token(request_token_url)
+    resource_owner_key, resource_owner_secret = response.get('oauth_token'), response.get('oauth_token_secret')
 
-    request_token = dict(urlparse.parse_qsl(content))
-
-    print "Request Token:"
-    print "    - oauth_token        = %s" % request_token['oauth_token']
-    print "    - oauth_token_secret = %s" % request_token['oauth_token_secret']
-    print
+    print("Request Token:")
+    print("    - oauth_token        = %s" % resource_owner_key)
+    print("    - oauth_token_secret = %s" % resource_owner_secret)
+    print("")
 
     # Step 2: Redirect to the provider. Since this is a CLI script we do not
     # redirect. In a web application you would redirect the user to the URL
     # below.
 
-    print "Go to the following link in your browser:"
-    print "{authorize_url}?oauth_token={oauth_token}&scope={scope}&expiration={expiration}".format(
+    print("Go to the following link in your browser:")
+    print("{authorize_url}?oauth_token={oauth_token}&scope={scope}&expiration={expiration}".format(
         authorize_url=authorize_url,
-        oauth_token=request_token['oauth_token'],
+        oauth_token=resource_owner_key,
         expiration=expiration,
         scope=scope,
-    )
+    ))
 
     # After the user has granted access to you, the consumer, the provider will
     # redirect you to whatever URL you have told them to redirect to. You can
     # usually define this in the oauth_callback argument as well.
+
+    # Python 3 compatibility (raw_input was renamed to input)
+    try:
+        raw_input
+    except NameError:
+        raw_input = input
+
     accepted = 'n'
     while accepted.lower() == 'n':
         accepted = raw_input('Have you authorized me? (y/n) ')
@@ -67,20 +67,17 @@ def create_oauth_token():
     # request token to sign this request. After this is done you throw away the
     # request token and use the access token returned. You should store this
     # access token somewhere safe, like a database, for future use.
-    token = oauth.Token(request_token['oauth_token'],
-                        request_token['oauth_token_secret'])
-    token.set_verifier(oauth_verifier)
-    client = oauth.Client(consumer, token)
+    session = OAuth1Session(client_key=trello_key, client_secret=trello_secret,
+                            resource_owner_key=resource_owner_key, resource_owner_secret=resource_owner_secret,
+                            verifier=oauth_verifier)
+    access_token = session.fetch_access_token(access_token_url)
 
-    resp, content = client.request(access_token_url, "POST")
-    access_token = dict(urlparse.parse_qsl(content))
-
-    print "Access Token:"
-    print "    - oauth_token        = %s" % access_token['oauth_token']
-    print "    - oauth_token_secret = %s" % access_token['oauth_token_secret']
-    print
-    print "You may now access protected resources using the access tokens above."
-    print
+    print("Access Token:")
+    print("    - oauth_token        = %s" % access_token['oauth_token'])
+    print("    - oauth_token_secret = %s" % access_token['oauth_token_secret'])
+    print("")
+    print("You may now access protected resources using the access tokens above.")
+    print("")
 
 if __name__ == '__main__':
     create_oauth_token()
