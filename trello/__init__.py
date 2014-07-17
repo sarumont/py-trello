@@ -95,10 +95,6 @@ class TrelloClient(object):
                               post_args={'name': board_name})
         return Board.from_json(self, obj)
 
-    def get_list(self, list_id):
-        obj = self.fetch_json('/lists/' + list_id)
-        return List.from_json(board=self, json_obj=obj)
-
     def get_member(self, member_id):
         return Member(self, member_id).fetch()
 
@@ -242,6 +238,9 @@ class Board(object):
             post_args={'value': 'true', }, )
         self.closed = True
 
+    def get_list(self, list_id):
+        obj = self.client.fetch_json('/lists/' + list_id)
+        return List.from_json(board=self, json_obj=obj)
 
     def all_lists(self):
         """Returns all lists on this board"""
