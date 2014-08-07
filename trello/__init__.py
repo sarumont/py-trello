@@ -322,20 +322,7 @@ class Board(object):
             query_params=filters
         )
 
-        cards = list()
-        for card_json in json_obj:
-            card = Card(self, card_json['id'],
-                        name=card_json['name'])
-
-            for card_key, card_val in card_json.items():
-                if card_key in ['id', 'name']:
-                    continue
-
-                setattr(card, card_key, card_val)
-
-            cards.append(card)
-
-        return cards
+        return list([Card.from_json(json, self) for json in json_obj])
 
     def fetch_actions(self, action_filter):
         json_obj = self.client.fetch_json(
@@ -373,15 +360,7 @@ class List(object):
     def list_cards(self):
         """Lists all cards in this list"""
         json_obj = self.client.fetch_json('/lists/' + self.id + '/cards')
-        cards = list()
-        for c in json_obj:
-            card = Card(self, c['id'], name=c['name'])
-            card.description = c.get('desc', '')
-            card.closed = c['closed']
-            card.url = c['url']
-            card.member_ids = c['idMembers']
-            cards.append(card)
-        return cards
+        return list([Card.from_json(json, self) for json in json_obj])
 
     def add_card(self, name, desc=None):
         """Add a card to this list
@@ -393,13 +372,7 @@ class List(object):
             '/lists/' + self.id + '/cards',
             http_method='POST',
             post_args={'name': name, 'idList': self.id, 'desc': desc}, )
-        card = Card(self, json_obj['id'])
-        card.name = json_obj['name']
-        card.description = json_obj.get('desc', '')
-        card.closed = json_obj['closed']
-        card.url = json_obj['url']
-        card.member_ids = json_obj['idMembers']
-        return card
+        return Card.from_json(json_obj, self)
 
     def fetch_actions(self, action_filter):
         """
@@ -453,11 +426,29 @@ class Card(object):
 
     @property
     def date_last_activity(self) -> datetime:
-        return self._dateLastActivity
+        return self.dateLastActivity
 
     @description.setter
     def description(self, value):
         self.desc = value
+
+    @property
+    def comments(self):
+        """
+        Lazily loads and returns the comments
+        """
+        if self._comments is None:
+            self._comments = self.fetch_comments()
+        return self._comments
+
+    @property
+    def checklists(self):
+        """
+        Lazily loads and returns the checklists
+        """
+        if self._checklists is None:
+            self._checklists = self.fetch_checklists()
+        return self._checklists
 
     def __init__(self, trello_list, card_id, name=''):
         """
@@ -469,14 +460,34 @@ class Card(object):
         self.id = card_id
         self.name = name
 
+    @staticmethod
+    def from_json(json_obj, trello_list, eager=False):
+        card = Card(trello_list, json_obj['id'])
+        card.init(json_obj, eager)
+        return card
+
     def __repr__(self):
         return '<Card %s>' % self.name
 
-    def fetch(self):
-        """Fetch all attributes for this card"""
+    def fetch(self, eager=True):
+        """
+        Fetch all attributes for this card
+        :param eager: If eager is true comments and checklists will be fetched immediately, otherwise on demand
+        """
         json_obj = self.client.fetch_json(
             '/cards/' + self.id,
             query_params={'badges': False})
+        self.init(json_obj, eager)
+
+    def init(self, json_obj, eager=True):
+        """
+        Initializes the card from its JSON representation as obtained through the Trello API.
+        :param json_obj:
+        :param eager: If eager is true comments and checklists will be fetched immediately, otherwise on demand
+        :return:
+        """
+
+        self.id = json_obj['id']
         self.name = json_obj['name']
         self.description = json_obj.get('desc', '')
         self.closed = json_obj['closed']
@@ -489,21 +500,27 @@ class Card(object):
         self.badges = json_obj['badges']
         self.due = json_obj['due']
         self.checked = json_obj['checkItemStates']
-        self._dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
+        self.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
 
-        self.checklists = []
+        self._checklists = self.fetch_checklists() if eager else None
+        self._comments = self.fetch_comments() if eager else None
+
+    def fetch_comments(self):
+        comments = []
+        if self.badges['comments'] > 0:
+            comments = self.client.fetch_json(
+                '/cards/' + self.id + '/actions',
+                query_params={'filter': 'commentCard'})
+        return comments
+
+    def fetch_checklists(self):
+        checklists = []
         if self.badges['checkItems'] > 0:
             json_obj = self.client.fetch_json(
                 '/cards/' + self.id + '/checklists', )
             for cl in json_obj:
-                self.checklists.append(Checklist(self.client, self.checked, cl,
-                                                 trello_card=self.id))
-
-        self.comments = []
-        if self.badges['comments'] > 0:
-            self.comments = self.client.fetch_json(
-                '/cards/' + self.id + '/actions',
-                query_params={'filter': 'commentCard'})
+                checklists.append(Checklist(self.client, self.checked, cl, trello_card=self.id))
+        return checklists
 
     def fetch_actions(self, action_filter='createCard'):
         """
