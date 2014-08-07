@@ -1,3 +1,4 @@
+from datetime import datetime
 from trello import TrelloClient
 import unittest
 import os
@@ -61,7 +62,7 @@ class TrelloClientTestCase(unittest.TestCase):
                 self.assertIsNotNone(l.closed, msg="closed not provided")
             break  # only need to test one board's lists
 
-    def test40_list_cards(self):
+    def test50_list_cards(self):
         boards = self._trello.list_boards()
         for b in boards:
             for l in b.all_lists():
@@ -75,8 +76,24 @@ class TrelloClientTestCase(unittest.TestCase):
             break
         pass
 
+    def test51_fetch_cards(self):
+        """
+        Tests fetching all attributes for all cards
+        """
+        boards = self._trello.list_boards()
+        for b in boards:
+            for l in b.all_lists():
+                for c in l.list_cards():
+                    c.fetch()
 
-    def test50_add_card(self):
+                    self.assertIsInstance(c.date_last_activity, datetime, msg='date not provided')
+                    self.assertTrue(len(c.board_id) > 0, msg='board id not provided')
+                break
+            break
+        pass
+
+
+    def test40_add_card(self):
         boards = self._trello.list_boards()
         board_id = None
         for b in boards:
@@ -101,7 +118,7 @@ class TrelloClientTestCase(unittest.TestCase):
         if not card:
             self.fail("No card created")
 
-    def test51_add_card(self):
+    def test41_add_card(self):
         boards = self._trello.list_boards()
         board_id = None
         for b in boards:
@@ -128,6 +145,37 @@ class TrelloClientTestCase(unittest.TestCase):
         if not card:
             self.fail("No card created")
 
+    def test42_add_card_with_comments(self):
+        boards = self._trello.list_boards()
+        board_id = None
+        for b in boards:
+            if b.name != os.environ['TRELLO_TEST_BOARD_NAME']:
+                continue
+
+            for l in b.open_lists():
+                try:
+                    name = "Card with comments"
+                    comment = "Hello World!"
+                    card = l.add_card(name)
+                    card.comment(comment)
+                    card.fetch(True)
+                except Exception as e:
+                    print(str(e))
+                    self.fail("Caught Exception adding card")
+
+                self.assertIsNotNone(card, msg="card is None")
+                self.assertIsNotNone(card.id, msg="id not provided")
+                self.assertEquals(card.name, name)
+                self.assertEquals(card.description, '')
+                self.assertIsNotNone(card.closed, msg="closed not provided")
+                self.assertIsNotNone(card.url, msg="url not provided")
+                self.assertEquals(len(card.comments), 1)
+                self.assertEquals(card.comments[0]['data']['text'], comment)
+                break
+            break
+        if not card:
+            self.fail("No card created")
+
 
     def test52_get_cards(self):
         boards = [board for board in self._trello.list_boards() if board.name == os.environ['TRELLO_TEST_BOARD_NAME']]
@@ -135,12 +183,14 @@ class TrelloClientTestCase(unittest.TestCase):
 
         board = boards[0]
         cards = board.get_cards()
-        self.assertEqual(len(cards), 2, msg="Unexpected number of cards in testboard")
+        self.assertEqual(len(cards), 3, msg="Unexpected number of cards in testboard")
 
         for card in cards:
             if card.name == 'Testing from Python':
                 self.assertEqual(card.description, 'Description goes here')
             elif card.name == 'Testing from Python - no desc':
+                self.assertEqual(card.description, '')
+            elif card.name == 'Card with comments':
                 self.assertEqual(card.description, '')
             else:
                 self.fail(msg='Unexpected card found')

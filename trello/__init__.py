@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+from dateutil import parser as dateparser
 import requests
 from requests_oauthlib import OAuth1
 
@@ -310,20 +311,7 @@ class Board(object):
             query_params=filters
         )
 
-        cards = list()
-        for card_json in json_obj:
-            card = Card(self, card_json['id'],
-                        name=card_json['name'])
-
-            for card_key, card_val in card_json.items():
-                if card_key in ['id', 'name']:
-                    continue
-
-                setattr(card, card_key, card_val)
-
-            cards.append(card)
-
-        return cards
+        return list([Card.from_json(json, self) for json in json_obj])
 
     def all_members(self):
         """Returns all members on this board"""
@@ -487,9 +475,31 @@ class Card(object):
     def description(self):
         return self.desc
 
+    @property
+    def date_last_activity(self) -> datetime:
+        return self.dateLastActivity
+
     @description.setter
     def description(self, value):
         self.desc = value
+
+    @property
+    def comments(self):
+        """
+        Lazily loads and returns the comments
+        """
+        if self._comments is None:
+            self._comments = self.fetch_comments()
+        return self._comments
+
+    @property
+    def checklists(self):
+        """
+        Lazily loads and returns the checklists
+        """
+        if self._checklists is None:
+            self._checklists = self.fetch_checklists()
+        return self._checklists
 
     def __init__(self, trello_list, card_id, name=''):
         """
@@ -523,11 +533,15 @@ class Card(object):
     def __repr__(self):
         return '<Card %s>' % self.name
 
-    def fetch(self):
-        """Fetch all attributes for this card"""
+    def fetch(self, eager=True):
+        """
+        Fetch all attributes for this card
+        :param eager: If eager is true comments and checklists will be fetched immediately, otherwise on demand
+        """
         json_obj = self.client.fetch_json(
             '/cards/' + self.id,
             query_params={'badges': False})
+        self.id = json_obj['id']
         self.name = json_obj['name'].encode('utf-8')
         self.desc = json_obj.get('desc', '')
         self.closed = json_obj['closed']
@@ -541,20 +555,27 @@ class Card(object):
         # For consistency, due date is in YYYY-MM-DD format
         self.due = json_obj.get('due', '')[:10]
         self.checked = json_obj['checkItemStates']
+        self.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
 
-        self.checklists = []
+        self._checklists = self.fetch_checklists() if eager else None
+        self._comments = self.fetch_comments() if eager else None
+
+    def fetch_comments(self):
+        comments = []
+        if self.badges['comments'] > 0:
+            comments = self.client.fetch_json(
+                '/cards/' + self.id + '/actions',
+                query_params={'filter': 'commentCard'})
+        return comments
+
+    def fetch_checklists(self):
+        checklists = []
         if self.badges['checkItems'] > 0:
             json_obj = self.client.fetch_json(
                 '/cards/' + self.id + '/checklists', )
             for cl in json_obj:
-                self.checklists.append(Checklist(self.client, self.checked, cl,
-                                                 trello_card=self.id))
-
-        self.comments = []
-        if self.badges['comments'] > 0:
-            self.comments = self.client.fetch_json(
-                '/cards/' + self.id + '/actions',
-                query_params={'filter': 'commentCard'})
+                checklists.append(Checklist(self.client, self.checked, cl, trello_card=self.id))
+        return checklists
 
     def fetch_actions(self, action_filter='createCard'):
         """
