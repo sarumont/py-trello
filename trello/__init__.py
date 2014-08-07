@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+from dateutil import parser as dateparser
 import requests
 from requests_oauthlib import OAuth1
 
@@ -450,6 +451,10 @@ class Card(object):
     def description(self):
         return self.desc
 
+    @property
+    def date_last_activity(self) -> datetime:
+        return self._dateLastActivity
+
     @description.setter
     def description(self, value):
         self.desc = value
@@ -484,6 +489,7 @@ class Card(object):
         self.badges = json_obj['badges']
         self.due = json_obj['due']
         self.checked = json_obj['checkItemStates']
+        self._dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
 
         self.checklists = []
         if self.badges['checkItems'] > 0:

@@ -1,3 +1,4 @@
+from datetime import datetime
 from trello import TrelloClient
 import unittest
 import os
@@ -70,6 +71,22 @@ class TrelloClientTestCase(unittest.TestCase):
                     self.assertIsNotNone(c.description, msg="description not provided")
                     self.assertIsNotNone(c.closed, msg="closed not provided")
                     self.assertIsNotNone(c.url, msg="url not provided")
+                break
+            break
+        pass
+
+    def test41_fetch_cards(self):
+        """
+        Tests fetching all attributes for all cards
+        """
+        boards = self._trello.list_boards()
+        for b in boards:
+            for l in b.all_lists():
+                for c in l.list_cards():
+                    c.fetch()
+
+                    self.assertIsInstance(c.date_last_activity, datetime, msg='date not provided')
+                    self.assertTrue(len(c.board_id) > 0, msg='board id not provided')
                 break
             break
         pass
