@@ -53,14 +53,14 @@ def create_oauth_token(expiration=None, scope=None, key=None, secret=None):
 
     # Python 3 compatibility (raw_input was renamed to input)
     try:
-        raw_input
+        inputFunc = raw_input
     except NameError:
-        raw_input = input
+        inputFunc = input
 
     accepted = 'n'
     while accepted.lower() == 'n':
-        accepted = raw_input('Have you authorized me? (y/n) ')
-    oauth_verifier = raw_input('What is the PIN? ')
+        accepted = inputFunc('Have you authorized me? (y/n) ')
+    oauth_verifier = inputFunc('What is the PIN? ')
 
     # Step 3: Once the consumer has redirected the user back to the oauth_callback
     # URL you can request the access token the user has approved. You use the
