@@ -1,6 +1,5 @@
 from datetime import datetime
 import json
-import os
 from dateutil import parser as dateparser
 import requests
 from requests_oauthlib import OAuth1
