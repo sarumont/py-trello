@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+import os
 from dateutil import parser as dateparser
 import requests
 from requests_oauthlib import OAuth1
@@ -183,12 +184,10 @@ class TrelloClient(object):
             all_hooks.append(new_hook)
         return all_hooks
 
-    def create_hook(self, callback_url, id_model, desc=None, token=None):
+    def create_hook(self, callback_url, id_model, desc=None, token=None, use_api_key=False):
         """
         Creates a new webhook. Returns the WebHook object created.
-
-        There seems to be some sort of bug that makes you unable to create a
-        hook using httplib2, so I'm using urllib2 for that instead.
+        :param use_api_key: Use API key? Added to maintain compatibility with previous py-trello version, which didn't
         """
         token = token or self.resource_owner_key
 
@@ -198,6 +197,10 @@ class TrelloClient(object):
         url = "https://trello.com/1/tokens/%s/webhooks/" % token
         data = {'callbackURL': callback_url, 'idModel': id_model,
                 'description': desc}
+
+        # optionally send api key with request
+        if use_api_key and self.api_key:
+            url += "?api_key=%s" % self.api_key
 
         response = requests.post(url, data=data, auth=self.oauth)
 
@@ -425,7 +428,7 @@ class Card(object):
         return self.desc
 
     @property
-    def date_last_activity(self) -> datetime:
+    def date_last_activity(self):
         return self.dateLastActivity
 
     @description.setter
@@ -450,7 +453,7 @@ class Card(object):
             self._checklists = self.fetch_checklists()
         return self._checklists
 
-    def __init__(self, trello_list, card_id, name=''):
+    def __init__(self, trello_list, card_id=None, name='', **kwargs):
         """
         :trello_list: reference to the parent list
         :card_id: ID for this card
@@ -459,6 +462,10 @@ class Card(object):
         self.client = trello_list.client
         self.id = card_id
         self.name = name
+
+        # allow initializing fields via kwargs
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     @staticmethod
     def from_json(json_obj, trello_list, eager=False):
@@ -504,6 +511,20 @@ class Card(object):
 
         self._checklists = self.fetch_checklists() if eager else None
         self._comments = self.fetch_comments() if eager else None
+
+    def save(self, fields=None):
+        if fields is None:
+            fields = ["name", "desc", "closed", "labels", "idMembers", "idAttachmentCover", "idList", "idBoard", "due"]
+
+        json = {field: getattr(self, field) for field in fields if hasattr(self, field) and getattr(self, field)}
+
+        if self.id:
+            # save changes to the existing card
+            self.client.fetch_json('/cards/' + self.id, http_method='PUT', post_args=json)
+        else:
+            # add as a new card
+            result = self.client.fetch_json('/cards', http_method='POST', post_args=json)
+            self.id = result['id']
 
     def fetch_comments(self):
         comments = []
@@ -588,6 +609,11 @@ class Card(object):
             '/cards/' + self.id + '/idBoard',
             http_method='PUT',
             post_args=args)
+
+    def add_url_attachment(self, url, name=None):
+        self.client.fetch_json('/cards/%s/attachments' % self.id, http_method='POST', post_args={
+            "url": url, "name": name
+        })
 
     def add_checklist(self, title, items, itemstates=None):
 
@@ -741,12 +767,25 @@ class WebHook(object):
     def __init__(self, client, token, hook_id=None, desc=None, id_model=None,
                  callback_url=None, active=False):
         self.id = hook_id
+        """ :type : str """
+
         self.desc = desc
+        """ :type : str """
+
         self.id_model = id_model
+        """ :type : str """
+
         self.callback_url = callback_url
+        """ :type : str """
+
         self.active = active
+        """ :type : bool """
+
         self.client = client
+        """ :type : TrelloClient """
+
         self.token = token
+        """ :type : str """
 
     def delete(self):
         """Removes this webhook from Trello"""
