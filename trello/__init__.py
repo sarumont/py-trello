@@ -553,7 +553,8 @@ class Card(object):
         self.labels = json_obj['labels']
         self.badges = json_obj['badges']
         # For consistency, due date is in YYYY-MM-DD format
-        self.due = json_obj.get('due', '')[:10]
+        if json_obj.get('due', ''):
+            self.due = json_obj.get('due', '')[:10]
         self.checked = json_obj['checkItemStates']
         self.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
 
