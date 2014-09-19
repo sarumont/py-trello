@@ -476,7 +476,7 @@ class Card(object):
         return self.desc
 
     @property
-    def date_last_activity(self) -> datetime:
+    def date_last_activity(self):
         return self.dateLastActivity
 
     @description.setter
