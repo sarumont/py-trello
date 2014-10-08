@@ -99,6 +99,12 @@ class TrelloClient(object):
     def get_member(self, member_id):
         return Member(self, member_id).fetch()
 
+    def get_card(self, card_id):
+        card_json = self.fetch_json('/cards/' + card_id)
+        list_json = self.fetch_json('/lists/' + card_json['idList'])
+        board = self.get_board(card_json['idBoard'])
+        return Card.from_json(List.from_json(board, list_json), card_json)
+
     def fetch_json(
             self,
             uri_path,
@@ -776,15 +782,15 @@ class Checklist(object):
             [ix] = [i for i in range(len(self.items)) if self.items[i]['name'] == name]
         except ValueError:
             return
-         
+
         json_obj = self.client.fetch_json(
                 '/cards/'+self.trello_card+\
                 '/checklist/'+self.id+\
                 '/checkItem/'+self.items[ix]['id'],
                 http_method = 'PUT',
                 post_args = {'name' : new_name})
-        
-        self.items[ix] = json_obj 
+
+        self.items[ix] = json_obj
         return json_obj
 
     def __repr__(self):
