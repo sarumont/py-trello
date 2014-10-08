@@ -311,7 +311,7 @@ class Board(object):
             query_params=filters
         )
 
-        return list([Card.from_json(json, self) for json in json_obj])
+        return list([Card.from_json(self, json) for json in json_obj])
 
     def all_members(self):
         """Returns all members on this board"""
