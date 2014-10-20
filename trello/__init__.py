@@ -111,7 +111,8 @@ class TrelloClient(object):
             http_method='GET',
             headers=None,
             query_params=None,
-            post_args=None):
+            post_args=None,
+            files=None):
         """ Fetch some JSON from Trello """
 
         # explicit values here to avoid mutable default values
@@ -122,9 +123,15 @@ class TrelloClient(object):
         if post_args is None:
             post_args = {}
 
+        # if files specified, we don't want any data
+        data = None
+        if files is None:
+            data = json.dumps(post_args)
+
         # set content type and accept headers to handle JSON
-        if http_method in ("POST", "PUT", "DELETE"):
+        if http_method in ("POST", "PUT", "DELETE") and not files:
             headers['Content-Type'] = 'application/json; charset=utf-8'
+
         headers['Accept'] = 'application/json'
 
         # construct the full URL without query parameters
@@ -134,7 +141,8 @@ class TrelloClient(object):
 
         # perform the HTTP requests, if possible uses OAuth authentication
         response = requests.request(http_method, url, params=query_params,
-                                    headers=headers, data=json.dumps(post_args), auth=self.oauth)
+                                    headers=headers, data=data,
+                                    auth=self.oauth, files=files)
 
         if response.status_code == 401:
             raise Unauthorized("%s at %s" % (response.text, url), response)
@@ -636,6 +644,30 @@ class Card(object):
             http_method='POST',
             post_args={'text': comment_text, })
 
+    def attach(self, name=None, mimeType=None, file=None, url=None):
+        """
+        Add an attachment to the card. The attachment can be either a
+        file or a url. Setting the name and/or mime type is optional.
+        :param name: The name of the attachment
+        :param mimeType: mime type for the attachement
+        :param file: a file-like, binary object that supports read()
+        :param url: a URL pointing to the resource to be attached
+        """
+        if (file and url) or (not file and not url):
+            raise Exception('Please provide either a file or url, and not both!')
+
+        kwargs = {}
+        if file:
+            kwargs['files'] = dict(file=(name, file, mimeType))
+        else:
+            kwargs['name'] = name
+            kwargs['mimeType'] = mimeType
+            kwargs['url'] = url
+
+        self._post_remote_data(
+            'attachments', **kwargs
+        )
+
     def change_list(self, list_id):
         self.client.fetch_json(
             '/cards/' + self.id + '/idList',
@@ -684,6 +716,13 @@ class Card(object):
             '/cards/' + self.id + '/' + attribute,
             http_method='PUT',
             post_args={'value': value, }, )
+
+    def _post_remote_data(self, attribute, files=None, **kwargs):
+        self.client.fetch_json(
+            '/cards/' + self.id + '/' + attribute,
+            http_method='POST',
+            files=files,
+            post_args=kwargs )
 
 
 class Member(object):
