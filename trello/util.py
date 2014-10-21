@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import os
 
 from requests_oauthlib import OAuth1Session
