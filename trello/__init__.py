@@ -585,11 +585,11 @@ class Card(object):
 
     def fetch_checklists(self):
         checklists = []
-        if self.badges['checkItems'] > 0:
-            json_obj = self.client.fetch_json(
-                '/cards/' + self.id + '/checklists', )
-            for cl in json_obj:
-                checklists.append(Checklist(self.client, self.checked, cl, trello_card=self.id))
+        json_obj = self.client.fetch_json(
+            '/cards/' + self.id + '/checklists', )
+        for cl in json_obj:
+            checklists.append(Checklist(self.client, self.checked, cl,
+                                        trello_card=self.id))
         return checklists
 
     def fetch_actions(self, action_filter='createCard'):
