@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from trello import TrelloClient
+from trello import TrelloClient, Unauthorized, ResourceUnavailable
 import unittest
 import os
 
@@ -97,6 +97,9 @@ class TrelloClientTestCase(unittest.TestCase):
             break
         pass
 
+    def test52_list_hooks(self):
+        self.assertIsInstance(self._trello.list_hooks(), list)
+
 
 class TrelloBoardTestCase(unittest.TestCase):
     """
@@ -135,6 +138,9 @@ class TrelloBoardTestCase(unittest.TestCase):
         self.assertIsNotNone(card.closed, msg="closed not provided")
         self.assertIsNotNone(card.url, msg="url not provided")
 
+        card2 = self._trello.get_card(card.id)
+        self.assertEqual(card.name, card2.name)
+
     def test41_add_card(self):
         name = "Testing from Python"
         description = "Description goes here"
@@ -143,6 +149,13 @@ class TrelloBoardTestCase(unittest.TestCase):
         self.assertEquals(card.description, description)
         self.assertIsNotNone(card.closed, msg="closed not provided")
         self.assertIsNotNone(card.url, msg="url not provided")
+        card.fetch()
+        self.assertIsNotNone(card.member_id)
+        self.assertIsNotNone(card.short_id)
+        self.assertIsNotNone(card.list_id)
+        self.assertIsNotNone(card.comments)
+        self.assertIsNotNone(card.checklists)
+        self.assertIsInstance(card.create_date, datetime)
 
     def test42_add_card_with_comments(self):
         name = "Card with comments"
@@ -171,9 +184,18 @@ class TrelloBoardTestCase(unittest.TestCase):
         checklist.delete()
         card.delete()
 
+    def test44_attach_url_to_card(self):
+        name = "Testing from Python - url"
+        card = self._add_card(name)
+
+        card.attach(name='lwn', url='http://lwn.net/')
+        card.fetch()
+        self.assertEquals(card.badges['attachments'], 1)
+        card.delete()
+
     def test52_get_cards(self):
         cards = self._board.get_cards()
-        self.assertEqual(len(cards), 4)
+        self.assertEquals(len(cards), 4)
 
         for card in cards:
             if card.name == 'Testing from Python':
@@ -184,6 +206,10 @@ class TrelloBoardTestCase(unittest.TestCase):
                 self.assertEqual(card.description, '')
             else:
                 self.fail(msg='Unexpected card found')
+
+        self.assertIsInstance(self._board.all_cards(), list)
+        self.assertIsInstance(self._board.open_cards(), list)
+        self.assertIsInstance(self._board.closed_cards(), list)
 
     def test52_add_card_set_due(self):
         name = "Testing from Python"
@@ -215,10 +241,55 @@ class TrelloBoardTestCase(unittest.TestCase):
         checklist.rename('Renamed')
         self.assertEquals(checklist.name, 'Renamed')
 
+    def test54_set(self):
+        name = "Testing from Python"
+        description = "Description goes here"
+        card = self._list.add_card('noname')
+        card.set_name(name)
+        card.set_description(description)
+        self.assertEquals(card.name, name)
+        self.assertEquals(card.description, description)
+
     def test60_delete_cards(self):
         cards = self._board.get_cards()
         for card in cards:
             card.delete()
+
+    def test70_all_members(self):
+        self.assertTrue(len(self._board.all_members()) > 0)
+
+    def test71_normal_members(self):
+        self.assertTrue(len(self._board.normal_members()) >= 0)
+
+    def test72_admin_members(self):
+        self.assertTrue(len(self._board.admin_members()) > 0)
+
+    def test73_owner_members(self):
+        members = self._board.owner_members()
+        self.assertTrue(len(members) > 0)
+        member = members[0].fetch()
+        self.assertNotEqual(member.status, None)
+        self.assertNotEqual(member.id, None)
+        self.assertNotEqual(member.bio, None)
+        self.assertNotEqual(member.url, None)
+        self.assertNotEqual(member.username, None)
+        self.assertNotEqual(member.full_name, None)
+        self.assertNotEqual(member.initials, None)
+        member2 = self._trello.get_member(member.id)
+        self.assertEqual(member.username, member2.username)
+
+    def test80_unauthorized(self):
+        client = TrelloClient('a')
+        self.assertRaises(Unauthorized,
+                          client.list_boards)
+
+    def test81_resource_unavailable(self):
+        self.assertRaises(ResourceUnavailable,
+                          self._trello.get_card, '0')
+
+    def test90_get_board(self):
+        board = self._trello.get_board(self._board.id)
+        self.assertEqual(self._board.name, board.name)
 
 
 def suite():
