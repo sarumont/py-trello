@@ -195,6 +195,33 @@ class TrelloClientTestCase(unittest.TestCase):
             else:
                 self.fail(msg='Unexpected card found')
 
+    def test53_checklist(self):
+        boards = self._trello.list_boards()
+        for b in boards:
+            if b.name != os.environ['TRELLO_TEST_BOARD_NAME']:
+                continue
+
+            for l in b.open_lists():
+                try:
+                    name = "Testing from Python"
+                    description = "Description goes here"
+                    card = l.add_card(name, description)
+                except Exception as e:
+                    print(str(e))
+                    self.fail("Caught Exception adding card")
+
+                name = 'Checklists'
+                checklist = card.add_checklist(name,
+                                               ['item1', 'item2'])
+                self.assertIsNotNone(checklist, msg="checklist is None")
+                self.assertIsNotNone(checklist.id, msg="id not provided")
+                self.assertEquals(checklist.name, name)
+                checklist.rename('Renamed')
+                self.assertEquals(checklist.name, 'Renamed')
+                break
+            break
+        if not checklist:
+            self.fail("No checklist created")
 
     def test60_delete_cards(self):
         boards = [board for board in self._trello.list_boards() if board.name == os.environ['TRELLO_TEST_BOARD_NAME']]

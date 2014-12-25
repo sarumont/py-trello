@@ -816,6 +816,21 @@ class Checklist(object):
         self.items[ix] = json_obj
         return json_obj
 
+    def rename(self, new_name):
+        """Rename this checklist
+
+        :new_name: new name of the checklist
+        """
+
+        json_obj = self.client.fetch_json(
+            '/checklists/' + self.id + '/name/',
+            http_method='PUT',
+            post_args={'value': new_name})
+
+        self.name = json_obj['name']
+
+        return json_obj
+
     def rename_checklist_item(self, name, new_name):
         """Rename the item on this checklist
 
