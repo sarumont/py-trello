@@ -839,6 +839,12 @@ class Checklist(object):
         self.items[ix] = json_obj
         return json_obj
 
+    def delete(self):
+        """Removes this checklist"""
+        self.client.fetch_json(
+            '/checklists/%s' % self.id,
+            http_method='DELETE')
+
     def __repr__(self):
         return '<Checklist %s>' % self.id
 

@@ -2,7 +2,6 @@ from datetime import datetime
 from trello import TrelloClient
 import unittest
 import os
-import datetime
 
 
 class TrelloClientTestCase(unittest.TestCase):
@@ -176,6 +175,35 @@ class TrelloClientTestCase(unittest.TestCase):
         if not card:
             self.fail("No card created")
 
+    def test43_delete_checklist(self):
+        boards = self._trello.list_boards()
+        for b in boards:
+            if b.name != os.environ['TRELLO_TEST_BOARD_NAME']:
+                continue
+
+            for l in b.open_lists():
+                try:
+                    name = "Card with comments"
+                    card = l.add_card(name)
+                    card.fetch(True)
+                except Exception as e:
+                    print(str(e))
+                    self.fail("Caught Exception adding card")
+
+                self.assertIsNotNone(card, msg="card is None")
+                name = 'Checklists'
+                checklist = card.add_checklist(name,
+                                               ['item1', 'item2'])
+                self.assertIsNotNone(checklist, msg="checklist is None")
+                self.assertIsNotNone(checklist.id, msg="id not provided")
+                self.assertEquals(checklist.name, name)
+                checklist.delete()
+                card.delete()
+                break
+            break
+        if not card:
+            self.fail("No card created")
+
 
     def test52_get_cards(self):
         boards = [board for board in self._trello.list_boards() if board.name == os.environ['TRELLO_TEST_BOARD_NAME']]
@@ -223,7 +251,7 @@ class TrelloClientTestCase(unittest.TestCase):
 					self.fail("Caught Exception adding card")
 
                                 # Set the due date to be 3 days from now
-                                today = datetime.datetime.today()
+                                today = datetime.today()
                                 day_detla = datetime.timedelta(3)
                                 due_date = today + day_detla #
                                 card.set_due(due_date)
