@@ -87,6 +87,27 @@ class TrelloClient(object):
         json_obj = self.fetch_json('/members/me/boards')
         return [Board.from_json(self, obj) for obj in json_obj]
 
+    def list_organizations(self):
+        """
+        Returns all organizations for your Trello user
+
+        :return: a list of Python objects representing the Trello organizations.
+        Each organization has the following noteworthy attributes:
+            - id: the organization's identifier
+            - name: Name of the organization
+            - desc: Description of the organization (optional - may be missing from the
+                    returned JSON)
+            - closed: Boolean representing whether this organization is closed or not
+            - url: URL to the organization
+        """
+        json_obj = self.fetch_json('members/me/organizations')
+        return [Organization.from_json(self, obj) for obj in json_obj]
+
+    def get_organization(self, organization_id):
+        obj = self.fetch_json('/organizations/' + organization_id)
+
+        return Organization.from_json(self, obj)
+
     def get_board(self, board_id):
         obj = self.fetch_json('/boards/' + board_id)
         return Board.from_json(self, obj)
@@ -201,6 +222,65 @@ class TrelloClient(object):
         else:
             return False
 
+class Organization(object):
+
+    """
+    Class representing an organization
+    """
+    def __init__(self, client, organization_id,   name=''):
+        self.client = client
+        self.id = organization_id
+        self.name = name
+
+    @classmethod
+    def from_json(cls, trello_client, json_obj):
+        """
+        Deserialize the board json object to a Organization object
+
+        :trello_client: the trello client
+        :json_obj: the board json object
+        """
+        organization = Organization(trello_client, json_obj['id'], name=json_obj['name'].encode('utf-8'))
+        organization.description = json_obj.get('desc', '').encode('utf-8')
+        # cannot close an organization
+        #organization.closed = json_obj['closed']
+        organization.url = json_obj['url']
+        return organization
+
+    def __repr__(self):
+        return '<Organization %s>' % self.name
+
+    def fetch(self):
+        """Fetch all attributes for this organization"""
+        json_obj = self.client.fetch_json('/organizations/' + self.id)
+        self.name = json_obj['name']
+        self.description = json_obj.get('desc', '')
+        self.closed = json_obj['closed']
+        self.url = json_obj['url']
+
+    def all_boards(self):
+        """Returns all boards on this organization"""
+        return self.get_boards('all')
+
+    def get_boards(self, list_filter):
+        # error checking
+        json_obj = self.client.fetch_json(
+            '/organizations/' + self.id + '/boards',
+            query_params={'lists': 'none', 'filter': list_filter})
+        return [Board.from_json(organization=self, json_obj=obj) for obj in json_obj]
+
+    def get_board(self, field_name):
+        # error checking
+        json_obj = self.client.fetch_json(
+            '/organizations/' + self.id + '/boards',
+            query_params={'filter': 'open','fields':field_name})
+        return [Board.from_json(organization=self, json_obj=obj) for obj in json_obj]
+
+    def get_members(self):
+        json_obj = self.client.fetch_json(
+        '/organizations/' + self.id + '/members',
+        query_params={'filter': 'all'})
+        return [Member.from_json(trello_client=self.client, json_obj=obj) for obj in json_obj]
 
 class Board(object):
     """
@@ -209,24 +289,46 @@ class Board(object):
     an API call (Lists, Cards).
     """
 
-    def __init__(self, client, board_id, name=''):
+    def __init__(self, client=None, board_id=None, organization=None, name=''):
         """
         :trello: Reference to a Trello object
         :board_id: ID for the board
+
+        Alternative Constructor
+
+        :organization: reference to the parent organization
+        :board_id: ID for this board
+
         """
-        self.client = client
+        if organization is None:
+            self.client = client
+        else:
+            self.organization = organization
+            self.client = organization.client
         self.id = board_id
         self.name = name
 
+
     @classmethod
-    def from_json(cls, trello_client, json_obj):
+    def from_json(cls, trello_client=None, organization = None, json_obj=None):
         """
         Deserialize the board json object to a Board object
 
         :trello_client: the trello client
         :json_obj: the board json object
+
+        Alternative contrustraction:
+
+        Deserialize the board json object to a board object
+
+        :organization: the organization object that the board belongs to
+        :json_obj: the json board object
         """
-        board = Board(trello_client, json_obj['id'], name=json_obj['name'].encode('utf-8'))
+        if organization is None:
+            board = Board(client=trello_client, board_id=json_obj['id'], name=json_obj['name'].encode('utf-8'))
+        else:
+            board = Board(organization=organization, board_id=json_obj['id'], name=json_obj['name'].encode('utf-8'))
+
         board.description = json_obj.get('desc', '').encode('utf-8')
         board.closed = json_obj['closed']
         board.url = json_obj['url']
@@ -462,6 +564,8 @@ class List(object):
             post_args={'value': 'true', }, )
         self.closed = True
 
+    def cardsCnt(self):
+        return len(self.list_cards())
 
 class Card(object):
     """
@@ -577,12 +681,21 @@ class Card(object):
 
     def fetch_comments(self):
         comments = []
+
         if self.badges['comments'] > 0:
             comments = self.client.fetch_json(
                 '/cards/' + self.id + '/actions',
                 query_params={'filter': 'commentCard'})
+
         return comments
 
+    def get_comments(self):
+        comments = []
+        comments = self.client.fetch_json(
+                '/cards/' + self.id + '/actions',
+                query_params={'filter': 'commentCard'})
+        return comments
+    
     def fetch_checklists(self):
         checklists = []
         json_obj = self.client.fetch_json(
@@ -602,8 +715,51 @@ class Card(object):
             query_params={'filter': action_filter})
         self.actions = json_obj
 
+
+    def attriExp(self, multiple):
+        """
+            Provides the option to explore what comes from trello
+            :multiple is one of the attributes of GET /1/cards/[card id or shortlink]/actions
+        """
+        self.fetch_actions(multiple)
+        return self.actions
+
+    def listCardMove_date(self):
+        """
+            Will return the history of transitions of a card from one list to another
+            The lower the index the more resent the historical item
+
+            It returns a list of lists. The sublists are triplates of
+            starting list, ending list and when the transition occured.
+        """
+        self.fetch_actions('updateCard:idList')
+        res =[]
+        for idx in self.actions:
+            date_str = idx['date'][:-5]
+            dateDate = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S')
+            strLst = idx['data']['listBefore']['name']
+            endLst = idx['data']['listAfter']['name']
+            res.append([strLst,endLst,dateDate])
+        return res
+
+    @property
+    def latestCardMove_date(self):
+        """
+            returns the date of the last card transition
+
+        """
+        self.fetch_actions('updateCard:idList')
+        date_str = self.actions[0]['date'][:-5]
+        return datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S')
+
     @property
     def create_date(self):
+        """
+            Will return the creation date of the card.
+            WARNING: if the card was create via convertion of a checklist item
+                    it fails. attriExp('convertToCardFromCheckItem') allows to
+                    test for the condition.
+        """
         self.fetch_actions()
         date_str = self.actions[0]['date'][:-5]
         return datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S')
@@ -737,9 +893,11 @@ class Member(object):
     Class representing a Trello member.
     """
 
-    def __init__(self, client, member_id):
+    def __init__(self, client, member_id, full_name=''):
         self.client = client
         self.id = member_id
+        self.full_name = full_name
+
 
     def __repr__(self):
         return '<Member %s>' % self.id
@@ -756,7 +914,33 @@ class Member(object):
         self.username = json_obj['username']
         self.full_name = json_obj['fullName']
         self.initials = json_obj['initials']
+        self.commentCard = json_obj['commentCard']
         return self
+
+    def fetch_comments(self):
+        comments = []
+        if self.badges['comments'] > 0:
+            comments = self.client.fetch_json(
+                '/members/' + self.id + '/actions',
+                query_params={'filter': 'commentCard'})
+        return comments
+
+    @classmethod
+    def from_json(cls, trello_client, json_obj):
+        """
+        Deserialize the organization json object to a member object
+
+        :trello_client: the trello client
+        :json_obj: the member json object
+        """
+
+        member = Member(trello_client, json_obj['id'], full_name=json_obj['fullName'].encode('utf-8'))
+        member.username = json_obj.get('username', '').encode('utf-8')
+        member.initials = json_obj.get('initials', '').encode('utf-8')
+        # cannot close an organization
+        #organization.closed = json_obj['closed']
+        return member
+
 
 
 class Checklist(object):
