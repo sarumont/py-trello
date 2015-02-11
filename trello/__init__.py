@@ -85,7 +85,7 @@ class TrelloClient(object):
             - url: URL to the board
         """
         json_obj = self.fetch_json('/members/me/boards')
-        return [Board.from_json(self, obj) for obj in json_obj]
+        return [Board.from_json(self, json_obj=obj) for obj in json_obj]
 
     def list_organizations(self):
         """
@@ -110,12 +110,12 @@ class TrelloClient(object):
 
     def get_board(self, board_id):
         obj = self.fetch_json('/boards/' + board_id)
-        return Board.from_json(self, obj)
+        return Board.from_json(self, json_obj=obj)
 
     def add_board(self, board_name):
         obj = self.fetch_json('/boards', http_method='POST',
                               post_args={'name': board_name})
-        return Board.from_json(self, obj)
+        return Board.from_json(self, json_obj=obj)
 
     def get_member(self, member_id):
         return Member(self, member_id).fetch()
