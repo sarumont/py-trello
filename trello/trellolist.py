@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+from card import Card
+
+
 class List(object):
     """
     Class representing a Trello list. List attributes are stored on the object,
