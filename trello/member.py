@@ -26,7 +26,6 @@ class Member(object):
         self.username = json_obj['username']
         self.full_name = json_obj['fullName']
         self.initials = json_obj['initials']
-        self.commentCard = json_obj['commentCard']
         return self
 
     def fetch_comments(self):
@@ -50,7 +49,5 @@ class Member(object):
         member.username = json_obj.get('username', '').encode('utf-8')
         member.initials = json_obj.get('initials', '').encode('utf-8')
         # cannot close an organization
-        #organization.closed = json_obj['closed']
+        # organization.closed = json_obj['closed']
         return member
-
-
