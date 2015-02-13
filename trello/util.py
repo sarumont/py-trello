@@ -1,8 +1,7 @@
 #!/usr/bin/python
-
 import os
-
 from requests_oauthlib import OAuth1Session
+
 
 def create_oauth_token(expiration=None, scope=None, key=None, secret=None):
     """
