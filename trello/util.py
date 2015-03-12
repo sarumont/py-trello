@@ -4,7 +4,7 @@ import os
 
 from requests_oauthlib import OAuth1Session
 
-def create_oauth_token(expiration=None, scope=None, key=None, secret=None):
+def create_oauth_token(expiration=None, scope=None, key=None, secret=None, name=None):
     """
     Script to obtain an OAuth token from Trello.
 
@@ -23,6 +23,7 @@ def create_oauth_token(expiration=None, scope=None, key=None, secret=None):
     scope = scope or os.environ.get('TRELLO_SCOPE', 'read,write')
     trello_key = key or os.environ['TRELLO_API_KEY']
     trello_secret = secret or os.environ['TRELLO_API_SECRET']
+    name = name or os.environ.get('TRELLO_NAME', 'py-trello')
 
     # Step 1: Get a request token. This is a temporary token that is used for
     # having the user authorize an access token and to sign the request to obtain
@@ -42,11 +43,12 @@ def create_oauth_token(expiration=None, scope=None, key=None, secret=None):
     # below.
 
     print("Go to the following link in your browser:")
-    print("{authorize_url}?oauth_token={oauth_token}&scope={scope}&expiration={expiration}".format(
+    print("{authorize_url}?oauth_token={oauth_token}&scope={scope}&expiration={expiration}&name={name}".format(
         authorize_url=authorize_url,
         oauth_token=resource_owner_key,
         expiration=expiration,
         scope=scope,
+        name=name
     ))
 
     # After the user has granted access to you, the consumer, the provider will
