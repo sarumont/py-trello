@@ -14,8 +14,7 @@ class ResourceUnavailable(Exception):
         self._status = http_response.status_code
 
     def __str__(self):
-        return "%s (HTTP status: %s)" % (
-        self._msg, self._status)
+        return "%s (HTTP status: %s)" % (self._msg, self._status)
 
 
 class Unauthorized(ResourceUnavailable):
@@ -29,7 +28,8 @@ class TokenError(Exception):
 class TrelloClient(object):
     """ Base class for Trello API access """
 
-    def __init__(self, api_key, api_secret=None, token=None, token_secret=None):
+    def __init__(self, api_key, api_secret=None,
+                 token=None, token_secret=None):
         """
         Constructor
 
@@ -43,7 +43,8 @@ class TrelloClient(object):
         # client key and secret for oauth1 session
         if api_key or token:
             self.oauth = OAuth1(client_key=api_key, client_secret=api_secret,
-                                resource_owner_key=token, resource_owner_secret=token_secret)
+                                resource_owner_key=token,
+                                resource_owner_secret=token_secret)
         else:
             self.oauth = None
 
@@ -67,7 +68,7 @@ class TrelloClient(object):
 
     def logout(self):
         """Log out of Trello."""
-        #TODO: This function.
+        # TODO: This function.
 
         raise NotImplementedError()
 
@@ -79,8 +80,8 @@ class TrelloClient(object):
         Each board has the following noteworthy attributes:
             - id: the board's identifier
             - name: Name of the board
-            - desc: Description of the board (optional - may be missing from the
-                    returned JSON)
+            - desc: Description of the board (optional - may be missing from
+                    the returned JSON)
             - closed: Boolean representing whether this board is closed or not
             - url: URL to the board
         """
@@ -95,9 +96,10 @@ class TrelloClient(object):
         Each organization has the following noteworthy attributes:
             - id: the organization's identifier
             - name: Name of the organization
-            - desc: Description of the organization (optional - may be missing from the
-                    returned JSON)
-            - closed: Boolean representing whether this organization is closed or not
+            - desc: Description of the organization (optional - may be missing
+                    from the returned JSON)
+            - closed: Boolean representing whether this organization is closed
+                      or not
             - url: URL to the organization
         """
         json_obj = self.fetch_json('members/me/organizations')
@@ -168,14 +170,16 @@ class TrelloClient(object):
         if response.status_code == 401:
             raise Unauthorized("%s at %s" % (response.text, url), response)
         if response.status_code != 200:
-            raise ResourceUnavailable("%s at %s" % (response.text, url), response)
+            raise ResourceUnavailable("%s at %s" % (response.text, url),
+                                      response)
 
         return response.json()
 
     def list_hooks(self, token=None):
         """
-        Returns a list of all hooks associated with a specific token. If you don't pass in a token,
-        it tries to use the token associated with the TrelloClient object (if it exists)
+        Returns a list of all hooks associated with a specific token.
+        If you don't pass in a token, it tries to use the token associated with
+        the TrelloClient object (if it exists)
         """
         token = token or self.resource_owner_key
 
@@ -222,8 +226,8 @@ class TrelloClient(object):
         else:
             return False
 
-class Organization(object):
 
+class Organization(object):
     """
     Class representing an organization
     """
@@ -240,10 +244,11 @@ class Organization(object):
         :trello_client: the trello client
         :json_obj: the board json object
         """
-        organization = Organization(trello_client, json_obj['id'], name=json_obj['name'].encode('utf-8'))
+        organization = Organization(trello_client, json_obj['id'],
+                                    name=json_obj['name'].encode('utf-8'))
         organization.description = json_obj.get('desc', '').encode('utf-8')
         # cannot close an organization
-        #organization.closed = json_obj['closed']
+        # organization.closed = json_obj['closed']
         organization.url = json_obj['url']
         return organization
 
@@ -273,14 +278,15 @@ class Organization(object):
         # error checking
         json_obj = self.client.fetch_json(
             '/organizations/' + self.id + '/boards',
-            query_params={'filter': 'open','fields':field_name})
+            query_params={'filter': 'open', 'fields': field_name})
         return [Board.from_json(organization=self, json_obj=obj) for obj in json_obj]
 
     def get_members(self):
         json_obj = self.client.fetch_json(
-        '/organizations/' + self.id + '/members',
-        query_params={'filter': 'all'})
+            '/organizations/' + self.id + '/members',
+            query_params={'filter': 'all'})
         return [Member.from_json(trello_client=self.client, json_obj=obj) for obj in json_obj]
+
 
 class Board(object):
     """
@@ -308,9 +314,8 @@ class Board(object):
         self.id = board_id
         self.name = name
 
-
     @classmethod
-    def from_json(cls, trello_client=None, organization = None, json_obj=None):
+    def from_json(cls, trello_client=None, organization=None, json_obj=None):
         """
         Deserialize the board json object to a Board object
 
@@ -325,9 +330,11 @@ class Board(object):
         :json_obj: the json board object
         """
         if organization is None:
-            board = Board(client=trello_client, board_id=json_obj['id'], name=json_obj['name'].encode('utf-8'))
+            board = Board(client=trello_client, board_id=json_obj['id'],
+                          name=json_obj['name'].encode('utf-8'))
         else:
-            board = Board(organization=organization, board_id=json_obj['id'], name=json_obj['name'].encode('utf-8'))
+            board = Board(organization=organization, board_id=json_obj['id'],
+                          name=json_obj['name'].encode('utf-8'))
 
         board.description = json_obj.get('desc', '').encode('utf-8')
         board.closed = json_obj['closed']
@@ -567,6 +574,7 @@ class List(object):
     def cardsCnt(self):
         return len(self.list_cards())
 
+
 class Card(object):
     """
     Class representing a Trello card. Card attributes are stored on
@@ -654,7 +662,8 @@ class Card(object):
     def fetch(self, eager=True):
         """
         Fetch all attributes for this card
-        :param eager: If eager is true comments and checklists will be fetched immediately, otherwise on demand
+        :param eager: If eager is true comments and checklists will be fetched
+                      immediately, otherwise on demand
         """
         json_obj = self.client.fetch_json(
             '/cards/' + self.id,
@@ -692,10 +701,10 @@ class Card(object):
     def get_comments(self):
         comments = []
         comments = self.client.fetch_json(
-                '/cards/' + self.id + '/actions',
-                query_params={'filter': 'commentCard'})
+            '/cards/' + self.id + '/actions',
+            query_params={'filter': 'commentCard'})
         return comments
-    
+
     def fetch_checklists(self):
         checklists = []
         json_obj = self.client.fetch_json(
@@ -715,7 +724,6 @@ class Card(object):
             query_params={'filter': action_filter})
         self.actions = json_obj
 
-
     def attriExp(self, multiple):
         """
             Provides the option to explore what comes from trello
@@ -726,20 +734,20 @@ class Card(object):
 
     def listCardMove_date(self):
         """
-            Will return the history of transitions of a card from one list to another
-            The lower the index the more resent the historical item
+            Will return the history of transitions of a card from one list to another.
+            The lower the index the more resent the historical item.
 
             It returns a list of lists. The sublists are triplates of
             starting list, ending list and when the transition occured.
         """
         self.fetch_actions('updateCard:idList')
-        res =[]
+        res = []
         for idx in self.actions:
             date_str = idx['date'][:-5]
             dateDate = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S')
             strLst = idx['data']['listBefore']['name']
             endLst = idx['data']['listAfter']['name']
-            res.append([strLst,endLst,dateDate])
+            res.append([strLst, endLst, dateDate])
         return res
 
     @property
@@ -885,7 +893,7 @@ class Card(object):
             '/cards/' + self.id + '/' + attribute,
             http_method='POST',
             files=files,
-            post_args=kwargs )
+            post_args=kwargs)
 
 
 class Member(object):
@@ -897,7 +905,6 @@ class Member(object):
         self.client = client
         self.id = member_id
         self.full_name = full_name
-
 
     def __repr__(self):
         return '<Member %s>' % self.id
@@ -934,13 +941,13 @@ class Member(object):
         :json_obj: the member json object
         """
 
-        member = Member(trello_client, json_obj['id'], full_name=json_obj['fullName'].encode('utf-8'))
+        member = Member(trello_client, json_obj['id'],
+                        full_name=json_obj['fullName'].encode('utf-8'))
         member.username = json_obj.get('username', '').encode('utf-8')
         member.initials = json_obj.get('initials', '').encode('utf-8')
         # cannot close an organization
-        #organization.closed = json_obj['closed']
+        # organization.closed = json_obj['closed']
         return member
-
 
 
 class Checklist(object):
@@ -1029,11 +1036,11 @@ class Checklist(object):
             return
 
         json_obj = self.client.fetch_json(
-                '/cards/'+self.trello_card+\
-                '/checklist/'+self.id+\
-                '/checkItem/'+self.items[ix]['id'],
-                http_method = 'PUT',
-                post_args = {'name' : new_name})
+            '/cards/' + self.trello_card + \
+            '/checklist/' + self.id + \
+            '/checkItem/' + self.items[ix]['id'],
+            http_method='PUT',
+            post_args={'name': new_name})
 
         self.items[ix] = json_obj
         return json_obj

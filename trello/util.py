@@ -4,6 +4,7 @@ import os
 
 from requests_oauthlib import OAuth1Session
 
+
 def create_oauth_token(expiration=None, scope=None, key=None, secret=None):
     """
     Script to obtain an OAuth token from Trello.
@@ -25,12 +26,13 @@ def create_oauth_token(expiration=None, scope=None, key=None, secret=None):
     trello_secret = secret or os.environ['TRELLO_API_SECRET']
 
     # Step 1: Get a request token. This is a temporary token that is used for
-    # having the user authorize an access token and to sign the request to obtain
-    # said access token.
+    # having the user authorize an access token and to sign the request to
+    # obtain said access token.
 
     session = OAuth1Session(client_key=trello_key, client_secret=trello_secret)
     response = session.fetch_request_token(request_token_url)
-    resource_owner_key, resource_owner_secret = response.get('oauth_token'), response.get('oauth_token_secret')
+    resource_owner_key = response.get('oauth_token')
+    resource_owner_secret = response.get('oauth_token_secret')
 
     print("Request Token:")
     print("    - oauth_token        = %s" % resource_owner_key)
@@ -64,13 +66,16 @@ def create_oauth_token(expiration=None, scope=None, key=None, secret=None):
         accepted = inputFunc('Have you authorized me? (y/n) ')
     oauth_verifier = inputFunc('What is the PIN? ')
 
-    # Step 3: Once the consumer has redirected the user back to the oauth_callback
-    # URL you can request the access token the user has approved. You use the
-    # request token to sign this request. After this is done you throw away the
-    # request token and use the access token returned. You should store this
-    # access token somewhere safe, like a database, for future use.
+    # Step 3: Once the consumer has redirected the user back to the
+    # oauth_callback URL you can request the access token the user has
+    # approved. You use the request token to sign this request. After this is
+    # done you throw away the request token and use the access token returned.
+    # You should store this access token somewhere safe, like a database, for
+    # future use.
+
     session = OAuth1Session(client_key=trello_key, client_secret=trello_secret,
-                            resource_owner_key=resource_owner_key, resource_owner_secret=resource_owner_secret,
+                            resource_owner_key=resource_owner_key,
+                            resource_owner_secret=resource_owner_secret,
                             verifier=oauth_verifier)
     access_token = session.fetch_access_token(access_token_url)
 
