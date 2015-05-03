@@ -252,6 +252,21 @@ class TrelloBoardTestCase(unittest.TestCase):
         self.assertEquals(card.name, name)
         self.assertEquals(card.description, description)
 
+    def test55_set_pos(self):
+        card_names = lambda: [c.name for c in self._list.list_cards()]
+        self._list.add_card('card1')
+        card2 = self._list.add_card('card2')
+        names = card_names()
+        self.assertGreater(names.index('card2'), names.index('card1'))
+
+        card2.set_pos('top')
+        names = card_names()
+        self.assertGreater(names.index('card1'), names.index('card2'))
+
+        card2.set_pos('bottom')
+        names = card_names()
+        self.assertGreater(names.index('card2'), names.index('card1'))
+
     def test60_delete_cards(self):
         cards = self._board.get_cards()
         for card in cards:
