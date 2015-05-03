@@ -764,6 +764,10 @@ class Card(object):
         date_str = self.actions[0]['date'][:-5]
         return datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S')
 
+    @property
+    def due_date(self):
+        return dateparser.parse(self.due)
+
     def set_name(self, new_name):
         """
         Update the name on the card to :new_name:

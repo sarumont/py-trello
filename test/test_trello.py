@@ -226,6 +226,8 @@ class TrelloBoardTestCase(unittest.TestCase):
         card.fetch()
         actual_due_date = card.due[:10]
         self.assertEquals(expected_due_date, actual_due_date)
+        # Note that set_due passes only the date, stripping time
+        self.assertEquals(card.due_date.date(), due_date.date())
 
     def test53_checklist(self):
         name = "Testing from Python"
