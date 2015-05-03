@@ -616,6 +616,20 @@ class Card(object):
         self.desc = value
 
     @property
+    def idLabels(self):
+        return self.label_ids
+
+    @idLabels.setter
+    def idLabels(self, values):
+        self.label_ids = values
+
+    @property
+    def list_labels(self):
+        if self.labels:
+            return self.labels
+        return None
+
+    @property
     def comments(self):
         """
         Lazily loads and returns the comments
@@ -660,6 +674,8 @@ class Card(object):
         card.closed = json_obj['closed']
         card.url = json_obj['url']
         card.member_ids = json_obj['idMembers']
+        card.idLabels = json_obj['idLabels']
+        card.labels = json_obj['labels']
         return card
 
     def __repr__(self):
@@ -682,6 +698,7 @@ class Card(object):
         self.idShort = json_obj['idShort']
         self.idList = json_obj['idList']
         self.idBoard = json_obj['idBoard']
+        self.idLabels = json_obj['idLabels']
         self.labels = json_obj['labels']
         self.badges = json_obj['badges']
         # For consistency, due date is in YYYY-MM-DD format
@@ -901,6 +918,26 @@ class Card(object):
             files=files,
             post_args=kwargs )
 
+class Label(object):
+    """
+    Class representing a Trello Label.
+    """
+    def __init__(self, client, label_id, name, color=""):
+        self.client = client
+        self.id = label_id
+        self.name = name
+        self.color = color
+
+    def __repr__(self):
+        return '<Label %s>' % self.name
+
+    def fetch(self):
+        """Fetch all attributes for this label"""
+        json_obj = self.client.fetch_json(
+            '/labels/' + self.id)
+        self.name = json_obj['name'].encode('utf-8')
+        self.color = json_obj['color']
+        return self
 
 class Member(object):
     """
