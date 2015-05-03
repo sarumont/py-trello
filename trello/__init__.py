@@ -947,7 +947,7 @@ class Label(object):
         """
         Deserialize the label json object to a Label object
 
-        :trello_client: the trello client
+        :board: the parent board the label is on
         :json_obj: the label json object
         """
         label = Label(board.client, label_id=json_obj['id'], name=json_obj['name'].encode('utf-8'), color=json_obj['color'])
