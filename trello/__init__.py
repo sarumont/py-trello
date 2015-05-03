@@ -397,6 +397,20 @@ class Board(object):
             post_args={'name': name, 'idBoard': self.id}, )
         return List.from_json(board=self, json_obj=obj)
 
+    def add_label(self, name, color):
+        """
+            Add a label to this board
+            :name: name of the label
+            :color: the color, either green, yellow, orange
+                red, purple, blue, sky, lime, pink, or black
+            :return: the label
+        """
+        obj = self.client.fetch_json(
+            '/labels',
+            http_method='POST',
+            post_args={'name':name, 'idBoard': self.id, 'color': color},)
+        return Label.from_json(board=self, json_obj=obj)
+
     def all_cards(self):
         """Returns all cards on this board"""
         filters = {
@@ -927,6 +941,17 @@ class Label(object):
         self.id = label_id
         self.name = name
         self.color = color
+
+    @classmethod
+    def from_json(cls, board, json_obj):
+        """
+        Deserialize the label json object to a Label object
+
+        :trello_client: the trello client
+        :json_obj: the label json object
+        """
+        label = Label(board.client, label_id=json_obj['id'], name=json_obj['name'].encode('utf-8'), color=json_obj['color'])
+        return label
 
     def __repr__(self):
         return '<Label %s>' % self.name
