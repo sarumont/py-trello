@@ -378,6 +378,12 @@ class Board(object):
             query_params={'cards': 'none', 'filter': list_filter})
         return [List.from_json(board=self, json_obj=obj) for obj in json_obj]
 
+    def get_labels(self, fields='all', limit=50):
+        json_obj = self.client.fetch_json(
+              '/boards/' + self.id + '/labels',
+              query_params={'fields': fields, 'limit': limit})
+        return [Label.from_json(board=self, json_obj=obj) for obj in json_obj]
+
     def add_list(self, name):
         """Add a list to this board
 
@@ -543,16 +549,21 @@ class List(object):
         json_obj = self.client.fetch_json('/lists/' + self.id + '/cards')
         return [Card.from_json(self, c) for c in json_obj]
 
-    def add_card(self, name, desc=None):
+    def add_card(self, name, desc=None, labels=None):
         """Add a card to this list
 
         :name: name for the card
+        :desc: the description of the card
+        :labels: a list of label IDs to be added
         :return: the card
         """
+        labels_str = None
+        if labels:
+            labels_str = ",".join(labels)
         json_obj = self.client.fetch_json(
             '/lists/' + self.id + '/cards',
             http_method='POST',
-            post_args={'name': name, 'idList': self.id, 'desc': desc}, )
+            post_args={'name': name, 'idList': self.id, 'desc': desc, 'idLabels': labels_str}, )
         return Card.from_json(self, json_obj)
 
     def fetch_actions(self, action_filter):
@@ -837,6 +848,12 @@ class Card(object):
             '/cards/' + self.id + '/actions/comments',
             http_method='POST',
             post_args={'text': comment_text, })
+
+    def add_label(self, label):
+        self.client.fetch_json(
+            '/cards/' + self.id +'/idLabels',
+            http_method='POST',
+            post_args={'value': label.id})
 
     def attach(self, name=None, mimeType=None, file=None, url=None):
         """
