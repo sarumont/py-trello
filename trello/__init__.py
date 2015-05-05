@@ -670,6 +670,7 @@ class Card(object):
         self.idBoard = json_obj['idBoard']
         self.labels = json_obj['labels']
         self.badges = json_obj['badges']
+        self.pos = json_obj['pos']
         # For consistency, due date is in YYYY-MM-DD format
         if json_obj.get('due', ''):
             self.due = json_obj.get('due', '')[:10]
@@ -695,7 +696,7 @@ class Card(object):
                 '/cards/' + self.id + '/actions',
                 query_params={'filter': 'commentCard'})
         return comments
-    
+
     def fetch_checklists(self):
         checklists = []
         json_obj = self.client.fetch_json(
@@ -764,6 +765,10 @@ class Card(object):
         date_str = self.actions[0]['date'][:-5]
         return datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S')
 
+    @property
+    def due_date(self):
+        return dateparser.parse(self.due)
+
     def set_name(self, new_name):
         """
         Update the name on the card to :new_name:
@@ -783,6 +788,15 @@ class Card(object):
         datestr = due.strftime('%Y-%m-%d')
         self._set_remote_attribute('due', datestr)
         self.due = datestr
+
+    def set_pos(self, pos):
+        """
+        Update card position in list
+
+        :pos: 'top', 'bottom' or int
+        """
+        self._set_remote_attribute('pos', pos)
+        self.pos = pos
 
     def set_closed(self, closed):
         self._set_remote_attribute('closed', closed)
