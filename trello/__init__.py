@@ -355,13 +355,6 @@ class Board(object):
             post_args={'value': 'true', }, )
         self.closed = True
 
-    def open(self):
-        self.client.fetch_json(
-            '/boards/' + self.id + '/closed',
-            http_method='PUT',
-            post_args={'value': 'false', }, )
-        self.closed = False
-
     def get_list(self, list_id):
         obj = self.client.fetch_json('/lists/' + list_id)
         return List.from_json(board=self, json_obj=obj)
@@ -385,6 +378,12 @@ class Board(object):
             query_params={'cards': 'none', 'filter': list_filter})
         return [List.from_json(board=self, json_obj=obj) for obj in json_obj]
 
+    def get_labels(self, fields='all', limit=50):
+        json_obj = self.client.fetch_json(
+              '/boards/' + self.id + '/labels',
+              query_params={'fields': fields, 'limit': limit})
+        return [Label.from_json(board=self, json_obj=obj) for obj in json_obj]
+
     def add_list(self, name):
         """Add a list to this board
 
@@ -396,6 +395,20 @@ class Board(object):
             http_method='POST',
             post_args={'name': name, 'idBoard': self.id}, )
         return List.from_json(board=self, json_obj=obj)
+
+    def add_label(self, name, color):
+        """
+            Add a label to this board
+            :name: name of the label
+            :color: the color, either green, yellow, orange
+                red, purple, blue, sky, lime, pink, or black
+            :return: the label
+        """
+        obj = self.client.fetch_json(
+            '/labels',
+            http_method='POST',
+            post_args={'name':name, 'idBoard': self.id, 'color': color},)
+        return Label.from_json(board=self, json_obj=obj)
 
     def all_cards(self):
         """Returns all cards on this board"""
@@ -536,17 +549,27 @@ class List(object):
         json_obj = self.client.fetch_json('/lists/' + self.id + '/cards')
         return [Card.from_json(self, c) for c in json_obj]
 
-    def add_card(self, name, desc=None):
+    def add_card(self, name, desc=None, labels=[], due="null"):
         """Add a card to this list
 
         :name: name for the card
+        :desc: the description of the card
+        :labels: a list of label IDs to be added
         :return: the card
         """
+        labels_str = ""
+        for label in labels:
+            labels_str += label.id + ","
         json_obj = self.client.fetch_json(
-            '/lists/' + self.id + '/cards',
+            '/cards',
             http_method='POST',
-            post_args={'name': name, 'idList': self.id, 'desc': desc}, )
+            post_args={'name': name, 'idList': self.id, 'desc': desc, 'idLabels': labels_str[:-1], 'due': due})
         return Card.from_json(self, json_obj)
+
+    def archive_all_cards(self):
+        self.client.fetch_json(
+            '/lists/' + self.id + '/archiveAllCards',
+            http_method='POST')
 
     def fetch_actions(self, action_filter):
         """
@@ -570,13 +593,6 @@ class List(object):
             http_method='PUT',
             post_args={'value': 'true', }, )
         self.closed = True
-
-    def open(self):
-        self.client.fetch_json(
-            '/lists/' + self.id + '/closed',
-            http_method='PUT',
-            post_args={'value': 'false', }, )
-        self.closed = False
 
     def cardsCnt(self):
         return len(self.list_cards())
@@ -614,6 +630,20 @@ class Card(object):
     @description.setter
     def description(self, value):
         self.desc = value
+
+    @property
+    def idLabels(self):
+        return self.label_ids
+
+    @idLabels.setter
+    def idLabels(self, values):
+        self.label_ids = values
+
+    @property
+    def list_labels(self):
+        if self.labels:
+            return self.labels
+        return None
 
     @property
     def comments(self):
@@ -660,6 +690,8 @@ class Card(object):
         card.closed = json_obj['closed']
         card.url = json_obj['url']
         card.member_ids = json_obj['idMembers']
+        card.idLabels = json_obj['idLabels']
+        card.labels = json_obj['labels']
         return card
 
     def __repr__(self):
@@ -682,6 +714,7 @@ class Card(object):
         self.idShort = json_obj['idShort']
         self.idList = json_obj['idList']
         self.idBoard = json_obj['idBoard']
+        self.idLabels = json_obj['idLabels']
         self.labels = json_obj['labels']
         self.badges = json_obj['badges']
         self.pos = json_obj['pos']
@@ -835,6 +868,12 @@ class Card(object):
             http_method='POST',
             post_args={'text': comment_text, })
 
+    def add_label(self, label):
+        self.client.fetch_json(
+            '/cards/' + self.id +'/idLabels',
+            http_method='POST',
+            post_args={'value': label.id})
+
     def attach(self, name=None, mimeType=None, file=None, url=None):
         """
         Add an attachment to the card. The attachment can be either a
@@ -915,6 +954,37 @@ class Card(object):
             files=files,
             post_args=kwargs )
 
+class Label(object):
+    """
+    Class representing a Trello Label.
+    """
+    def __init__(self, client, label_id, name, color=""):
+        self.client = client
+        self.id = label_id
+        self.name = name
+        self.color = color
+
+    @classmethod
+    def from_json(cls, board, json_obj):
+        """
+        Deserialize the label json object to a Label object
+
+        :board: the parent board the label is on
+        :json_obj: the label json object
+        """
+        label = Label(board.client, label_id=json_obj['id'], name=json_obj['name'].encode('utf-8'), color=json_obj['color'])
+        return label
+
+    def __repr__(self):
+        return '<Label %s>' % self.name
+
+    def fetch(self):
+        """Fetch all attributes for this label"""
+        json_obj = self.client.fetch_json(
+            '/labels/' + self.id)
+        self.name = json_obj['name'].encode('utf-8')
+        self.color = json_obj['color']
+        return self
 
 class Member(object):
     """
