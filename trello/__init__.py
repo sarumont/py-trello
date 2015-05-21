@@ -76,6 +76,7 @@ class TrelloClient(object):
         Returns all boards for your Trello user
 
         :return: a list of Python objects representing the Trello boards.
+        :rtype: Board
 
         Each board has the following noteworthy attributes:
             - id: the board's identifier
@@ -93,6 +94,7 @@ class TrelloClient(object):
         Returns all organizations for your Trello user
 
         :return: a list of Python objects representing the Trello organizations.
+        :rtype: Organization
 
         Each organization has the following noteworthy attributes:
             - id: the organization's identifier
@@ -106,23 +108,43 @@ class TrelloClient(object):
         return [Organization.from_json(self, obj) for obj in json_obj]
 
     def get_organization(self, organization_id):
+        '''Get organization
+
+        :rtype: Organization
+        '''
         obj = self.fetch_json('/organizations/' + organization_id)
 
         return Organization.from_json(self, obj)
 
     def get_board(self, board_id):
+        '''Get board
+
+        :rtype: Board
+        '''
         obj = self.fetch_json('/boards/' + board_id)
         return Board.from_json(self, json_obj=obj)
 
     def add_board(self, board_name):
+        '''Create board
+
+        :rtype: Board
+        '''
         obj = self.fetch_json('/boards', http_method='POST',
                               post_args={'name': board_name})
         return Board.from_json(self, json_obj=obj)
 
     def get_member(self, member_id):
+        '''Get member
+
+        :rtype: Member
+        '''
         return Member(self, member_id).fetch()
 
     def get_card(self, card_id):
+        '''Get card
+
+        :rtype: Card
+        '''
         card_json = self.fetch_json('/cards/' + card_id)
         list_json = self.fetch_json('/lists/' + card_json['idList'])
         board = self.get_board(card_json['idBoard'])
@@ -265,6 +287,10 @@ class Organization(object):
         return self.get_boards('all')
 
     def get_boards(self, list_filter):
+        '''Get boards using filter
+
+        :rtype: Board
+        '''
         # error checking
         json_obj = self.client.fetch_json(
             '/organizations/' + self.id + '/boards',
@@ -272,6 +298,10 @@ class Organization(object):
         return [Board.from_json(organization=self, json_obj=obj) for obj in json_obj]
 
     def get_board(self, field_name):
+        '''Get board
+
+        :rtype: Board
+        '''
         # error checking
         json_obj = self.client.fetch_json(
             '/organizations/' + self.id + '/boards',
