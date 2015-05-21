@@ -76,6 +76,7 @@ class TrelloClient(object):
         Returns all boards for your Trello user
 
         :return: a list of Python objects representing the Trello boards.
+
         Each board has the following noteworthy attributes:
             - id: the board's identifier
             - name: Name of the board
@@ -92,6 +93,7 @@ class TrelloClient(object):
         Returns all organizations for your Trello user
 
         :return: a list of Python objects representing the Trello organizations.
+
         Each organization has the following noteworthy attributes:
             - id: the organization's identifier
             - name: Name of the organization
@@ -397,12 +399,12 @@ class Board(object):
         return List.from_json(board=self, json_obj=obj)
 
     def add_label(self, name, color):
-        """
-            Add a label to this board
-            :name: name of the label
-            :color: the color, either green, yellow, orange
-                red, purple, blue, sky, lime, pink, or black
-            :return: the label
+        """Add a label to this board
+
+        :name: name of the label
+        :color: the color, either green, yellow, orange
+            red, purple, blue, sky, lime, pink, or black
+        :return: the label
         """
         obj = self.client.fetch_json(
             '/labels',
@@ -802,11 +804,11 @@ class Card(object):
 
     @property
     def create_date(self):
-        """
-            Will return the creation date of the card.
-            WARNING: if the card was create via convertion of a checklist item
-                    it fails. attriExp('convertToCardFromCheckItem') allows to
-                    test for the condition.
+        """Will return the creation date of the card.
+
+        WARNING: if the card was create via convertion of a checklist item
+                it fails. attriExp('convertToCardFromCheckItem') allows to
+                test for the condition.
         """
         self.fetch_actions()
         date_str = self.actions[0]['date'][:-5]
