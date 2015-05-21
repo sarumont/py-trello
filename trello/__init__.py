@@ -388,22 +388,39 @@ class Board(object):
         self.closed = True
 
     def get_list(self, list_id):
+        '''Get list
+
+        :rtype: List
+        '''
         obj = self.client.fetch_json('/lists/' + list_id)
         return List.from_json(board=self, json_obj=obj)
 
     def all_lists(self):
-        """Returns all lists on this board"""
+        """Returns all lists on this board
+
+        :rtype: List
+        """
         return self.get_lists('all')
 
     def open_lists(self):
-        """Returns all open lists on this board"""
+        """Returns all open lists on this board
+
+        :rtype: List
+        """
         return self.get_lists('open')
 
     def closed_lists(self):
-        """Returns all closed lists on this board"""
+        """Returns all closed lists on this board
+
+        :rtype: List
+        """
         return self.get_lists('closed')
 
     def get_lists(self, list_filter):
+        '''Get lists from filter
+
+        :rtype: List
+        '''
         # error checking
         json_obj = self.client.fetch_json(
             '/boards/' + self.id + '/lists',
@@ -411,6 +428,10 @@ class Board(object):
         return [List.from_json(board=self, json_obj=obj) for obj in json_obj]
 
     def get_labels(self, fields='all', limit=50):
+        '''Get label
+
+        :rtype: Label
+        '''
         json_obj = self.client.fetch_json(
               '/boards/' + self.id + '/labels',
               query_params={'fields': fields, 'limit': limit})
@@ -421,6 +442,7 @@ class Board(object):
 
         :name: name for the list
         :return: the list
+        :rtype: List
         """
         obj = self.client.fetch_json(
             '/lists',
@@ -435,6 +457,7 @@ class Board(object):
         :color: the color, either green, yellow, orange
             red, purple, blue, sky, lime, pink, or black
         :return: the label
+        :rtype: Label
         """
         obj = self.client.fetch_json(
             '/labels',
@@ -443,7 +466,10 @@ class Board(object):
         return Label.from_json(board=self, json_obj=obj)
 
     def all_cards(self):
-        """Returns all cards on this board"""
+        """Returns all cards on this board
+
+        :rtype: Card
+        """
         filters = {
             'filter': 'all',
             'fields': 'all'
@@ -451,7 +477,10 @@ class Board(object):
         return self.get_cards(filters)
 
     def open_cards(self):
-        """Returns all open cards on this board"""
+        """Returns all open cards on this board
+
+        :rtype: Card
+        """
         filters = {
             'filter': 'open',
             'fields': 'all'
@@ -459,7 +488,10 @@ class Board(object):
         return self.get_cards(filters)
 
     def closed_cards(self):
-        """Returns all closed cards on this board"""
+        """Returns all closed cards on this board
+
+        :rtype: Card
+        """
         filters = {
             'filter': 'closed',
             'fields': 'all'
@@ -473,6 +505,8 @@ class Board(object):
 
         More info on card queries:
         https://trello.com/docs/api/board/index.html#get-1-boards-board-id-cards
+
+        :rtype: Card
         """
         json_obj = self.client.fetch_json(
             '/boards/' + self.id + '/cards',
@@ -482,7 +516,10 @@ class Board(object):
         return list([Card.from_json(self, json) for json in json_obj])
 
     def all_members(self):
-        """Returns all members on this board"""
+        """Returns all members on this board
+
+        :rtype: Member
+        """
         filters = {
             'filter': 'all',
             'fields': 'all'
@@ -490,7 +527,10 @@ class Board(object):
         return self.get_members(filters)
 
     def normal_members(self):
-        """Returns all normal members on this board"""
+        """Returns all normal members on this board
+
+        :rtype: Member
+        """
         filters = {
             'filter': 'normal',
             'fields': 'all'
@@ -498,7 +538,10 @@ class Board(object):
         return self.get_members(filters)
 
     def admin_members(self):
-        """Returns all admin members on this board"""
+        """Returns all admin members on this board
+
+        :rtype: Member
+        """
         filters = {
             'filter': 'admins',
             'fields': 'all'
@@ -506,7 +549,10 @@ class Board(object):
         return self.get_members(filters)
 
     def owner_members(self):
-        """Returns all owner members on this board"""
+        """Returns all owner members on this board
+
+        :rtype: Member
+        """
         filters = {
             'filter': 'owners',
             'fields': 'all'
@@ -514,6 +560,10 @@ class Board(object):
         return self.get_members(filters)
 
     def get_members(self, filters=None):
+        """Get members with filter
+
+        :rtype: Member
+        """
         json_obj = self.client.fetch_json(
             '/boards/' + self.id + '/members',
             query_params=filters)
