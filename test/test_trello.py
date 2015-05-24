@@ -108,17 +108,18 @@ class TrelloBoardTestCase(unittest.TestCase):
     independently.
     """
 
-    def setUp(self):
-        self._trello = TrelloClient(os.environ['TRELLO_API_KEY'],
-                                    token=os.environ['TRELLO_TOKEN'])
-        for b in self._trello.list_boards():
+    @classmethod
+    def setUpClass(cls):
+        cls._trello = TrelloClient(os.environ['TRELLO_API_KEY'],
+                                   token=os.environ['TRELLO_TOKEN'])
+        for b in cls._trello.list_boards():
             if b.name == os.environ['TRELLO_TEST_BOARD_NAME']:
-                self._board = b
+                cls._board = b
                 break
         try:
-            self._list = self._board.open_lists()[0]
+            cls._list = cls._board.open_lists()[0]
         except IndexError:
-            self._list = self._board.add_list('List')
+            cls._list = cls._board.add_list('List')
 
     def _add_card(self, name, description=None):
         card = self._list.add_card(name, description)
