@@ -76,6 +76,8 @@ class TrelloClient(object):
         Returns all boards for your Trello user
 
         :return: a list of Python objects representing the Trello boards.
+        :rtype: Board
+
         Each board has the following noteworthy attributes:
             - id: the board's identifier
             - name: Name of the board
@@ -92,6 +94,8 @@ class TrelloClient(object):
         Returns all organizations for your Trello user
 
         :return: a list of Python objects representing the Trello organizations.
+        :rtype: Organization
+
         Each organization has the following noteworthy attributes:
             - id: the organization's identifier
             - name: Name of the organization
@@ -104,23 +108,43 @@ class TrelloClient(object):
         return [Organization.from_json(self, obj) for obj in json_obj]
 
     def get_organization(self, organization_id):
+        '''Get organization
+
+        :rtype: Organization
+        '''
         obj = self.fetch_json('/organizations/' + organization_id)
 
         return Organization.from_json(self, obj)
 
     def get_board(self, board_id):
+        '''Get board
+
+        :rtype: Board
+        '''
         obj = self.fetch_json('/boards/' + board_id)
         return Board.from_json(self, json_obj=obj)
 
     def add_board(self, board_name):
+        '''Create board
+
+        :rtype: Board
+        '''
         obj = self.fetch_json('/boards', http_method='POST',
                               post_args={'name': board_name})
         return Board.from_json(self, json_obj=obj)
 
     def get_member(self, member_id):
+        '''Get member
+
+        :rtype: Member
+        '''
         return Member(self, member_id).fetch()
 
     def get_card(self, card_id):
+        '''Get card
+
+        :rtype: Card
+        '''
         card_json = self.fetch_json('/cards/' + card_id)
         list_json = self.fetch_json('/lists/' + card_json['idList'])
         board = self.get_board(card_json['idBoard'])
@@ -263,6 +287,10 @@ class Organization(object):
         return self.get_boards('all')
 
     def get_boards(self, list_filter):
+        '''Get boards using filter
+
+        :rtype: Board
+        '''
         # error checking
         json_obj = self.client.fetch_json(
             '/organizations/' + self.id + '/boards',
@@ -270,6 +298,10 @@ class Organization(object):
         return [Board.from_json(organization=self, json_obj=obj) for obj in json_obj]
 
     def get_board(self, field_name):
+        '''Get board
+
+        :rtype: Board
+        '''
         # error checking
         json_obj = self.client.fetch_json(
             '/organizations/' + self.id + '/boards',
@@ -356,22 +388,39 @@ class Board(object):
         self.closed = True
 
     def get_list(self, list_id):
+        '''Get list
+
+        :rtype: List
+        '''
         obj = self.client.fetch_json('/lists/' + list_id)
         return List.from_json(board=self, json_obj=obj)
 
     def all_lists(self):
-        """Returns all lists on this board"""
+        """Returns all lists on this board
+
+        :rtype: List
+        """
         return self.get_lists('all')
 
     def open_lists(self):
-        """Returns all open lists on this board"""
+        """Returns all open lists on this board
+
+        :rtype: List
+        """
         return self.get_lists('open')
 
     def closed_lists(self):
-        """Returns all closed lists on this board"""
+        """Returns all closed lists on this board
+
+        :rtype: List
+        """
         return self.get_lists('closed')
 
     def get_lists(self, list_filter):
+        '''Get lists from filter
+
+        :rtype: List
+        '''
         # error checking
         json_obj = self.client.fetch_json(
             '/boards/' + self.id + '/lists',
@@ -379,6 +428,10 @@ class Board(object):
         return [List.from_json(board=self, json_obj=obj) for obj in json_obj]
 
     def get_labels(self, fields='all', limit=50):
+        '''Get label
+
+        :rtype: Label
+        '''
         json_obj = self.client.fetch_json(
               '/boards/' + self.id + '/labels',
               query_params={'fields': fields, 'limit': limit})
@@ -389,6 +442,7 @@ class Board(object):
 
         :name: name for the list
         :return: the list
+        :rtype: List
         """
         obj = self.client.fetch_json(
             '/lists',
@@ -397,12 +451,13 @@ class Board(object):
         return List.from_json(board=self, json_obj=obj)
 
     def add_label(self, name, color):
-        """
-            Add a label to this board
-            :name: name of the label
-            :color: the color, either green, yellow, orange
-                red, purple, blue, sky, lime, pink, or black
-            :return: the label
+        """Add a label to this board
+
+        :name: name of the label
+        :color: the color, either green, yellow, orange
+            red, purple, blue, sky, lime, pink, or black
+        :return: the label
+        :rtype: Label
         """
         obj = self.client.fetch_json(
             '/labels',
@@ -411,7 +466,10 @@ class Board(object):
         return Label.from_json(board=self, json_obj=obj)
 
     def all_cards(self):
-        """Returns all cards on this board"""
+        """Returns all cards on this board
+
+        :rtype: Card
+        """
         filters = {
             'filter': 'all',
             'fields': 'all'
@@ -419,7 +477,10 @@ class Board(object):
         return self.get_cards(filters)
 
     def open_cards(self):
-        """Returns all open cards on this board"""
+        """Returns all open cards on this board
+
+        :rtype: Card
+        """
         filters = {
             'filter': 'open',
             'fields': 'all'
@@ -427,7 +488,10 @@ class Board(object):
         return self.get_cards(filters)
 
     def closed_cards(self):
-        """Returns all closed cards on this board"""
+        """Returns all closed cards on this board
+
+        :rtype: Card
+        """
         filters = {
             'filter': 'closed',
             'fields': 'all'
@@ -441,6 +505,8 @@ class Board(object):
 
         More info on card queries:
         https://trello.com/docs/api/board/index.html#get-1-boards-board-id-cards
+
+        :rtype: Card
         """
         json_obj = self.client.fetch_json(
             '/boards/' + self.id + '/cards',
@@ -450,7 +516,10 @@ class Board(object):
         return list([Card.from_json(self, json) for json in json_obj])
 
     def all_members(self):
-        """Returns all members on this board"""
+        """Returns all members on this board
+
+        :rtype: Member
+        """
         filters = {
             'filter': 'all',
             'fields': 'all'
@@ -458,7 +527,10 @@ class Board(object):
         return self.get_members(filters)
 
     def normal_members(self):
-        """Returns all normal members on this board"""
+        """Returns all normal members on this board
+
+        :rtype: Member
+        """
         filters = {
             'filter': 'normal',
             'fields': 'all'
@@ -466,7 +538,10 @@ class Board(object):
         return self.get_members(filters)
 
     def admin_members(self):
-        """Returns all admin members on this board"""
+        """Returns all admin members on this board
+
+        :rtype: Member
+        """
         filters = {
             'filter': 'admins',
             'fields': 'all'
@@ -474,7 +549,10 @@ class Board(object):
         return self.get_members(filters)
 
     def owner_members(self):
-        """Returns all owner members on this board"""
+        """Returns all owner members on this board
+
+        :rtype: Member
+        """
         filters = {
             'filter': 'owners',
             'fields': 'all'
@@ -482,6 +560,10 @@ class Board(object):
         return self.get_members(filters)
 
     def get_members(self, filters=None):
+        """Get members with filter
+
+        :rtype: Member
+        """
         json_obj = self.client.fetch_json(
             '/boards/' + self.id + '/members',
             query_params=filters)
@@ -802,11 +884,11 @@ class Card(object):
 
     @property
     def create_date(self):
-        """
-            Will return the creation date of the card.
-            WARNING: if the card was create via convertion of a checklist item
-                    it fails. attriExp('convertToCardFromCheckItem') allows to
-                    test for the condition.
+        """Will return the creation date of the card.
+
+        WARNING: if the card was create via convertion of a checklist item
+                it fails. attriExp('convertToCardFromCheckItem') allows to
+                test for the condition.
         """
         self.fetch_actions()
         date_str = self.actions[0]['date'][:-5]

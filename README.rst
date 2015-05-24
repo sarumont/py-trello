@@ -70,3 +70,5 @@ Contributors
 
 * `Adrien Lemaire <https://github.com/Fandekasp>`_
 * `Kyle Valade <https://github.com/kdazzle>`_
+* `Rick van Hattem <https://github.com/WoLpH>`_
+
