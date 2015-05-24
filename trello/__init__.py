@@ -382,7 +382,7 @@ class Board(object):
         json_obj = self.client.fetch_json(
               '/boards/' + self.id + '/labels',
               query_params={'fields': fields, 'limit': limit})
-        return [Label.from_json(board=self, json_obj=obj) for obj in json_obj]
+        return Label.from_json_list(self, json_obj)
 
     def add_list(self, name):
         """Add a list to this board
@@ -407,7 +407,7 @@ class Board(object):
         obj = self.client.fetch_json(
             '/labels',
             http_method='POST',
-            post_args={'name':name, 'idBoard': self.id, 'color': color},)
+            post_args={'name': name, 'idBoard': self.id, 'color': color},)
         return Label.from_json(board=self, json_obj=obj)
 
     def all_cards(self):
@@ -696,7 +696,7 @@ class Card(object):
         card.url = json_obj['url']
         card.member_ids = json_obj['idMembers']
         card.idLabels = json_obj['idLabels']
-        card.labels = json_obj['labels']
+        card.labels = Label.from_json_list(card.board, json_obj['labels'])
         return card
 
     def __repr__(self):
@@ -720,7 +720,7 @@ class Card(object):
         self.idList = json_obj['idList']
         self.idBoard = json_obj['idBoard']
         self.idLabels = json_obj['idLabels']
-        self.labels = json_obj['labels']
+        self.labels = Label.from_json_list(self.board, json_obj['labels'])
         self.badges = json_obj['badges']
         self.pos = json_obj['pos']
         # For consistency, due date is in YYYY-MM-DD format
@@ -979,6 +979,10 @@ class Label(object):
         """
         label = Label(board.client, label_id=json_obj['id'], name=json_obj['name'].encode('utf-8'), color=json_obj['color'])
         return label
+
+    @classmethod
+    def from_json_list(cls, board, json_objs):
+        return [cls.from_json(board, obj) for obj in json_objs]
 
     def __repr__(self):
         return '<Label %s>' % self.name
