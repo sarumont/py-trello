@@ -663,18 +663,23 @@ class Card(object):
             self._checklists = self.fetch_checklists()
         return self._checklists
 
-    def __init__(self, trello_list, card_id, name=''):
+    def __init__(self, parent, card_id, name=''):
         """
         :trello_list: reference to the parent list
         :card_id: ID for this card
         """
-        self.trello_list = trello_list
-        self.client = trello_list.client
+        if isinstance(parent, List):
+            self.trello_list = parent
+            self.board = parent.board
+        else:
+            self.board = parent
+
+        self.client = parent.client
         self.id = card_id
         self.name = name
 
     @classmethod
-    def from_json(cls, trello_list, json_obj):
+    def from_json(cls, parent, json_obj):
         """
         Deserialize the card json object to a Card object
 
@@ -683,7 +688,7 @@ class Card(object):
         """
         if 'id' not in json_obj:
             raise Exception("key 'id' is not in json_obj")
-        card = cls(trello_list,
+        card = cls(parent,
                    json_obj['id'],
                    name=json_obj['name'].encode('utf-8'))
         card.desc = json_obj.get('desc', '')

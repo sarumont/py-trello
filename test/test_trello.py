@@ -121,15 +121,13 @@ class TrelloBoardTestCase(unittest.TestCase):
             self._list = self._board.add_list('List')
 
     def _add_card(self, name, description=None):
-        try:
-            card = self._list.add_card(name, description)
-            self.assertIsNotNone(card, msg="card is None")
-            self.assertIsNotNone(card.id, msg="id not provided")
-            self.assertEquals(card.name, name)
-            return card
-        except Exception as e:
-            print(str(e))
-            self.fail("Caught Exception adding card")
+        card = self._list.add_card(name, description)
+        self.assertIsNotNone(card, msg="card is None")
+        self.assertIsNotNone(card.id, msg="id not provided")
+        self.assertEquals(card.name, name)
+        self.assertEqual(card.board, self._board)
+        self.assertEqual(card.trello_list, self._list)
+        return card
 
     def test40_add_card(self):
         name = "Testing from Python - no desc"
@@ -206,6 +204,8 @@ class TrelloBoardTestCase(unittest.TestCase):
                 self.assertEqual(card.description, '')
             else:
                 self.fail(msg='Unexpected card found')
+
+            self.assertFalse(hasattr(card, 'trello_list'))
 
         self.assertIsInstance(self._board.all_cards(), list)
         self.assertIsInstance(self._board.open_cards(), list)
