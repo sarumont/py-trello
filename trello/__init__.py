@@ -435,7 +435,7 @@ class Board(object):
         json_obj = self.client.fetch_json(
               '/boards/' + self.id + '/labels',
               query_params={'fields': fields, 'limit': limit})
-        return [Label.from_json(board=self, json_obj=obj) for obj in json_obj]
+        return Label.from_json_list(self, json_obj)
 
     def add_list(self, name):
         """Add a list to this board
@@ -462,7 +462,7 @@ class Board(object):
         obj = self.client.fetch_json(
             '/labels',
             http_method='POST',
-            post_args={'name':name, 'idBoard': self.id, 'color': color},)
+            post_args={'name': name, 'idBoard': self.id, 'color': color},)
         return Label.from_json(board=self, json_obj=obj)
 
     def all_cards(self):
@@ -745,18 +745,23 @@ class Card(object):
             self._checklists = self.fetch_checklists()
         return self._checklists
 
-    def __init__(self, trello_list, card_id, name=''):
+    def __init__(self, parent, card_id, name=''):
         """
         :trello_list: reference to the parent list
         :card_id: ID for this card
         """
-        self.trello_list = trello_list
-        self.client = trello_list.client
+        if isinstance(parent, List):
+            self.trello_list = parent
+            self.board = parent.board
+        else:
+            self.board = parent
+
+        self.client = parent.client
         self.id = card_id
         self.name = name
 
     @classmethod
-    def from_json(cls, trello_list, json_obj):
+    def from_json(cls, parent, json_obj):
         """
         Deserialize the card json object to a Card object
 
@@ -765,7 +770,7 @@ class Card(object):
         """
         if 'id' not in json_obj:
             raise Exception("key 'id' is not in json_obj")
-        card = cls(trello_list,
+        card = cls(parent,
                    json_obj['id'],
                    name=json_obj['name'].encode('utf-8'))
         card.desc = json_obj.get('desc', '')
@@ -773,7 +778,7 @@ class Card(object):
         card.url = json_obj['url']
         card.member_ids = json_obj['idMembers']
         card.idLabels = json_obj['idLabels']
-        card.labels = json_obj['labels']
+        card.labels = Label.from_json_list(card.board, json_obj['labels'])
         return card
 
     def __repr__(self):
@@ -797,7 +802,7 @@ class Card(object):
         self.idList = json_obj['idList']
         self.idBoard = json_obj['idBoard']
         self.idLabels = json_obj['idLabels']
-        self.labels = json_obj['labels']
+        self.labels = Label.from_json_list(self.board, json_obj['labels'])
         self.badges = json_obj['badges']
         self.pos = json_obj['pos']
         # For consistency, due date is in YYYY-MM-DD format
@@ -1056,6 +1061,10 @@ class Label(object):
         """
         label = Label(board.client, label_id=json_obj['id'], name=json_obj['name'].encode('utf-8'), color=json_obj['color'])
         return label
+
+    @classmethod
+    def from_json_list(cls, board, json_objs):
+        return [cls.from_json(board, obj) for obj in json_objs]
 
     def __repr__(self):
         return '<Label %s>' % self.name
