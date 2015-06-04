@@ -778,6 +778,7 @@ class Card(object):
         card.url = json_obj['url']
         card.member_ids = json_obj['idMembers']
         card.idLabels = json_obj['idLabels']
+        card.idList = json_obj['idList']
         card.labels = Label.from_json_list(card.board, json_obj['labels'])
         return card
 
@@ -823,6 +824,10 @@ class Card(object):
                 query_params={'filter': 'commentCard'})
 
         return comments
+
+    def get_list(self):
+        obj = self.client.fetch_json('/lists/' + self.idList)
+        return List.from_json(board=self, json_obj=obj)
 
     def get_comments(self):
         comments = []
