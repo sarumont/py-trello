@@ -1108,7 +1108,6 @@ class Member(object):
         self.username = json_obj['username']
         self.full_name = json_obj['fullName']
         self.initials = json_obj['initials']
-        self.commentCard = json_obj['commentCard']
         return self
 
     def fetch_comments(self):
