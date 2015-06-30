@@ -1097,7 +1097,7 @@ class Member(object):
         return '<Member %s>' % self.id
 
     def fetch(self):
-        """Fetch all attributes for this card"""
+        """Fetch all attributes for this member"""
         json_obj = self.client.fetch_json(
             '/members/' + self.id,
             query_params={'badges': False})
