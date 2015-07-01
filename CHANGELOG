@@ -31,3 +31,53 @@ Rename header Content-type to Content-Type.
 Add setter to Card.description
 Add members methods to Board class
 rename to changelog
+
+v0.3.0
+
+use requests and requests-oauthlib to simplify code and make it Python 3 compatible
+bumped version to 0.2.0, updated setup.py and requirements.txt
+added test for Board.get_cards and Card.delete -> 0.2.1
+Extended test for Board.get_cards
+Remove `get_list` from TrelloClient (closes #51)
+Fix util.py for Python2
+added property Card.date_last_activity : datetime, and test for fetching card attributes (including the new datetime property)
+Unified initialization of cards from JSON data. Added optionally lazy properties for comments and checklists.
+Python 2 fix (@henriquegemignani )
+version bumped and dependency "dateutil" added
+Allow empty due dates
+Change requirement dateutil to python-dateutil.
+Fix python2 support (no annotations)
+Add method get_card, fixes #62
+FIX: Inverted arguments
+make util script executable
+Add shebang to util.py
+[NEW]: support attachments from file or url
+Added method to Card object to update card name
+fetch_checklists: allow the list to be empty
+added the rename method on Checklist
+added the delete method on Checklist
+refactor tests to avoid code duplication and flake8 reports
+raised coverage to 80%
+Added support for Organizations
+Fix Board.from_json call parameterization
+Add a default app name
+Updated the create_oauth_token() function to include the ability to suppress printing the secrets and tokens, as well as returning the access tokens after the OAuth request.
+Added open() to Boards and Lists
+added due_date property
+handling pos attribute
+Added the Label class and fixed the labels property to cards
+Added functionality to add a Label to a board
+Updated the from_json documentation to reflect the parent board as being on the arguments, as opposed to the Trello Client I had originally
+Removed Board.open() and List.open() for the pull request
+Added the ability to add a label on card creation. Added a call to add a label to a card directly. Added a call to get all labels for a board
+Added the ability to archive all cards, and add a due date on a card. Additionally, I updated creating a new card to use the Card path instead of the List path, since it allows for adding Labels by ID instead of by color
+added sphinx docs
+improved docs slightly
+improved docs slightly
+improved docs slightly
+card might be initialized with either board or list
+card labels are returned as Label class instead of dicts
+setUp -> setUpClass
+added list to card
+Remove unused Member.commentCard attribute
+Fix docstring typo in Member.fetch()
