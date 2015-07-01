@@ -63,3 +63,9 @@
 [view](https://github.com/sarumont/py-trello/commit/bae80fc089aa29fee8e1355942d03d9339fc91b5) &bull; added list to card  
 [view](https://github.com/sarumont/py-trello/commit/3a8232967e1b716cc8ab73872b7a13e842188fa0) &bull; Remove unused Member.commentCard attribute  
 [view](https://github.com/sarumont/py-trello/commit/bd839071763cd4c2a1999c74cb54e4bb6ce5b665) &bull; Fix docstring typo in Member.fetch()  
+
+
+**v0.3.1**
+
+
+[view](https://github.com/sarumont/py-trello/commit/c572b91998b34c26df4827a75335858638070d7c) &bull; bump version since I forgot to sign  
