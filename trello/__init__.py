@@ -387,6 +387,13 @@ class Board(object):
             post_args={'value': 'true', }, )
         self.closed = True
 
+    def open(self):
+        self.client.fetch_json(
+            '/boards/' + self.id + '/closed',
+            http_method='PUT',
+            post_args={'value': 'false', }, )
+        self.closed = False
+
     def get_list(self, list_id):
         '''Get list
 
@@ -675,6 +682,13 @@ class List(object):
             http_method='PUT',
             post_args={'value': 'true', }, )
         self.closed = True
+
+    def open(self):
+        self.client.fetch_json(
+            '/lists/' + self.id + '/closed',
+            http_method='PUT',
+            post_args={'value': 'false', }, )
+        self.closed = False
 
     def cardsCnt(self):
         return len(self.list_cards())
