@@ -570,13 +570,13 @@ class Board(object):
         members = list()
         for obj in json_obj:
             m = Member(self.client, obj['id'])
-            m.status = obj['status'].encode('utf-8')
+            m.status = obj.get('status', '').encode('utf-8')
             m.id = obj.get('id', '')
             m.bio = obj.get('bio', '')
             m.url = obj.get('url', '')
             m.username = obj['username'].encode('utf-8')
             m.full_name = obj['fullName'].encode('utf-8')
-            m.initials = obj['initials'].encode('utf-8')
+            m.initials = obj.get('initials', '').encode('utf-8')
             members.append(m)
 
         return members
