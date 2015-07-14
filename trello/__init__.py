@@ -924,7 +924,7 @@ class Card(object):
 
         :title: due a datetime object
         """
-        datestr = due.strftime('%Y-%m-%d')
+        datestr = due.strftime('%Y-%m-%dT%H:%M:%S')
         self._set_remote_attribute('due', datestr)
         self.due = datestr
 
