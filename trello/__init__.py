@@ -809,6 +809,8 @@ class Card(object):
         # For consistency, due date is in YYYY-MM-DD format
         if json_obj.get('due', ''):
             self.due = json_obj.get('due', '')[:10]
+        else:
+            self.due = ''
         self.checked = json_obj['checkItemStates']
         self.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
 
@@ -906,7 +908,7 @@ class Card(object):
 
     @property
     def due_date(self):
-        return dateparser.parse(self.due)
+        return dateparser.parse(self.due) if self.due else ''
 
     def set_name(self, new_name):
         """
