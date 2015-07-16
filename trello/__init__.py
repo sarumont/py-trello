@@ -877,8 +877,8 @@ class Card(object):
         self.fetch_actions('updateCard:idList')
         res =[]
         for idx in self.actions:
-            date_str = idx['date'][:-5]
-            dateDate = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S')
+            date_str = idx['date']
+            dateDate = dateparser.parse(date_str)
             strLst = idx['data']['listBefore']['name']
             endLst = idx['data']['listAfter']['name']
             res.append([strLst,endLst,dateDate])
@@ -891,8 +891,8 @@ class Card(object):
 
         """
         self.fetch_actions('updateCard:idList')
-        date_str = self.actions[0]['date'][:-5]
-        return datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S')
+        date_str = self.actions[0]['date']
+        return dateparser.parse(date_str)
 
     @property
     def create_date(self):
@@ -903,8 +903,8 @@ class Card(object):
                 test for the condition.
         """
         self.fetch_actions()
-        date_str = self.actions[0]['date'][:-5]
-        return datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S')
+        date_str = self.actions[0]['date']
+        return dateparser.parse(date_str)
 
     @property
     def due_date(self):
