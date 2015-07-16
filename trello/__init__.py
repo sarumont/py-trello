@@ -570,13 +570,13 @@ class Board(object):
         members = list()
         for obj in json_obj:
             m = Member(self.client, obj['id'])
-            m.status = obj['status'].encode('utf-8')
+            m.status = obj.get('status', '').encode('utf-8')
             m.id = obj.get('id', '')
             m.bio = obj.get('bio', '')
             m.url = obj.get('url', '')
             m.username = obj['username'].encode('utf-8')
             m.full_name = obj['fullName'].encode('utf-8')
-            m.initials = obj['initials'].encode('utf-8')
+            m.initials = obj.get('initials', '').encode('utf-8')
             members.append(m)
 
         return members
@@ -809,6 +809,8 @@ class Card(object):
         # For consistency, due date is in YYYY-MM-DD format
         if json_obj.get('due', ''):
             self.due = json_obj.get('due', '')[:10]
+        else:
+            self.due = ''
         self.checked = json_obj['checkItemStates']
         self.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
 
@@ -906,7 +908,7 @@ class Card(object):
 
     @property
     def due_date(self):
-        return dateparser.parse(self.due)
+        return dateparser.parse(self.due) if self.due else ''
 
     def set_name(self, new_name):
         """
@@ -924,7 +926,7 @@ class Card(object):
 
         :title: due a datetime object
         """
-        datestr = due.strftime('%Y-%m-%d')
+        datestr = due.strftime('%Y-%m-%dT%H:%M:%S')
         self._set_remote_attribute('due', datestr)
         self.due = datestr
 
@@ -952,6 +954,12 @@ class Card(object):
             '/cards/' + self.id + '/members',
             http_method='POST',
             post_args={'value': member_id, })
+
+    def subscribe(self):
+        self.client.fetch_json(
+            '/cards/' + self.id + '/subscribed',
+            http_method='PUT',
+            post_args={'value': True, })
 
     def comment(self, comment_text):
         """Add a comment to a card."""
