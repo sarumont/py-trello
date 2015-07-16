@@ -955,6 +955,12 @@ class Card(object):
             http_method='POST',
             post_args={'value': member_id, })
 
+    def subscribe(self):
+        self.client.fetch_json(
+            '/cards/' + self.id + '/subscribed',
+            http_method='PUT',
+            post_args={'value': True, })
+
     def comment(self, comment_text):
         """Add a comment to a card."""
         self.client.fetch_json(
