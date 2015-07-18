@@ -3,6 +3,7 @@ from __future__ import with_statement, print_function
 from dateutil import parser as dateparser
 from checklist import Checklist
 from label import Label
+import trellolist
 
 
 class Card(object):
@@ -76,7 +77,7 @@ class Card(object):
         :trello_list: reference to the parent list
         :card_id: ID for this card
         """
-        if isinstance(parent, List):
+        if isinstance(parent, trellolist.List):
             self.trello_list = parent
             self.board = parent.board
         else:
@@ -155,7 +156,7 @@ class Card(object):
 
     def get_list(self):
         obj = self.client.fetch_json('/lists/' + self.idList)
-        return List.from_json(board=self, json_obj=obj)
+        return trellolist.List.from_json(board=self, json_obj=obj)
 
     def get_comments(self):
         comments = []
@@ -378,6 +379,3 @@ class Card(object):
             http_method='POST',
             files=files,
             post_args=kwargs)
-
-
-from trellolist import List

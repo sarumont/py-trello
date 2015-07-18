@@ -35,8 +35,7 @@ class Label(object):
 
     def fetch(self):
         """Fetch all attributes for this label"""
-        json_obj = self.client.fetch_json(
-            '/labels/' + self.id)
+        json_obj = self.client.fetch_json('/labels/' + self.id)
         self.name = json_obj['name'].encode('utf-8')
         self.color = json_obj['color']
         return self
