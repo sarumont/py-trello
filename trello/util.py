@@ -1,8 +1,9 @@
 #!/usr/bin/python
-
+from __future__ import with_statement, print_function
 import os
 
 from requests_oauthlib import OAuth1Session
+
 
 def create_oauth_token(expiration=None, scope=None, key=None, secret=None, name=None, output=True):
     """
