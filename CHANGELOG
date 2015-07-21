@@ -85,3 +85,16 @@ Fix docstring typo in Member.fetch()
 v0.3.1
 
 bump version since I forgot to sign
+
+v0.4.0
+
+Revert "Removed Board.open() and List.open() for the pull request"
+datetime.strptime -> dateparser.parse
+The fields 'status' and 'initials' appear optional
+Use hour, min, sec to help deal with TZ issues
+Don't error out if no due date
+Add ability to subscribe to a card
+broken code into multiple files
+broken tests into multiple files + change board test list behavior (each run create a new list)
+FIX saner way to deal with circular import between list/card
+Add myself to contributors list and cleanup setup.py

@@ -69,3 +69,18 @@
 
 
 [view](https://github.com/sarumont/py-trello/commit/c572b91998b34c26df4827a75335858638070d7c) &bull; bump version since I forgot to sign  
+
+
+**v0.4.0**
+
+
+[view](https://github.com/sarumont/py-trello/commit/daa7faf95fdeee6ecb146f8ad9488af88a3e1ee9) &bull; Revert "Removed Board.open() and List.open() for the pull request"  
+[view](https://github.com/sarumont/py-trello/commit/b0f91c603e3f8e6c5774a177cec2a9b16ab27884) &bull; datetime.strptime -> dateparser.parse  
+[view](https://github.com/sarumont/py-trello/commit/84a85709215284f686d44cfa80e5ece9551de3e2) &bull; The fields 'status' and 'initials' appear optional  
+[view](https://github.com/sarumont/py-trello/commit/66fbb599338c1bb18d8975a444a541b3a523ee75) &bull; Use hour, min, sec to help deal with TZ issues  
+[view](https://github.com/sarumont/py-trello/commit/b5ba124fb596dd8b8c260443ebaf2a0905337836) &bull; Don't error out if no due date  
+[view](https://github.com/sarumont/py-trello/commit/a39b61eb6c6cb7a6e8f7374f0e13a109a04c7dc7) &bull; Add ability to subscribe to a card  
+[view](https://github.com/sarumont/py-trello/commit/b45ca356b4c9db69e6209e56abfff5d95c370715) &bull; broken code into multiple files  
+[view](https://github.com/sarumont/py-trello/commit/89ba89a567fbfa0c13f5eddf48f91363b05112de) &bull; broken tests into multiple files + change board test list behavior (each run create a new list)  
+[view](https://github.com/sarumont/py-trello/commit/ec9dba31a211b0fc49c8b4d97d37ea19309ee8e8) &bull; FIX saner way to deal with circular import between list/card  
+[view](https://github.com/sarumont/py-trello/commit/da57e62be2cff901c3c9de17171e43205aa82ac2) &bull; Add myself to contributors list and cleanup setup.py  
