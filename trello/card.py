@@ -248,7 +248,7 @@ class Card(object):
     def set_due(self, due):
         """Set the due time for the card
 
-        :title: due a datetime object
+        :due: a datetime object
         """
         datestr = due.strftime('%Y-%m-%dT%H:%M:%S')
         self._set_remote_attribute('due', datestr)

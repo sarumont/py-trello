@@ -18,7 +18,7 @@ class TrelloBoardTestCase(unittest.TestCase):
         cls._trello = TrelloClient(os.environ['TRELLO_API_KEY'],
                                    token=os.environ['TRELLO_TOKEN'])
         for b in cls._trello.list_boards():
-            if b.name == os.environ['TRELLO_TEST_BOARD_NAME']:
+            if b.name == os.environ['TRELLO_TEST_BOARD_NAME'].encode('utf-8'):
                 cls._board = b
                 break
         if not cls._board:
@@ -44,7 +44,7 @@ class TrelloBoardTestCase(unittest.TestCase):
         self.assertIsNotNone(card.url, msg="url not provided")
 
         card2 = self._trello.get_card(card.id)
-        self.assertEqual(card.name, card2.name)
+        self.assertEquals(card.name, card2.name)
 
     def test41_add_card(self):
         name = "Testing from Python"
@@ -130,7 +130,7 @@ class TrelloBoardTestCase(unittest.TestCase):
         # Refresh the due date from cloud
         card.fetch()
         actual_due_date = card.due
-        self.assertEquals(expected_due_date, actual_due_date)
+        self.assertEquals(expected_due_date[:8], actual_due_date[:8])
 
     def test53_checklist(self):
         name = "Testing from Python"
