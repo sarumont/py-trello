@@ -1,7 +1,7 @@
-#!/usr/bin/python
-from __future__ import with_statement, print_function
-from board import Board
-from member import Member
+# -*- coding: utf-8 -*-
+from __future__ import with_statement, print_function, absolute_import
+from trello.board import Board
+from trello.member import Member
 
 
 class Organization(object):
@@ -9,7 +9,7 @@ class Organization(object):
     """
     Class representing an organization
     """
-    def __init__(self, client, organization_id,   name=''):
+    def __init__(self, client, organization_id, name=''):
         self.client = client
         self.id = organization_id
         self.name = name
