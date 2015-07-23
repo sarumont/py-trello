@@ -1,9 +1,9 @@
-#!/usr/bin/python
-from __future__ import with_statement, print_function
-from member import Member
-from card import Card
-from trellolist import List
-from label import Label
+# -*- coding: utf-8 -*-
+from __future__ import with_statement, print_function, absolute_import
+from trello.member import Member
+from trello.card import Card
+from trello.trellolist import List
+from trello.label import Label
 
 
 class Board(object):

@@ -1,6 +1,5 @@
-#!/usr/bin/python
-from __future__ import with_statement, print_function
-import card
+# -*- coding: utf-8 -*-
+from __future__ import with_statement, print_function, absolute_import
 
 
 class List(object):
@@ -44,7 +43,7 @@ class List(object):
     def list_cards(self):
         """Lists all cards in this list"""
         json_obj = self.client.fetch_json('/lists/' + self.id + '/cards')
-        return [card.Card.from_json(self, c) for c in json_obj]
+        return [Card.from_json(self, c) for c in json_obj]
 
     def add_card(self, name, desc=None, labels=[], due="null"):
         """Add a card to this list
@@ -61,7 +60,7 @@ class List(object):
             '/cards',
             http_method='POST',
             post_args={'name': name, 'idList': self.id, 'desc': desc, 'idLabels': labels_str[:-1], 'due': due})
-        return card.Card.from_json(self, json_obj)
+        return Card.from_json(self, json_obj)
 
     def archive_all_cards(self):
         self.client.fetch_json(
@@ -100,3 +99,6 @@ class List(object):
 
     def cardsCnt(self):
         return len(self.list_cards())
+
+
+from trello.card import Card

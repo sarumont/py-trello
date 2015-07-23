@@ -129,7 +129,7 @@ class TrelloBoardTestCase(unittest.TestCase):
         expected_due_date = card.due
         # Refresh the due date from cloud
         card.fetch()
-        actual_due_date = card.due[:10]
+        actual_due_date = card.due
         self.assertEquals(expected_due_date, actual_due_date)
 
     def test53_checklist(self):
