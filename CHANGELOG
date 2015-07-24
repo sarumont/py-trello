@@ -103,3 +103,9 @@ v0.4.1
 
 FIX bugs from breaking up code
 FIX bug when testing card due datetime
+
+v0.4.0
+
+Fix import bugs + bug in tests for card due date
+bump to 0.4.1
+fix unicode bug (tests for python3 are broken)

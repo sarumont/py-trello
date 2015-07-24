@@ -84,3 +84,11 @@
 [view](https://github.com/sarumont/py-trello/commit/89ba89a567fbfa0c13f5eddf48f91363b05112de) &bull; broken tests into multiple files + change board test list behavior (each run create a new list)  
 [view](https://github.com/sarumont/py-trello/commit/ec9dba31a211b0fc49c8b4d97d37ea19309ee8e8) &bull; FIX saner way to deal with circular import between list/card  
 [view](https://github.com/sarumont/py-trello/commit/da57e62be2cff901c3c9de17171e43205aa82ac2) &bull; Add myself to contributors list and cleanup setup.py  
+
+
+**v0.4.1**
+
+
+[view](https://github.com/sarumont/py-trello/commit/be01f34b77d6af794eda4609503b410f3230c1bb) &bull; Fix import bugs + bug in tests for card due date  
+[view](https://github.com/sarumont/py-trello/commit/abe08b6cc106e81443a52064f4a3c458c15bd63e) &bull; bump to 0.4.1  
+[view](https://github.com/sarumont/py-trello/commit/ce85d3334f5172c5706e0c6bd568e1fd9e15854c) &bull; fix unicode bug (tests for python3 are broken)  
