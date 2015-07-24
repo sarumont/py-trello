@@ -1,7 +1,6 @@
-#!/usr/bin/python
-from __future__ import with_statement, print_function
+# -*- coding: utf-8 -*-
+from __future__ import with_statement, print_function, absolute_import
 import os
-
 from requests_oauthlib import OAuth1Session
 
 

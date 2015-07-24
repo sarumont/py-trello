@@ -1,10 +1,15 @@
-#!/usr/bin/python
-from __future__ import with_statement, print_function
+# -*- coding: utf-8 -*-
+from __future__ import with_statement, print_function, absolute_import
+import json
 import requests
 from requests_oauthlib import OAuth1
-from board import Board
-from card import Card
-from exceptions import *
+from trello.board import Board
+from trello.card import Card
+from trello.trellolist import List
+from trello.organization import Organization
+from trello.member import Member
+from trello.webhook import WebHook
+from trello.exceptions import *
 
 
 class TrelloClient(object):

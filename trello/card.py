@@ -1,9 +1,8 @@
-#!/usr/bin/python
-from __future__ import with_statement, print_function
+# -*- coding: utf-8 -*-
+from __future__ import with_statement, print_function, absolute_import
 from dateutil import parser as dateparser
-from checklist import Checklist
-from label import Label
-import trellolist
+from trello.checklist import Checklist
+from trello.label import Label
 
 
 class Card(object):
@@ -77,7 +76,7 @@ class Card(object):
         :trello_list: reference to the parent list
         :card_id: ID for this card
         """
-        if isinstance(parent, trellolist.List):
+        if isinstance(parent, List):
             self.trello_list = parent
             self.board = parent.board
         else:
@@ -133,9 +132,8 @@ class Card(object):
         self.labels = Label.from_json_list(self.board, json_obj['labels'])
         self.badges = json_obj['badges']
         self.pos = json_obj['pos']
-        # For consistency, due date is in YYYY-MM-DD format
         if json_obj.get('due', ''):
-            self.due = json_obj.get('due', '')[:10]
+            self.due = json_obj.get('due', '')
         else:
             self.due = ''
         self.checked = json_obj['checkItemStates']
@@ -156,7 +154,7 @@ class Card(object):
 
     def get_list(self):
         obj = self.client.fetch_json('/lists/' + self.idList)
-        return trellolist.List.from_json(board=self, json_obj=obj)
+        return List.from_json(board=self, json_obj=obj)
 
     def get_comments(self):
         comments = []
@@ -250,7 +248,7 @@ class Card(object):
     def set_due(self, due):
         """Set the due time for the card
 
-        :title: due a datetime object
+        :due: a datetime object
         """
         datestr = due.strftime('%Y-%m-%dT%H:%M:%S')
         self._set_remote_attribute('due', datestr)
@@ -379,3 +377,6 @@ class Card(object):
             http_method='POST',
             files=files,
             post_args=kwargs)
+
+
+from trello.trellolist import List

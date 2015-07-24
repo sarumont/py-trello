@@ -1,5 +1,4 @@
-#!/usr/bin/python
-from __future__ import with_statement, print_function
+# -*- coding: utf-8 -*-
 
 
 class ResourceUnavailable(Exception):

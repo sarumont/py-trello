@@ -98,3 +98,8 @@ broken code into multiple files
 broken tests into multiple files + change board test list behavior (each run create a new list)
 FIX saner way to deal with circular import between list/card
 Add myself to contributors list and cleanup setup.py
+
+v0.4.1
+
+FIX bugs from breaking up code
+FIX bug when testing card due datetime
