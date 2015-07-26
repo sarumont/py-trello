@@ -11,6 +11,16 @@ from trello.member import Member
 from trello.webhook import WebHook
 from trello.exceptions import *
 
+try:
+    # PyOpenSSL works around some issues in python ssl modules
+    # In particular in python < 2.7.9 and python < 3.2
+    # It is not a hard requirement, so it's not listed in requirements.txt
+    # More info https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning
+    import urllib3.contrib.pyopenssl
+    urllib3.contrib.pyopenssl.inject_into_urllib3()
+except:
+    pass
+
 
 class TrelloClient(object):
     """ Base class for Trello API access """
