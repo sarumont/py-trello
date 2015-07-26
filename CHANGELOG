@@ -109,3 +109,11 @@ v0.4.0
 Fix import bugs + bug in tests for card due date
 bump to 0.4.1
 fix unicode bug (tests for python3 are broken)
+
+v0.4.2
+cards : checklists and comments are sorted
+cards : checklists and comments no longer raise AttributeError if not already fetched
+style nitpicking
+members : comments are sorted
+trelloclient : add optional import of PyOpenSSL useful for python < 2.7.9 and 3.2 to prevent security issues with openssl (More info : https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning)
+more tests
