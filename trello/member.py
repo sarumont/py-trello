@@ -30,12 +30,12 @@ class Member(object):
         return self
 
     def fetch_comments(self):
-        comments = []
         if self.badges['comments'] > 0:
             comments = self.client.fetch_json(
                 '/members/' + self.id + '/actions',
                 query_params={'filter': 'commentCard'})
-        return comments
+            return sorted(comments, key=lambda comment: comment['date'])
+        return []
 
     @classmethod
     def from_json(cls, trello_client, json_obj):
