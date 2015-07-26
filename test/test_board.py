@@ -1,9 +1,9 @@
 #!/usr/bin/python
 from __future__ import with_statement, print_function
-from datetime import datetime, timedelta
+from datetime import datetime
 import unittest
 import os
-from trello import TrelloClient, Unauthorized, ResourceUnavailable
+from trello import TrelloClient
 
 
 class TrelloBoardTestCase(unittest.TestCase):
@@ -36,129 +36,45 @@ class TrelloBoardTestCase(unittest.TestCase):
             print(str(e))
             self.fail("Caught Exception adding card")
 
-    def test40_add_card(self):
-        name = "Testing from Python - no desc"
-        card = self._add_card(name)
+    def test_get_cards(self):
+        # Let's ensure we have no cards in board
+        for card in self._board.get_cards():
+            card.delete()
 
-        self.assertIsNotNone(card.closed, msg="closed not provided")
-        self.assertIsNotNone(card.url, msg="url not provided")
-
-        card2 = self._trello.get_card(card.id)
-        self.assertEquals(card.name, card2.name)
-
-    def test41_add_card(self):
-        name = "Testing from Python"
-        description = "Description goes here"
-        card = self._add_card(name, description)
-
-        self.assertEquals(card.description, description)
-        self.assertIsNotNone(card.closed, msg="closed not provided")
-        self.assertIsNotNone(card.url, msg="url not provided")
-        card.fetch()
-        self.assertIsNotNone(card.member_id)
-        self.assertIsNotNone(card.short_id)
-        self.assertIsNotNone(card.list_id)
-        self.assertIsNotNone(card.comments)
-        self.assertIsNotNone(card.checklists)
-        self.assertIsInstance(card.create_date, datetime)
-
-    def test42_add_card_with_comments(self):
-        name = "Card with comments"
-        comment = "Hello World!"
-        card = self._add_card(name)
-        card.comment(comment)
-        card.fetch(True)
-
-        self.assertEquals(card.description, '')
-        self.assertIsNotNone(card.closed, msg="closed not provided")
-        self.assertIsNotNone(card.url, msg="url not provided")
-        self.assertEquals(len(card.comments), 1)
-        self.assertEquals(card.comments[0]['data']['text'], comment)
-
-    def test43_delete_checklist(self):
-        name = "Card with comments"
-        card = self._list.add_card(name)
-        card.fetch(True)
-
-        name = 'Checklists'
-        checklist = card.add_checklist(name,
-                                       ['item1', 'item2'])
-        self.assertIsNotNone(checklist, msg="checklist is None")
-        self.assertIsNotNone(checklist.id, msg="id not provided")
-        self.assertEquals(checklist.name, name)
-        checklist.delete()
-        card.delete()
-
-    def test44_attach_url_to_card(self):
-        name = "Testing from Python - url"
-        card = self._add_card(name)
-
-        card.attach(name='lwn', url='http://lwn.net/')
-        card.fetch()
-        self.assertEquals(card.badges['attachments'], 1)
-        card.delete()
-
-    def test52_get_cards(self):
+        nb_cards = 3
+        names = ["Card #" + str(i) for i in range(nb_cards)]
+        for i in range(nb_cards):
+            self._add_card(names[i])
         cards = self._board.get_cards()
-        self.assertEquals(len(cards), 4)
+        self.assertEquals(len(cards), nb_cards)
+        self.assertEquals(len(cards), len(self._board.open_cards()))
 
         for card in cards:
-            if card.name == 'Testing from Python':
-                self.assertEqual(card.description, 'Description goes here')
-            elif card.name == 'Testing from Python - no desc':
-                self.assertEqual(card.description, '')
-            elif card.name == 'Card with comments':
-                self.assertEqual(card.description, '')
-            else:
-                self.fail(msg='Unexpected card found')
+            self.assertTrue(card.name in names, 'Unexpected card found')
 
         self.assertIsInstance(self._board.all_cards(), list)
         self.assertIsInstance(self._board.open_cards(), list)
         self.assertIsInstance(self._board.closed_cards(), list)
 
-    def test52_add_card_set_due(self):
-        name = "Testing from Python"
-        description = "Description goes here"
-        card = self._list.add_card(name, description)
-
-        # Set the due date to be 3 days from now
-        today = datetime.today()
-        day_detla = timedelta(3)
-        due_date = today + day_detla
-        card.set_due(due_date)
-        expected_due_date = card.due
-        # Refresh the due date from cloud
-        card.fetch()
-        actual_due_date = card.due
-        self.assertEquals(expected_due_date[:8], actual_due_date[:8])
-
-    def test53_checklist(self):
-        name = "Testing from Python"
-        description = "Description goes here"
-        card = self._list.add_card(name, description)
-
-        name = 'Checklists'
-        checklist = card.add_checklist(name,
-                                       ['item1', 'item2'])
-        self.assertIsNotNone(checklist, msg="checklist is None")
-        self.assertIsNotNone(checklist.id, msg="id not provided")
-        self.assertEquals(checklist.name, name)
-        checklist.rename('Renamed')
-        self.assertEquals(checklist.name, 'Renamed')
-
-    def test54_set(self):
-        name = "Testing from Python"
-        description = "Description goes here"
-        card = self._list.add_card('noname')
-        card.set_name(name)
-        card.set_description(description)
-        self.assertEquals(card.name, name)
-        self.assertEquals(card.description, description)
-
-    def test60_delete_cards(self):
-        cards = self._board.get_cards()
+    def test_delete_cards(self):
+        nb_deleted_cards = len(self._board.closed_cards())
+        cards = self._board.open_cards()
+        nb_open_cards = len(cards)
+        if nb_open_cards == 0:
+            self._add_card("card to be deleted")
+            nb_open_cards = 1
         for card in cards:
             card.delete()
+        self.assertEquals(len(self._board.closed_cards()), nb_deleted_cards + nb_open_cards)
+
+    def test_all_cards_reachable(self):
+        if not len(self._board.open_cards()):
+            self._add_card("an open card")
+        if not len(self._board.closed_cards()):
+            card = self._add_card("card to be closed")
+            card.set_closed(True)
+        self.assertEquals(len(self._board.all_cards()),
+                          len(self._board.open_cards()) + len(self._board.closed_cards()))
 
     def test70_all_members(self):
         self.assertTrue(len(self._board.all_members()) > 0)
@@ -182,15 +98,6 @@ class TrelloBoardTestCase(unittest.TestCase):
         self.assertNotEqual(member.initials, None)
         member2 = self._trello.get_member(member.id)
         self.assertEqual(member.username, member2.username)
-
-    def test80_unauthorized(self):
-        client = TrelloClient('a')
-        self.assertRaises(Unauthorized,
-                          client.list_boards)
-
-    def test81_resource_unavailable(self):
-        self.assertRaises(ResourceUnavailable,
-                          self._trello.get_card, '0')
 
     def test90_get_board(self):
         board = self._trello.get_board(self._board.id)
