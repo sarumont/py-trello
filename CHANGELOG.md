@@ -92,3 +92,13 @@
 [view](https://github.com/sarumont/py-trello/commit/be01f34b77d6af794eda4609503b410f3230c1bb) &bull; Fix import bugs + bug in tests for card due date  
 [view](https://github.com/sarumont/py-trello/commit/abe08b6cc106e81443a52064f4a3c458c15bd63e) &bull; bump to 0.4.1  
 [view](https://github.com/sarumont/py-trello/commit/ce85d3334f5172c5706e0c6bd568e1fd9e15854c) &bull; fix unicode bug (tests for python3 are broken)  
+
+
+**v0.4.2**
+
+
+[view](https://github.com/sarumont/py-trello/commit/f4ebdc41c03984516ce5bf4d7d73e962ab7a7b05) &bull; card : checklists and comments are sorted; checklists and comments won't raise AttributeError if not already fetched; style nitpicking  
+[view](https://github.com/sarumont/py-trello/commit/daf6bbe704162e8684dc455ac904a56211e5e41d) &bull; members : comments are sorted  
+[view](https://github.com/sarumont/py-trello/commit/a61fcf9f13f203c9934c9bb84b9f2f8d93deb78e) &bull; trelloclient : add optional import of PyOpenSSL useful for python < 2.7.9 and 3.2 to prevent security issues with openssl (More info : https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning)  
+[view](https://github.com/sarumont/py-trello/commit/40653c0fe8dfeebd987e1a4e61bbd68b1b4c3032) &bull; tests : more tests and broken into multiple files  
+[view](https://github.com/sarumont/py-trello/commit/880e7aeb6e337659e5459f3618f2961185ef57d2) &bull; Proposition of changelog for 0.4.2  
