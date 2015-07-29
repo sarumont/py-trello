@@ -3,7 +3,7 @@ from __future__ import with_statement, print_function
 import os
 import unittest
 from datetime import datetime
-from trello import TrelloClient
+from trello import TrelloClient, Unauthorized, ResourceUnavailable
 
 
 class TrelloClientTestCase(unittest.TestCase):
@@ -101,6 +101,15 @@ class TrelloClientTestCase(unittest.TestCase):
 
     def test52_list_hooks(self):
         self.assertIsInstance(self._trello.list_hooks(), list)
+
+    def test53_unauthorized(self):
+        client = TrelloClient('a')
+        self.assertRaises(Unauthorized,
+                          client.list_boards)
+
+    def test54_resource_unavailable(self):
+        self.assertRaises(ResourceUnavailable,
+                          self._trello.get_card, '0')
 
 
 def suite():

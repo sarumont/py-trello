@@ -58,8 +58,11 @@ class Card(object):
         """
         Lazily loads and returns the comments
         """
-        if self._comments is None:
-            self._comments = self.fetch_comments()
+        try:
+            if self._comments is None:
+                self._comments = self.fetch_comments()
+        except AttributeError:
+            self._comments = None
         return self._comments
 
     @property
@@ -67,8 +70,11 @@ class Card(object):
         """
         Lazily loads and returns the checklists
         """
-        if self._checklists is None:
-            self._checklists = self.fetch_checklists()
+        try:
+            if self._checklists is None:
+                self._checklists = self.fetch_checklists()
+        except AttributeError:
+            self._checklists = None
         return self._checklists
 
     def __init__(self, parent, card_id, name=''):
@@ -142,14 +148,14 @@ class Card(object):
         self._checklists = self.fetch_checklists() if eager else None
         self._comments = self.fetch_comments() if eager else None
 
-    def fetch_comments(self):
+    def fetch_comments(self, force=False):
         comments = []
 
-        if self.badges['comments'] > 0:
+        if (force is True) or (self.badges['comments'] > 0):
             comments = self.client.fetch_json(
                 '/cards/' + self.id + '/actions',
                 query_params={'filter': 'commentCard'})
-
+            return sorted(comments, key=lambda comment: checklist['date'])
         return comments
 
     def get_list(self):
@@ -157,16 +163,15 @@ class Card(object):
         return List.from_json(board=self, json_obj=obj)
 
     def get_comments(self):
-        comments = []
-        comments = self.client.fetch_json(
-                '/cards/' + self.id + '/actions',
-                query_params={'filter': 'commentCard'})
-        return comments
+        """Alias for fetch_comments for backward compatibility. Always contact server"""
+        return self.fetch_comments(force=True)
 
     def fetch_checklists(self):
         checklists = []
         json_obj = self.client.fetch_json(
             '/cards/' + self.id + '/checklists', )
+        # Thanks https://github.com/HuffAndPuff for noticing checklist were not sorted
+        json_obj = sorted(json_obj, key=lambda checklist: checklist['pos'])
         for cl in json_obj:
             checklists.append(Checklist(self.client, self.checked, cl,
                                         trello_card=self.id))
@@ -271,26 +276,26 @@ class Card(object):
         # Delete this card permanently
         self.client.fetch_json(
             '/cards/' + self.id,
-            http_method='DELETE', )
+            http_method='DELETE')
 
     def assign(self, member_id):
         self.client.fetch_json(
             '/cards/' + self.id + '/members',
             http_method='POST',
-            post_args={'value': member_id, })
+            post_args={'value': member_id})
 
     def subscribe(self):
         self.client.fetch_json(
             '/cards/' + self.id + '/subscribed',
             http_method='PUT',
-            post_args={'value': True, })
+            post_args={'value': True})
 
     def comment(self, comment_text):
         """Add a comment to a card."""
         self.client.fetch_json(
             '/cards/' + self.id + '/actions/comments',
             http_method='POST',
-            post_args={'text': comment_text, })
+            post_args={'text': comment_text})
 
     def add_label(self, label):
         self.client.fetch_json(
@@ -326,10 +331,10 @@ class Card(object):
         self.client.fetch_json(
             '/cards/' + self.id + '/idList',
             http_method='PUT',
-            post_args={'value': list_id, })
+            post_args={'value': list_id})
 
     def change_board(self, board_id, list_id=None):
-        args = {'value': board_id, }
+        args = {'value': board_id}
         if list_id is not None:
             args['idList'] = list_id
         self.client.fetch_json(
@@ -369,7 +374,7 @@ class Card(object):
         self.client.fetch_json(
             '/cards/' + self.id + '/' + attribute,
             http_method='PUT',
-            post_args={'value': value, }, )
+            post_args={'value': value}, )
 
     def _post_remote_data(self, attribute, files=None, **kwargs):
         self.client.fetch_json(
