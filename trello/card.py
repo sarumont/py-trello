@@ -284,6 +284,11 @@ class Card(object):
             http_method='POST',
             post_args={'value': member_id})
 
+    def unassign(self, member_id):
+        self.client.fetch_json(
+            '/cards/' + self.id + '/idMembers/' + member_id,
+            http_method='DELETE')
+
     def subscribe(self):
         self.client.fetch_json(
             '/cards/' + self.id + '/subscribed',
