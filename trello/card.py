@@ -155,7 +155,7 @@ class Card(object):
             comments = self.client.fetch_json(
                 '/cards/' + self.id + '/actions',
                 query_params={'filter': 'commentCard'})
-            return sorted(comments, key=lambda comment: checklist['date'])
+            return sorted(comments, key=lambda comment: comment['date'])
         return comments
 
     def get_list(self):
