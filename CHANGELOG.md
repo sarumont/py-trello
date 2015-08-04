@@ -102,3 +102,10 @@
 [view](https://github.com/sarumont/py-trello/commit/a61fcf9f13f203c9934c9bb84b9f2f8d93deb78e) &bull; trelloclient : add optional import of PyOpenSSL useful for python < 2.7.9 and 3.2 to prevent security issues with openssl (More info : https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning)  
 [view](https://github.com/sarumont/py-trello/commit/40653c0fe8dfeebd987e1a4e61bbd68b1b4c3032) &bull; tests : more tests and broken into multiple files  
 [view](https://github.com/sarumont/py-trello/commit/880e7aeb6e337659e5459f3618f2961185ef57d2) &bull; Proposition of changelog for 0.4.2  
+
+
+**v0.4.3**
+
+
+[view](https://github.com/sarumont/py-trello/commit/ec6202b60a85c3b4be4307aa1cea1fb6df547a6b) &bull; Allow cards to unassign members  
+[view](https://github.com/sarumont/py-trello/commit/1d0934c15f83be6d5dac8af7eadac011b94d417e) &bull; Use the proper ref in the lambda (fixes #108)  

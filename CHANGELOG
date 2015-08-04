@@ -117,3 +117,8 @@ style nitpicking
 members : comments are sorted
 trelloclient : add optional import of PyOpenSSL useful for python < 2.7.9 and 3.2 to prevent security issues with openssl (More info : https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning)
 more tests
+
+v0.4.3
+
+Allow cards to unassign members
+Use the proper ref in the lambda (fixes #108)
