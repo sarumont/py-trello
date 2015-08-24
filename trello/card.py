@@ -308,6 +308,11 @@ class Card(object):
             http_method='POST',
             post_args={'value': label.id})
 
+    def remove_label(self, label):
+        self.client.fetch_json(
+            '/cards/' + self.id + '/idLabels/' + label.id,
+            http_method='DELETE')
+
     def attach(self, name=None, mimeType=None, file=None, url=None):
         """
         Add an attachment to the card. The attachment can be either a
