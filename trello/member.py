@@ -37,6 +37,20 @@ class Member(object):
             return sorted(comments, key=lambda comment: comment['date'])
         return []
 
+    def fetch_cards(self):
+        """ Fetches all the cards for this member """
+        cards = self.client.fetch_json(
+            '/members/' + self.id + '/cards',
+            query_params={'filter': 'visible'})
+        return sorted(cards, key=lambda card: card['dateLastActivity'])
+    
+    def fetch_notifications(self, filters = []):
+        """ Fetches all the notifications for this member """
+        notifications = self.client.fetch_json(
+            '/members/' + self.id + '/notifications',
+            query_params={'filter': ",".join(filters)})
+        return sorted(notifications, key=lambda notification: notification['date'])
+    
     @classmethod
     def from_json(cls, trello_client, json_obj):
         """
