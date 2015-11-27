@@ -112,6 +112,7 @@ class Card(object):
         card.idLabels = json_obj['idLabels']
         card.idList = json_obj['idList']
         card.labels = Label.from_json_list(card.board, json_obj['labels'])
+        card.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
         return card
 
     def __repr__(self):
