@@ -32,8 +32,8 @@ class Board(object):
             self.client = organization.client
         self.id = board_id
         self.name = name
-		
-		self.date_last_activity = None
+
+        self.date_last_activity = None
 
     @classmethod
     def from_json(cls, trello_client=None, organization=None, json_obj=None):
