@@ -4,6 +4,7 @@ from trello.member import Member
 from trello.card import Card
 from trello.trellolist import List
 from trello.label import Label
+from dateutil import parser as dateparser
 
 
 class Board(object):
@@ -32,6 +33,8 @@ class Board(object):
         self.id = board_id
         self.name = name
 
+        self.date_last_activity = None
+
     @classmethod
     def from_json(cls, trello_client=None, organization=None, json_obj=None):
         """
@@ -55,6 +58,12 @@ class Board(object):
         board.description = json_obj.get('desc', '').encode('utf-8')
         board.closed = json_obj['closed']
         board.url = json_obj['url']
+
+        try:
+            board.date_last_activity = dateparser.parse(json_obj['dateLastActivity'])
+        except:
+            pass
+
         return board
 
     def __repr__(self):
