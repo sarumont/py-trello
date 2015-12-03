@@ -104,7 +104,7 @@ class Card(object):
             raise Exception("key 'id' is not in json_obj")
         card = cls(parent,
                    json_obj['id'],
-                   name=json_obj['name'].encode('utf-8'))
+                   name=json_obj['name'].encode('utf-8').decode('utf-8'))
         card.desc = json_obj.get('desc', '')
         card.closed = json_obj['closed']
         card.url = json_obj['url']
@@ -127,7 +127,7 @@ class Card(object):
             '/cards/' + self.id,
             query_params={'badges': False})
         self.id = json_obj['id']
-        self.name = json_obj['name'].encode('utf-8')
+        self.name = json_obj['name'].encode('utf-8').decode('utf-8')
         self.desc = json_obj.get('desc', '')
         self.closed = json_obj['closed']
         self.url = json_obj['url']

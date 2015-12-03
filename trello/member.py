@@ -60,9 +60,9 @@ class Member(object):
         :json_obj: the member json object
         """
 
-        member = Member(trello_client, json_obj['id'], full_name=json_obj['fullName'].encode('utf-8'))
-        member.username = json_obj.get('username', '').encode('utf-8')
-        member.initials = json_obj.get('initials', '').encode('utf-8')
+        member = Member(trello_client, json_obj['id'], full_name=json_obj['fullName'].encode('utf-8').decode('utf-8'))
+        member.username = json_obj.get('username', '').encode('utf-8').decode('utf-8')
+        member.initials = json_obj.get('initials', '').encode('utf-8').decode('utf-8')
         # cannot close an organization
         # organization.closed = json_obj['closed']
         return member
