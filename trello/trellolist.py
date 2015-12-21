@@ -27,7 +27,7 @@ class List(object):
         :board: the board object that the list belongs to
         :json_obj: the json list object
         """
-        list = List(board, json_obj['id'], name=json_obj['name'].encode('utf-8').decode('utf-8'))
+        list = List(board, json_obj['id'], name=json_obj['name'].encode('utf-8'))
         list.closed = json_obj['closed']
         return list
 

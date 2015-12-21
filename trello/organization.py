@@ -22,8 +22,8 @@ class Organization(object):
         :trello_client: the trello client
         :json_obj: the board json object
         """
-        organization = Organization(trello_client, json_obj['id'], name=json_obj['name'].encode('utf-8').decode('utf-8'))
-        organization.description = json_obj.get('desc', '').encode('utf-8').decode('utf-8')
+        organization = Organization(trello_client, json_obj['id'], name=json_obj['name'].encode('utf-8'))
+        organization.description = json_obj.get('desc', '').encode('utf-8')
         # cannot close an organization
         # organization.closed = json_obj['closed']
         organization.url = json_obj['url']
