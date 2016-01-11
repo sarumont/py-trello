@@ -45,12 +45,14 @@ class List(object):
         json_obj = self.client.fetch_json('/lists/' + self.id + '/cards/' + card_filter)
         return [Card.from_json(self, c) for c in json_obj]
 
-    def add_card(self, name, desc=None, labels=[], due="null"):
+    def add_card(self, name, desc=None, labels=[], due="null", source=None):
         """Add a card to this list
 
         :name: name for the card
         :desc: the description of the card
         :labels: a list of label IDs to be added
+        :due: due date for the card
+        :source: card ID from which to clone from
         :return: the card
         """
         labels_str = ""
@@ -59,7 +61,7 @@ class List(object):
         json_obj = self.client.fetch_json(
             '/cards',
             http_method='POST',
-            post_args={'name': name, 'idList': self.id, 'desc': desc, 'idLabels': labels_str[:-1], 'due': due})
+            post_args={'name': name, 'idList': self.id, 'desc': desc, 'idLabels': labels_str[:-1], 'due': due, 'idCardSource': source})
         return Card.from_json(self, json_obj)
 
     def archive_all_cards(self):
