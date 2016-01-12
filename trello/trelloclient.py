@@ -10,6 +10,7 @@ from trello.organization import Organization
 from trello.member import Member
 from trello.webhook import WebHook
 from trello.exceptions import *
+from trello.label import Label
 
 try:
     # PyOpenSSL works around some issues in python ssl modules
@@ -144,6 +145,17 @@ class TrelloClient(object):
         list_json = self.fetch_json('/lists/' + card_json['idList'])
         board = self.get_board(card_json['idBoard'])
         return Card.from_json(List.from_json(board, list_json), card_json)
+
+    def get_label(self, label_id, board_id):
+        '''Get Label
+
+        Requires the parent board id the label is on
+
+        :rtype: Label
+        '''
+        board = self.get_board(board_id)
+        label_json = self.fetch_json('/labels/' + label_id)
+        return Label.from_json(board, label_json)
 
     def fetch_json(
             self,
