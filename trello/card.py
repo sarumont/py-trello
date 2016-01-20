@@ -12,6 +12,10 @@ class Card(object):
     """
 
     @property
+    def short_url(self):
+        return self.shortUrl
+
+    @property
     def member_id(self):
         return self.idMembers
 
@@ -131,6 +135,7 @@ class Card(object):
         self.desc = json_obj.get('desc', '')
         self.closed = json_obj['closed']
         self.url = json_obj['url']
+        self.shortUrl = json_obj['shortUrl']
         self.idMembers = json_obj['idMembers']
         self.idShort = json_obj['idShort']
         self.idList = json_obj['idList']
