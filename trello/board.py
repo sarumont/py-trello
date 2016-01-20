@@ -205,7 +205,7 @@ class Board(object):
         }
         return self.get_cards(filters)
 
-    def get_cards(self, filters=None):
+    def get_cards(self, filters=None, card_filter=""):
         """
         :card_filter: filters on card status ('open', 'closed', 'all')
         :query_params: dict containing query parameters. Eg. {'fields': 'all'}
@@ -216,7 +216,7 @@ class Board(object):
         :rtype: Card
         """
         json_obj = self.client.fetch_json(
-            '/boards/' + self.id + '/cards',
+            '/boards/' + self.id + '/cards/' + card_filter,
             query_params=filters
         )
 
