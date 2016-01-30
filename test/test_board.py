@@ -3,7 +3,7 @@ from __future__ import with_statement, print_function
 from datetime import datetime
 import unittest
 import os
-from trello import TrelloClient
+from trello import TrelloClient, Board
 
 
 class TrelloBoardTestCase(unittest.TestCase):
@@ -102,6 +102,38 @@ class TrelloBoardTestCase(unittest.TestCase):
     def test90_get_board(self):
         board = self._trello.get_board(self._board.id)
         self.assertEqual(self._board.name, board.name)
+
+    def test100_add_board(self):
+        test_board = self._trello.add_board("test_create_board")
+        test_list = test_board.add_list("test_list")
+        test_list.add_card("test_card")
+        open_boards = self._trello.list_boards(board_filter="open")
+        self.assertEqual(len([x for x in open_boards if x.name == "test_create_board"]), 1)
+
+    def test110_copy_board(self):
+        boards = self._trello.list_boards(board_filter="open")
+        source_board = next( x for x in boards if x.name == "test_create_board")
+        self._trello.add_board("copied_board", source_board=source_board)
+        listed_boards = self._trello.list_boards(board_filter="open")
+        copied_board = next(iter([x for x in listed_boards if x.name == "copied_board"]), None)
+        self.assertIsNotNone(copied_board)
+        open_lists = source_board.open_lists()
+        self.assertEqual(len(open_lists), 4) # default lists plus mine
+        test_list = open_lists[0]
+        self.assertEqual(len(test_list.list_cards()), 1)
+        test_card = next ( iter([ x for x in test_list.list_cards() if x.name == "test_card"]), None )
+        self.assertIsNotNone(test_card)
+
+    def test120_close_board(self):
+        boards = self._trello.list_boards(board_filter="open")
+        open_count = len(boards)
+        test_create_board = next( x for x in boards if x.name == "test_create_board") # type: Board
+        copied_board = next( x for x in boards if x.name == "copied_board") # type: Board
+        test_create_board.close()
+        copied_board.close()
+        still_open_boards = self._trello.list_boards(board_filter="open")
+        still_open_count = len(still_open_boards)
+        self.assertEqual(still_open_count, open_count - 2)
 
 
 def suite():
