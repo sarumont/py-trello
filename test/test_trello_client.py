@@ -21,7 +21,7 @@ class TrelloClientTestCase(unittest.TestCase):
 
     def test01_list_boards(self):
         self.assertEquals(
-            len(self._trello.list_boards()),
+            len(self._trello.list_boards(board_filter="open")),
             int(os.environ['TRELLO_TEST_BOARD_COUNT']))
 
     def test10_board_attrs(self):
