@@ -131,7 +131,7 @@ class TrelloClient(object):
             post_args['idBoardSource'] = source_board.id
 
         obj = self.fetch_json('/boards', http_method='POST',
-                              post_args={'name': board_name})
+                              post_args=post_args)
         return Board.from_json(self, json_obj=obj)
 
     def get_member(self, member_id):

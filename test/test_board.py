@@ -117,7 +117,7 @@ class TrelloBoardTestCase(unittest.TestCase):
         listed_boards = self._trello.list_boards(board_filter="open")
         copied_board = next(iter([x for x in listed_boards if x.name == "copied_board"]), None)
         self.assertIsNotNone(copied_board)
-        open_lists = source_board.open_lists()
+        open_lists = copied_board.open_lists()
         self.assertEqual(len(open_lists), 4) # default lists plus mine
         test_list = open_lists[0]
         self.assertEqual(len(test_list.list_cards()), 1)
