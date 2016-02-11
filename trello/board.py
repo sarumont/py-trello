@@ -288,7 +288,7 @@ class Board(object):
 
         return members
 
-    def fetch_actions(self, action_filter, action_limit):
+    def fetch_actions(self, action_filter, action_limit=50):
         json_obj = self.client.fetch_json(
             '/boards/' + self.id + '/actions',
             query_params={'filter': action_filter,
