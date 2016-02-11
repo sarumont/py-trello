@@ -56,16 +56,34 @@ class TrelloBoardTestCase(unittest.TestCase):
         self.assertIsInstance(self._board.open_cards(), list)
         self.assertIsInstance(self._board.closed_cards(), list)
 
+    def test_fetch_action_limit(self):
+        card = self._add_card('For action limit testing')
+        card.set_closed(True)
+        self._board.fetch_actions(action_filter='all', action_limit=2)
+        actions = sorted(self._board.actions,key=lambda act: act['date'], reverse=True)
+        self.assertEqual(len(actions), 2)
+        self.assertEqual(actions[0]['type'], 'updateCard')
+        self.assertFalse(actions[0]['data']['old']['closed'])
+        self.assertEqual(actions[1]['type'], 'createCard')
+
+    def test_fetch_action_filter(self):
+        card = self._add_card('For action filter testing')
+        card.set_closed(True) # This action will be skipped by filter
+        self._board.fetch_actions(action_filter='createCard', action_limit=1)
+        actions = self._board.actions
+        self.assertEqual(len(actions), 1)
+        self.assertEqual(actions[0]['type'], 'createCard')
+
     def test_delete_cards(self):
-        nb_deleted_cards = len(self._board.closed_cards())
+        self._add_card("card to be deleted")
         cards = self._board.open_cards()
         nb_open_cards = len(cards)
-        if nb_open_cards == 0:
-            self._add_card("card to be deleted")
-            nb_open_cards = 1
         for card in cards:
             card.delete()
-        self.assertEquals(len(self._board.closed_cards()), nb_deleted_cards + nb_open_cards)
+        self._board.fetch_actions(action_filter='all', action_limit=nb_open_cards)
+        self.assertEquals(len(self._board.actions), nb_open_cards)
+        for action in self._board.actions:
+            self.assertEqual(action['type'], 'deleteCard')
 
     def test_close_cards(self):
         nb_closed_cards = len(self._board.closed_cards())
@@ -85,7 +103,7 @@ class TrelloBoardTestCase(unittest.TestCase):
         if not len(self._board.closed_cards()):
             card = self._add_card("card to be closed")
             card.set_closed(True)
-        self.assertEquals(len(self._board.all_cards()),
+        self.assertEqual(len(self._board.all_cards()),
                           len(self._board.open_cards()) + len(self._board.closed_cards()))
 
     def test70_all_members(self):
