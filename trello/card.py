@@ -110,6 +110,7 @@ class Card(object):
                    json_obj['id'],
                    name=json_obj['name'].encode('utf-8'))
         card.desc = json_obj.get('desc', '')
+        card.due = json_obj.get('due', '')
         card.closed = json_obj['closed']
         card.url = json_obj['url']
         card.member_ids = json_obj['idMembers']

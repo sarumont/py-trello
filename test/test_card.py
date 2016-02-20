@@ -30,7 +30,7 @@ class TrelloBoardTestCase(unittest.TestCase):
             card = self._list.add_card(name, description)
             self.assertIsNotNone(card, msg="card is None")
             self.assertIsNotNone(card.id, msg="id not provided")
-            self.assertEquals(card.name, name)
+            self.assertEquals(card.name, name.encode('utf-8'))
             return card
         except Exception as e:
             print(str(e))
