@@ -56,12 +56,8 @@ class Checklist(object):
         :name: name of the checklist item
         :checked: True if item state should be checked, False otherwise
         """
-
-        # Locate the id of the checklist item
-        try:
-            [ix] = [i for i in range(len(self.items)) if
-                    self.items[i]['name'] == name]
-        except ValueError:
+        ix = self._get_item_id(name)
+        if ix is None:
             return
 
         json_obj = self.client.fetch_json(
@@ -96,11 +92,8 @@ class Checklist(object):
         :name: name of the checklist item
         :new_name: new name of item
         """
-
-        # Locate the id of the checklist item
-        try:
-            [ix] = [i for i in range(len(self.items)) if self.items[i]['name'] == name]
-        except ValueError:
+        ix = self._get_item_id(name)
+        if ix is None:
             return
 
         json_obj = self.client.fetch_json(
