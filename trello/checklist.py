@@ -43,12 +43,18 @@ class Checklist(object):
         if ix is None:
             return
 
-        obj = self.client.fetch_json(
+        self.client.fetch_json(
             '/checklists/'+ self.id +
             '/checkItems/'+ self.items[ix]['id'],
             http_method='DELETE')
         del self.items[ix]
 
+    def clear(self):
+        """Clear checklist by removing all checklist items"""
+        # iterate over names as list is modified while iterating and this breaks
+        # for-loops behaviour
+        for name in [item['name'] for item in self.items]:
+            self.delete_checklist_item(name)
 
     def set_checklist_item(self, name, checked):
         """Set the state of an item on this checklist

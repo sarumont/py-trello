@@ -83,8 +83,7 @@ class TrelloChecklistTestCase(unittest.TestCase):
 
     def test_delete_checklist_item(self):
         name = "Testing checklist item delete"
-        description = "Description goes here"
-        card = self._list.add_card(name, description)
+        card = self._list.add_card(name, "Description goes here")
 
         name = 'Checklist'
         checklist = self._add_checklist(card, name, ['item1', 'item2'])
@@ -94,7 +93,16 @@ class TrelloChecklistTestCase(unittest.TestCase):
         self.assertEqual(len(checklists[0].items), 1)
         self.assertEqual(checklists[0].items[0]['name'], 'item1')
 
-        card.delete()
+    def test_clear_checklist(self):
+        name = "Testing checklist clear"
+        card = self._list.add_card(name, "Description goes here")
+
+        name = 'Checklist'
+        checklist = self._add_checklist(card, name, ['item1', 'item2', 'item3'])
+        checklist.clear()
+
+        checklists = card.fetch_checklists()
+        self.assertEqual(len(checklists[0].items), 0)
 
 
 def suite():
