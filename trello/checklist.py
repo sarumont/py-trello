@@ -34,18 +34,36 @@ class Checklist(object):
         self.items.append(json_obj)
         return json_obj
 
+    def delete_checklist_item(self, name):
+        """Delete an item on this checklist
+
+        :name: name of the checklist item to delete
+        """
+        ix = self._get_item_id(name)
+        if ix is None:
+            return
+
+        self.client.fetch_json(
+            '/checklists/'+ self.id +
+            '/checkItems/'+ self.items[ix]['id'],
+            http_method='DELETE')
+        del self.items[ix]
+
+    def clear(self):
+        """Clear checklist by removing all checklist items"""
+        # iterate over names as list is modified while iterating and this breaks
+        # for-loops behaviour
+        for name in [item['name'] for item in self.items]:
+            self.delete_checklist_item(name)
+
     def set_checklist_item(self, name, checked):
         """Set the state of an item on this checklist
 
         :name: name of the checklist item
         :checked: True if item state should be checked, False otherwise
         """
-
-        # Locate the id of the checklist item
-        try:
-            [ix] = [i for i in range(len(self.items)) if
-                    self.items[i]['name'] == name]
-        except ValueError:
+        ix = self._get_item_id(name)
+        if ix is None:
             return
 
         json_obj = self.client.fetch_json(
@@ -80,11 +98,8 @@ class Checklist(object):
         :name: name of the checklist item
         :new_name: new name of item
         """
-
-        # Locate the id of the checklist item
-        try:
-            [ix] = [i for i in range(len(self.items)) if self.items[i]['name'] == name]
-        except ValueError:
+        ix = self._get_item_id(name)
+        if ix is None:
             return
 
         json_obj = self.client.fetch_json(
@@ -102,6 +117,15 @@ class Checklist(object):
         self.client.fetch_json(
             '/checklists/%s' % self.id,
             http_method='DELETE')
+
+    def _get_item_id(self, name):
+        """Locate the id of the checklist item"""
+        try:
+            [ix] = [i for i in range(len(self.items)) if
+                    self.items[i]['name'] == name]
+            return ix
+        except ValueError:
+            return None
 
     def __repr__(self):
         return '<Checklist %s>' % self.id
