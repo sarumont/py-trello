@@ -81,6 +81,18 @@ class Card(object):
             self._checklists = None
         return self._checklists
 
+    @property
+    def attachments(self):
+        """
+        Lazily loads and returns the attachments
+        """
+        try:
+            if self._attachments is None:
+                self._attachments = self.fetch_attachments()
+        except AttributeError:
+            self._attachments = None
+        return self._attachments
+
     def __init__(self, parent, card_id, name=''):
         """
         :trello_list: reference to the parent list
@@ -154,6 +166,7 @@ class Card(object):
 
         self._checklists = self.fetch_checklists() if eager else None
         self._comments = self.fetch_comments() if eager else None
+        self._attachments = self.fetch_attachments() if eager else None
 
     def fetch_comments(self, force=False):
         comments = []
@@ -183,6 +196,19 @@ class Card(object):
             checklists.append(Checklist(self.client, self.checked, cl,
                                         trello_card=self.id))
         return checklists
+
+    def fetch_attachments(self, force=False):
+        items = []
+
+        if (force is True) or (self.badges['attachments'] > 0):
+            items = self.client.fetch_json(
+                '/cards/' + self.id + '/attachments',
+                query_params={'filter':'false'})
+            return items
+        return items
+
+    def get_attachments(self):
+        return self.fetch_attachments(force=True)
 
     def fetch_actions(self, action_filter='createCard'):
         """
