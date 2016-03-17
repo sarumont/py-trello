@@ -36,6 +36,13 @@ class TrelloBoardTestCase(unittest.TestCase):
             print(str(e))
             self.fail("Caught Exception adding card")
 
+    def _add_checklist(self, card, name, items=[], itemstates=None):
+        checklist = card.add_checklist(name, items, itemstates)
+        self.assertIsNotNone(checklist, msg="checklist is None")
+        self.assertIsNotNone(checklist.id, msg="id not provided")
+        self.assertEquals(checklist.name, name)
+        return checklist
+
     def test_get_cards(self):
         # Let's ensure we have no cards in board
         for card in self._board.get_cards():
@@ -165,6 +172,24 @@ class TrelloBoardTestCase(unittest.TestCase):
         still_open_count = len(still_open_boards)
         self.assertEqual(still_open_count, open_count - 2)
 
+    def test130_get_checklists_board(self):
+        chklists = self._board.get_checklists(cards = 'open')
+        for chklst in chklists:
+            chklst.delete()
+        card = self._add_card('For checklist testing')
+        chklist = self._add_checklist(card, "Test Checklist", items=["item1","item2"], itemstates = [True, False])
+        new_chklists = self._board.get_checklists()
+        test_chk = new_chklists[0]
+        self.assertEqual(test_chk.name, "Test Checklist")
+        self.assertEqual(test_chk.trello_card, card.id)
+        self.assertEqual(len(new_chklists), 1)
+        i1 = test_chk.items[0]
+        i2 = test_chk.items[1]
+        self.assertEqual(len(test_chk.items), 2)
+        self.assertEqual(i1['name'], "item1")
+        self.assertEqual(i1['state'], "complete")
+        self.assertEqual(i2['name'], "item2")
+        self.assertEqual(i2['state'], "incomplete")
 
 def suite():
     # tests = ['test01_list_boards', 'test10_board_attrs', 'test20_add_card']
