@@ -4,6 +4,7 @@ from trello.member import Member
 from trello.card import Card
 from trello.trellolist import List
 from trello.label import Label
+from trello.checklist import Checklist
 from dateutil import parser as dateparser
 
 
@@ -143,6 +144,21 @@ class Board(object):
               '/boards/' + self.id + '/labels',
               query_params={'fields': fields, 'limit': limit})
         return Label.from_json_list(self, json_obj)
+
+    def get_checklists(self, cards='all'):
+        '''Get checklists
+
+        :rtype: Checklist
+        '''
+        checklists = []
+        json_obj = self.client.fetch_json(
+              '/boards/' + self.id + '/checklists',
+              query_params={'cards': cards})
+        json_obj = sorted(json_obj, key=lambda checklist: checklist['pos'])
+        for cl in json_obj:
+            checklists.append(Checklist(self.client, cl.get('checkItemStates',[]), cl,
+                                        trello_card=cl.get('idCard')))
+        return checklists
 
     def add_list(self, name):
         """Add a list to this board
