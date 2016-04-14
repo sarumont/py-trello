@@ -4,6 +4,8 @@ from dateutil import parser as dateparser
 from trello.checklist import Checklist
 from trello.label import Label
 
+import datetime
+
 
 class Card(object):
     """
@@ -245,6 +247,99 @@ class Card(object):
             endLst = idx['data']['listAfter']['name']
             res.append([strLst, endLst, dateDate])
         return res
+
+
+    def list_movements(self):
+        """
+            Will return the history of transitions of a card from one list to another
+            The lower the index the more resent the historical item
+
+            It returns a list of dicts in date and time descending order (the first movement is the earliest).
+            Dicts are of the form source: <listobj> destination: <listobj> date: <datetimeobj>
+        """
+
+        self.fetch_actions('updateCard:idList')
+
+        movements = []
+
+        for idx in self.actions:
+            date_str = idx['date']
+
+            movement_date = dateparser.parse(date_str)
+            source_list = idx['data']['listBefore']
+            destination_list = idx['data']['listAfter']
+
+            movement = {"source": source_list, "destination": destination_list, "date": movement_date}
+            movements.append(movement)
+
+        return movements
+
+
+    def get_time_by_list(self, tz, done_list=None, time_unit="seconds"):
+        """
+        Gets the time that the card has been in each column in seconds (minutes or hours).
+        Returns a dict where the key is list id and value is the time this card has been in that column.
+        If the card has not been in a column, its id will not be in the dict.
+        :param tz: timezone to make comparison timezone-aware
+        :param time_unit: default to seconds. Allow specifying time in "minutes" or "hours".
+        :param done_list: Column that implies that the task is done. If present, time measurement will be stopped if is current task list.
+        :return: dict of the form {list_id: card_time_in_list}
+        """
+
+        # Creation datetime of the card
+        creation_datetime = self.create_date
+
+        #  Time in seconds stores the seconds that our card lives in a column
+        time_in_columns = {self.idList: 0}
+
+        #  Last action date, used to compute the time the card spends between changes
+        # of columns
+        last_action_datetime = creation_datetime
+
+        #  Changes of columns of our card
+        changes = self.list_movements()
+
+        #  If there is no changes in the card, all its life has been in its creation list
+        if len(changes) == 0:
+            time_in_columns[self.idList] += (datetime.datetime.now(tz) - last_action_datetime).total_seconds()
+
+        else:
+            # Changes in card are in reversed order (closer to now are first)
+            last_list = None
+            for change in reversed(changes):
+                source_list = change["source"]
+                destination_list = change["destination"]
+                change_datetime = change["date"]
+
+                if not source_list["id"] in time_in_columns:
+                    time_in_columns[source_list["id"]] = 0
+
+                # For each colum the total number of seconds this card is computed
+                time_in_columns[source_list["id"]] += (change_datetime - last_action_datetime).total_seconds()
+                last_action_datetime = change_datetime
+
+                last_list = destination_list
+
+            if not last_list["id"] in time_in_columns:
+                time_in_columns[last_list["id"]] = 0
+
+            # Adding the number of seconds the card has been in its last column (until now)
+            # only if the last column is not "Done" column
+            if done_list and last_list["id"] != done_list.id:
+                time_in_columns[last_list["id"]] += (datetime.datetime.now(tz) - last_action_datetime).total_seconds()
+
+        # Conversion of units
+        seconds_per_unit = None
+        if time_unit == "minutes":
+            seconds_per_unit = 60.0
+        elif time_unit == "hours":
+            seconds_per_unit = 3600.0
+
+        if seconds_per_unit:
+            return {list_id: (time_in_list/seconds_per_unit) for list_id, time_in_list in time_in_columns.items()}
+
+        return time_in_columns
+
 
     @property
     def latestCardMove_date(self):
