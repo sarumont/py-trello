@@ -230,6 +230,42 @@ class Card(object):
         self.fetch_actions(multiple)
         return self.actions
 
+
+    @staticmethod
+    def _movement_as_triplet(source_list, destination_list, movement_datetime):
+        return [source_list["name"], destination_list["name"], movement_datetime]
+
+
+    @staticmethod
+    def _movement_as_dict(source_list, destination_list, movement_datetime):
+        return {"source": source_list, "destination": destination_list, "datetime": movement_datetime}
+
+
+    def _list_movements(self, movement_function):
+        """
+        Returns the list of movements of this card.
+        The list of movements is in descending date and time order. First movement is the closest one to now.
+        Its structure is a list of dicts where the lists are "source" and "destination" and both are also dicts.
+        Date and time of the movement is in key "datetime" as a datetime object.
+        :param movement_function: function that returns a representation of the movement.
+        :return:
+        """
+
+        self.fetch_actions('updateCard:idList')
+
+        movements = []
+
+        for idx in self.actions:
+            date_str = idx['date']
+            movement_datetime = dateparser.parse(date_str)
+            source_list = idx['data']['listBefore']
+            destination_list = idx['data']['listAfter']
+            movement = movement_function(source_list, destination_list, movement_datetime)
+            movements.append(movement)
+
+        return movements
+
+
     def listCardMove_date(self):
         """
             Will return the history of transitions of a card from one list to another
@@ -238,15 +274,7 @@ class Card(object):
             It returns a list of lists. The sublists are triplates of
             starting list, ending list and when the transition occured.
         """
-        self.fetch_actions('updateCard:idList')
-        res = []
-        for idx in self.actions:
-            date_str = idx['date']
-            dateDate = dateparser.parse(date_str)
-            strLst = idx['data']['listBefore']['name']
-            endLst = idx['data']['listAfter']['name']
-            res.append([strLst, endLst, dateDate])
-        return res
+        return self._list_movements(movement_function=Card._movement_as_triplet)
 
 
     def list_movements(self):
@@ -257,22 +285,7 @@ class Card(object):
             It returns a list of dicts in date and time descending order (the first movement is the earliest).
             Dicts are of the form source: <listobj> destination: <listobj> date: <datetimeobj>
         """
-
-        self.fetch_actions('updateCard:idList')
-
-        movements = []
-
-        for idx in self.actions:
-            date_str = idx['date']
-
-            movement_date = dateparser.parse(date_str)
-            source_list = idx['data']['listBefore']
-            destination_list = idx['data']['listAfter']
-
-            movement = {"source": source_list, "destination": destination_list, "date": movement_date}
-            movements.append(movement)
-
-        return movements
+        return self._list_movements(movement_function=Card._movement_as_dict)
 
 
     def get_time_by_list(self, tz, done_list=None, time_unit="seconds"):
@@ -309,7 +322,7 @@ class Card(object):
             for change in reversed(changes):
                 source_list = change["source"]
                 destination_list = change["destination"]
-                change_datetime = change["date"]
+                change_datetime = change["datetime"]
 
                 if not source_list["id"] in time_in_columns:
                     time_in_columns[source_list["id"]] = 0
