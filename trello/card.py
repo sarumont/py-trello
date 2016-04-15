@@ -306,9 +306,14 @@ class Card(object):
 
     def get_stats_by_list(self, tz, lists, list_cmp=None, done_list=None, time_unit="seconds"):
         """
-        Gets the time that the card has been in each column in seconds (minutes or hours).
-        Returns a dict where the key is list id and value is the time this card has been in that column.
-        If the card has not been in a column, its id will not be in the dict.
+        Gets several stats about the card by each list of the board:
+        - time: The time that the card has been in each column in seconds (minutes or hours).
+        - forward_moves: How many times this card has been the source of a forward movement.
+        - backward_moves: How many times this card has been the source of a backward movement.
+
+        Returns a dict where the key is list id and value is a dict with keys
+        time, forward_moves and backward_moves.
+
         :param tz: timezone to make comparison timezone-aware
         :param lists: list of board lists.
         :param list_cmp: function that compares two lists a,b given id_a, id_b. If b is in a forward position returns 1 else -1.
