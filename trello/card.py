@@ -238,7 +238,12 @@ class Card(object):
 
     @staticmethod
     def _movement_as_dict(source_list, destination_list, movement_datetime):
-        return {"source": source_list, "destination": destination_list, "datetime": movement_datetime}
+        _movement = {
+            "source": source_list,
+            "destination": destination_list,
+            "datetime": movement_datetime,
+        }
+        return _movement
 
 
     def _list_movements(self, movement_function):
@@ -248,6 +253,7 @@ class Card(object):
         Its structure is a list of dicts where the lists are "source" and "destination" and both are also dicts.
         Date and time of the movement is in key "datetime" as a datetime object.
         :param movement_function: function that returns a representation of the movement.
+        :param lists_dict:
         :return:
         """
 
@@ -271,13 +277,13 @@ class Card(object):
             Will return the history of transitions of a card from one list to another
             The lower the index the more resent the historical item
 
-            It returns a list of lists. The sublists are triplates of
-            starting list, ending list and when the transition occured.
+            It returns a list of lists. The sublists are triplets of
+            starting list, ending list and when the transition occurred.
         """
         return self._list_movements(movement_function=Card._movement_as_triplet)
 
 
-    def list_movements(self):
+    def list_movements(self, lists_dict=None):
         """
             Will return the history of transitions of a card from one list to another
             The lower the index the more resent the historical item
@@ -285,36 +291,56 @@ class Card(object):
             It returns a list of dicts in date and time descending order (the first movement is the earliest).
             Dicts are of the form source: <listobj> destination: <listobj> date: <datetimeobj>
         """
-        return self._list_movements(movement_function=Card._movement_as_dict)
+
+        movement_as_dict_function = Card._movement_as_dict
+        if lists_dict:
+            def movement_as_dict_function(_source_list, _destination_list, _movement_datetime):
+                _movement = Card._movement_as_dict(_source_list, _destination_list, _movement_datetime)
+                _source_list_id = _source_list["id"]
+                _destination_list_id = _destination_list["id"]
+                _movement["moving_forward"] = lists_dict[_source_list_id].pos < lists_dict[_destination_list_id].pos
+                return _movement
+
+        return self._list_movements(movement_function=movement_as_dict_function)
 
 
-    def get_time_by_list(self, tz, done_list=None, time_unit="seconds"):
+    def get_stats_by_list(self, tz, lists, done_list=None, time_unit="seconds"):
         """
         Gets the time that the card has been in each column in seconds (minutes or hours).
         Returns a dict where the key is list id and value is the time this card has been in that column.
         If the card has not been in a column, its id will not be in the dict.
         :param tz: timezone to make comparison timezone-aware
+        :param lists: list of board lists.
         :param time_unit: default to seconds. Allow specifying time in "minutes" or "hours".
         :param done_list: Column that implies that the task is done. If present, time measurement will be stopped if is current task list.
-        :return: dict of the form {list_id: card_time_in_list}
+        :return: dict of the form {list_id: {time:, }}
         """
+
+        # Conversion of units
+        seconds_to_time_unit = lambda time: time
+        if time_unit == "minutes":
+            seconds_to_time_unit = lambda time: time / 60.0
+        elif time_unit == "hours":
+            seconds_to_time_unit = lambda time: time / 3660.0
 
         # Creation datetime of the card
         creation_datetime = self.create_date
 
         #  Time in seconds stores the seconds that our card lives in a column
-        time_in_columns = {self.idList: 0}
+        stats_by_list = {list_.id: {"time":0, "forward_destination":0, "backward_destination":0} for list_ in lists}
 
         #  Last action date, used to compute the time the card spends between changes
         # of columns
         last_action_datetime = creation_datetime
 
         #  Changes of columns of our card
-        changes = self.list_movements()
+        lists_dict = {list_.id:list_ for list_ in lists}
+        changes = self.list_movements(lists_dict)
 
         #  If there is no changes in the card, all its life has been in its creation list
         if len(changes) == 0:
-            time_in_columns[self.idList] += (datetime.datetime.now(tz) - last_action_datetime).total_seconds()
+            card_life_time = seconds_to_time_unit((datetime.datetime.now(tz) - last_action_datetime).total_seconds())
+            stats_by_list[self.idList]["time"] += card_life_time
 
         else:
             # Changes in card are in reversed order (closer to now are first)
@@ -324,34 +350,31 @@ class Card(object):
                 destination_list = change["destination"]
                 change_datetime = change["datetime"]
 
-                if not source_list["id"] in time_in_columns:
-                    time_in_columns[source_list["id"]] = 0
+                # For each column the total number of seconds this card is computed
+                source_list_id = source_list["id"]
 
-                # For each colum the total number of seconds this card is computed
-                time_in_columns[source_list["id"]] += (change_datetime - last_action_datetime).total_seconds()
+                time_from_last_list_change = seconds_to_time_unit((change_datetime - last_action_datetime).total_seconds())
+                stats_by_list[source_list_id]["time"] += time_from_last_list_change
+
+                # Count if the change is to move forward to done list or backwards
+                if change["moving_forward"]:
+                    stats_by_list[source_list_id]["forward_destination"] += 1
+                else:
+                    stats_by_list[source_list_id]["backward_destination"] += 1
+
+                # Our last action has been this change
                 last_action_datetime = change_datetime
 
+                # Store the last list
                 last_list = destination_list
-
-            if not last_list["id"] in time_in_columns:
-                time_in_columns[last_list["id"]] = 0
 
             # Adding the number of seconds the card has been in its last column (until now)
             # only if the last column is not "Done" column
             if done_list and last_list["id"] != done_list.id:
-                time_in_columns[last_list["id"]] += (datetime.datetime.now(tz) - last_action_datetime).total_seconds()
+                time_card_has_spent_in_list_until_now = seconds_to_time_unit((datetime.datetime.now(tz) - last_action_datetime).total_seconds())
+                stats_by_list[last_list["id"]]["time"] += time_card_has_spent_in_list_until_now
 
-        # Conversion of units
-        seconds_per_unit = None
-        if time_unit == "minutes":
-            seconds_per_unit = 60.0
-        elif time_unit == "hours":
-            seconds_per_unit = 3600.0
-
-        if seconds_per_unit:
-            return {list_id: (time_in_list/seconds_per_unit) for list_id, time_in_list in time_in_columns.items()}
-
-        return time_in_columns
+        return stats_by_list
 
 
     @property
