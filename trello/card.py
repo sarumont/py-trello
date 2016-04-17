@@ -212,14 +212,14 @@ class Card(object):
     def get_attachments(self):
         return self.fetch_attachments(force=True)
 
-    def fetch_actions(self, action_filter='createCard'):
+    def fetch_actions(self, action_filter='createCard', since=None, before=None):
         """
         Fetch actions for this card can give more argv to action_filter,
         split for ',' json_obj is list
         """
         json_obj = self.client.fetch_json(
             '/cards/' + self.id + '/actions',
-            query_params={'filter': action_filter})
+            query_params={'filter': action_filter, "since": since, "before": before})
         self.actions = json_obj
 
     def attriExp(self, multiple):
@@ -246,18 +246,20 @@ class Card(object):
         return _movement
 
 
-    def _list_movements(self, movement_function):
+    def _list_movements(self, movement_function, filter_by_date_interval=None):
         """
         Returns the list of movements of this card.
         The list of movements is in descending date and time order. First movement is the closest one to now.
         Its structure is a list of dicts where the lists are "source" and "destination" and both are also dicts.
         Date and time of the movement is in key "datetime" as a datetime object.
         :param movement_function: function that returns a representation of the movement.
-        :param lists_dict:
-        :return:
+        :param filter_by_date_interval: Date interval used to filter card movements to return. Optional
+        :return: list with the movements.
         """
 
-        self.fetch_actions('updateCard:idList')
+        action_since = None if not filter_by_date_interval else filter_by_date_interval[0]
+        action_before = None if not filter_by_date_interval else filter_by_date_interval[1]
+        self.fetch_actions('updateCard:idList,', action_since, action_before)
 
         movements = []
 
@@ -283,13 +285,15 @@ class Card(object):
         return self._list_movements(movement_function=Card._movement_as_triplet)
 
 
-    def list_movements(self, list_cmp=None):
+    def list_movements(self, list_cmp=None, filter_by_date_interval=None):
         """
-            Will return the history of transitions of a card from one list to another
-            The lower the index the more resent the historical item
+        Will return the history of transitions of a card from one list to another
+        The lower the index the more resent the historical item
 
-            It returns a list of dicts in date and time descending order (the first movement is the earliest).
-            Dicts are of the form source: <listobj> destination: <listobj> datetime: <datetimeobj>
+        It returns a list of dicts in date and time descending order (the first movement is the earliest).
+        Dicts are of the form source: <listobj> destination: <listobj> datetime: <datetimeobj>
+        :param: list_cmp Comparison function between lists. For list_cmp(a, b) returns -1 if list a is greater that list b. Returns 1 otherwise.
+        :param: filter_by_date_interval: pair of two dates (two strings in YYYY-MM-DD format) to filter card movements by date.
         """
 
         movement_as_dict_function = Card._movement_as_dict
@@ -301,10 +305,10 @@ class Card(object):
                 _movement["moving_forward"] = list_cmp(_source_list_id, _destination_list_id) > 0
                 return _movement
 
-        return self._list_movements(movement_function=movement_as_dict_function)
+        return self._list_movements(movement_function=movement_as_dict_function, filter_by_date_interval=filter_by_date_interval)
 
 
-    def get_stats_by_list(self, tz, lists, list_cmp=None, done_list=None, time_unit="seconds"):
+    def get_stats_by_list(self, tz, lists, list_cmp=None, done_list=None, time_unit="seconds", card_movements_filter=None):
         """
         Gets several stats about the card by each list of the board:
         - time: The time that the card has been in each column in seconds (minutes or hours).
@@ -319,6 +323,7 @@ class Card(object):
         :param list_cmp: function that compares two lists a,b given id_a, id_b. If b is in a forward position returns 1 else -1.
         :param time_unit: default to seconds. Allow specifying time in "minutes" or "hours".
         :param done_list: Column that implies that the task is done. If present, time measurement will be stopped if is current task list.
+        :param card_movements_filter: Pair of two dates (two strings in YYYY-MM-DD format) that will filter the movements of the card. Optional.
         :return: dict of the form {list_id: {time:<time card was in that list>, forward_moves: <number>, backward_moves: <number> }}
         """
 
@@ -342,7 +347,7 @@ class Card(object):
         # Changes of columns of our card
         # Using list comparison function (if present) to check list position and, hence,
         # if the card movement was forward or backwards
-        changes = self.list_movements(list_cmp)
+        changes = self.list_movements(list_cmp, card_movements_filter)
 
         #  If there are no changes in the card, all its life has been in its creation list
         if len(changes) == 0:
