@@ -3,7 +3,7 @@ from __future__ import with_statement, print_function, absolute_import
 from dateutil import parser as dateparser
 from trello.checklist import Checklist
 from trello.label import Label
-from trello.organization import Organization
+from trello.configuration import Configuration
 
 import datetime
 import pytz
@@ -411,7 +411,7 @@ class Card(object):
                 test for the condition.
         """
         if not hasattr(self, "creation_date"):
-            localtz = pytz.timezone(Organization.TIMEZONE)
+            localtz = pytz.timezone(Configuration.TIMEZONE)
             self.creation_date = localtz.localize(datetime.datetime.fromtimestamp(int(self.id[0: 8], 16)))
         return self.creation_date
 
