@@ -5,6 +5,7 @@ from trello.checklist import Checklist
 from trello.label import Label
 
 import datetime
+import pytz
 
 
 class Card(object):
@@ -408,9 +409,10 @@ class Card(object):
                 it fails. attriExp('convertToCardFromCheckItem') allows to
                 test for the condition.
         """
-        self.fetch_actions()
-        date_str = self.actions[0]['date']
-        return dateparser.parse(date_str)
+        if not hasattr(self, "creation_date"):
+            localtz = pytz.timezone(Organization.TIMEZONE)
+            self.creation_date = localtz.localize(datetime.datetime.fromtimestamp(int(self.id[0: 8], 16)))
+        return self.creation_date
 
     @property
     def due_date(self):

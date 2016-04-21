@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
 from trello.board import Board
 from trello.member import Member
 
 
 class Organization(object):
+
+    TIMEZONE = None
 
     """
     Class representing an organization
