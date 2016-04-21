@@ -310,7 +310,7 @@ class Card(object):
         return self._list_movements(movement_function=movement_as_dict_function, filter_by_date_interval=filter_by_date_interval)
 
 
-    def get_stats_by_list(self, tz, lists, list_cmp=None, done_list=None, time_unit="seconds", card_movements_filter=None):
+    def get_stats_by_list(self, lists, list_cmp=None, done_list=None, time_unit="seconds", card_movements_filter=None):
         """
         Gets several stats about the card by each list of the board:
         - time: The time that the card has been in each column in seconds (minutes or hours).
@@ -320,7 +320,6 @@ class Card(object):
         Returns a dict where the key is list id and value is a dict with keys
         time, forward_moves and backward_moves.
 
-        :param tz: timezone to make comparison timezone-aware
         :param lists: list of board lists.
         :param list_cmp: function that compares two lists a,b given id_a, id_b. If b is in a forward position returns 1 else -1.
         :param time_unit: default to seconds. Allow specifying time in "minutes" or "hours".
@@ -328,6 +327,8 @@ class Card(object):
         :param card_movements_filter: Pair of two dates (two strings in YYYY-MM-DD format) that will filter the movements of the card. Optional.
         :return: dict of the form {list_id: {time:<time card was in that list>, forward_moves: <number>, backward_moves: <number> }}
         """
+
+        tz = pytz.timezone(Configuration.TIMEZONE)
 
         # Conversion of units
         seconds_to_time_unit = lambda time: time
