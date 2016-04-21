@@ -3,6 +3,7 @@ from __future__ import with_statement, print_function, absolute_import
 from dateutil import parser as dateparser
 from trello.checklist import Checklist
 from trello.label import Label
+from trello.organization import Organization
 
 import datetime
 import pytz
