@@ -122,3 +122,30 @@ v0.4.3
 
 Allow cards to unassign members
 Use the proper ref in the lambda (fixes #108)
+
+v0.5.0
+
+Add remove_label function to card
+Members: Add "fetch_cards" and "fetch_notifications" methods.
+A few things I added for a project of mine: 1. all_boards can now filter, for example open (https://developers.trello.com/advanced-reference/member#get-1-members-idmember-or-username-boards) 2. Cards and boards parse dateLastActivity without needing another fetch (as it is returned in the original json).
+None out the date_last_activity as I "promoted" it to the json parsing, so it'll be weird if it just didn't exist if parse failed.
+How the hell did I manage to add tabs? :)
+fix #66 - strings are encoded with UTF-8 to be compatible with python 2 and decoded with utf-8 to be compatible with python 3
+Revert "fix #66 - strings are encoded with UTF-8 to be compatible with python 2 and decoded with utf-8 to be compatible with python 3"
+Add card filter parameter to List.list_cards()
+Add cloning from a source card to add_card()
+Add functionality to retrieve a Label object
+Add URL shorturl property
+Added card_filter argument to Board.get_cards()
+Fixed gh-124.  -Added support for a source_board parameter to add_board  - Added tests for add_board, copy_board, close_board  - Modified list boards to only look at open boards  - This commit now causes the test account to accumulate closed boards
+gh-124 Fix for original PR, unit tests had flaw that hid non-working code for copying board.
+added test for closed cards, fixed tests for python3(except test_delete_cards)
+added action_limit for board. plus the unittests
+action_limit is an optional parameter
+add due date
+Add ability to specify which organization to create a board on
+implement deletion of single checklist items
+refactoring by removing some duplication
+implement clearing of checklists
+Updates to support attachments as per Walter's comments https://trello.com/c/5L574YgX/4-add-attachments-to-card
+Added obtaining all checklists directly from the board and the respective test
