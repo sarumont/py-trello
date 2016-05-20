@@ -45,7 +45,9 @@ Default permissions are read/write.
 More info on setting the expiration here:
 https://trello.com/docs/gettingstarted/#getting-a-token-from-a-user
 
-Run::
+Run
+
+::
 
     python ./trello/util.py
 
