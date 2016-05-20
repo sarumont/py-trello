@@ -47,8 +47,6 @@ https://trello.com/docs/gettingstarted/#getting-a-token-from-a-user
 
 Run
 
-::
-
     python ./trello/util.py
 
 Required Python modules
