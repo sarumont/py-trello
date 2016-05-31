@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
 from dateutil import parser as dateparser
+from datetime import datetime
 from trello.checklist import Checklist
 from trello.label import Label
 
@@ -267,6 +268,24 @@ class Card(object):
         self.fetch_actions()
         date_str = self.actions[0]['date']
         return dateparser.parse(date_str)
+
+    @property
+    def card_created_date(self):
+        """Will return the creation date of the card.
+
+        NOTE: This will return the date the card was created, even if it
+        was created on another board. The created_date() above actually just
+        returns the first activity and has the issue described in the warning.
+
+        The first 8 characters of the card id is a hexadecimal number.
+        Converted to a decimal from hexadecimal, the timestamp is an Unix
+        timestamp (the number of seconds that have elapsed since January 1,
+        1970 midnight UTC.See
+        http://help.trello.com/article/759-getting-the-time-a-card-or-board-was-created
+        """
+        unix_time = int(self.id[:8],16)
+
+        return datetime.fromtimestamp(unix_time)
 
     @property
     def due_date(self):
