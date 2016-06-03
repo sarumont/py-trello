@@ -10,19 +10,23 @@ for feature requests, discussion and some development tracking.
 Install
 =======
 
-    pip install py-trello
+```
+pip install py-trello
+```
 
 Usage
 =====
 
-    from trello import TrelloClient
+```python
+from trello import TrelloClient
 
-    client = TrelloClient(
-        api_key='your-key',
-        api_secret='your-secret',
-        token='your-oauth-token-key',
-        token_secret='your-oauth-token-secret'
-    )
+client = TrelloClient(
+    api_key='your-key',
+    api_secret='your-secret',
+    token='your-oauth-token-key',
+    token_secret='your-oauth-token-secret'
+)
+```
 
 Where `token` and `token_secret` come from the 3-legged OAuth process and
 `api_key` and `api_secret` are your Trello API credentials that are
@@ -47,20 +51,23 @@ https://trello.com/docs/gettingstarted/#getting-a-token-from-a-user
 
 Run
 
-    python ./trello/util.py
+```
+python ./trello/util.py
+```
 
 Required Python modules
 =======================
-Found in requirements.txt
+
+Found in `requirements.txt`
 
 Tests
 =====
 To run the tests, run `python -m unittest discover`. Four environment variables must be set:
 
-* TRELLO_API_KEY: your Trello API key
-* TRELLO_TOKEN: your Trello OAuth token
-* TRELLO_TEST_BOARD_COUNT: the number of boards in your Trello account
-* TRELLO_TEST_BOARD_NAME: name of the board to test card manipulation on. Must be unique, or the first match will be used
+* `TRELLO_API_KEY`: your Trello API key
+* `TRELLO_TOKEN`: your Trello OAuth token
+* `TRELLO_TEST_BOARD_COUNT`: the number of boards in your Trello account
+* `TRELLO_TEST_BOARD_NAME`: name of the board to test card manipulation on. Must be unique, or the first match will be used
 
 To run tests across various Python versions,
 [tox](https://tox.readthedocs.io/en/latest/) is supported. Install it
