@@ -30,7 +30,7 @@ class TrelloChecklistTestCase(unittest.TestCase):
             card = self._list.add_card(name, description)
             self.assertIsNotNone(card, msg="card is None")
             self.assertIsNotNone(card.id, msg="id not provided")
-            self.assertEquals(card.name, name)
+            self.assertEqual(card.name, name)
             return card
         except Exception as e:
             print(str(e))
@@ -40,7 +40,7 @@ class TrelloChecklistTestCase(unittest.TestCase):
         checklist = card.add_checklist(name, items)
         self.assertIsNotNone(checklist, msg="checklist is None")
         self.assertIsNotNone(checklist.id, msg="id not provided")
-        self.assertEquals(checklist.name, name)
+        self.assertEqual(checklist.name, name)
         return checklist
 
     def test_delete_checklist(self):
@@ -76,7 +76,7 @@ class TrelloChecklistTestCase(unittest.TestCase):
         new_name = "Renamed"
         checklist = self._add_checklist(card, name, ['item1', 'item2'])
         checklist.rename(new_name)
-        self.assertEquals(checklist.name, new_name)
+        self.assertEqual(checklist.name, new_name)
         card._checklists = card.fetch_checklists()
         self.assertEqual(len(card.checklists), 1)
         self.assertEqual(card.checklists[0].name, new_name)

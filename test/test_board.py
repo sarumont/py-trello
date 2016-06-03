@@ -40,7 +40,7 @@ class TrelloBoardTestCase(unittest.TestCase):
         checklist = card.add_checklist(name, items, itemstates)
         self.assertIsNotNone(checklist, msg="checklist is None")
         self.assertIsNotNone(checklist.id, msg="id not provided")
-        self.assertEquals(checklist.name, name)
+        self.assertEqual(checklist.name, name)
         return checklist
 
     def test_get_cards(self):
@@ -53,8 +53,8 @@ class TrelloBoardTestCase(unittest.TestCase):
         for i in range(nb_cards):
             self._add_card(names[i])
         cards = self._board.get_cards()
-        self.assertEquals(len(cards), nb_cards)
-        self.assertEquals(len(cards), len(self._board.open_cards()))
+        self.assertEqual(len(cards), nb_cards)
+        self.assertEqual(len(cards), len(self._board.open_cards()))
 
         for card in cards:
             self.assertTrue(card.name in names, 'Unexpected card found')
@@ -88,7 +88,7 @@ class TrelloBoardTestCase(unittest.TestCase):
         for card in cards:
             card.delete()
         self._board.fetch_actions(action_filter='all', action_limit=nb_open_cards)
-        self.assertEquals(len(self._board.actions), nb_open_cards)
+        self.assertEqual(len(self._board.actions), nb_open_cards)
         for action in self._board.actions:
             self.assertEqual(action['type'], 'deleteCard')
 
@@ -101,7 +101,7 @@ class TrelloBoardTestCase(unittest.TestCase):
             card.set_closed(True)
         cards_after = self._board.closed_cards()
         nb_cards_after = len(cards_after)
-        self.assertEquals(nb_cards_after, nb_closed_cards + nb_open_cards)
+        self.assertEqual(nb_cards_after, nb_closed_cards + nb_open_cards)
 
 
     def test_all_cards_reachable(self):

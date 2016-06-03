@@ -30,7 +30,7 @@ class TrelloBoardTestCase(unittest.TestCase):
             card = self._list.add_card(name, description)
             self.assertIsNotNone(card, msg="card is None")
             self.assertIsNotNone(card.id, msg="id not provided")
-            self.assertEquals(card.name, name)
+            self.assertEqual(card.name, name)
             return card
         except Exception as e:
             print(str(e))
@@ -44,7 +44,7 @@ class TrelloBoardTestCase(unittest.TestCase):
         self.assertFalse(card.closed, msg="Card should not be closed")
 
         card2 = self._trello.get_card(card.id)
-        self.assertEquals(card.name, card2.name)
+        self.assertEqual(card.name, card2.name)
 
     def test41_add_card_desc(self):
         name = "Testing from Python"
@@ -52,7 +52,7 @@ class TrelloBoardTestCase(unittest.TestCase):
         card = self._add_card(name, description)
 
         card.fetch()
-        self.assertEquals(description, card.description)
+        self.assertEqual(description, card.description)
         self.assertIsNotNone(card.url, msg="url not provided")
         self.assertIsNotNone(card.member_id)
         self.assertIsNotNone(card.short_id)
@@ -68,8 +68,8 @@ class TrelloBoardTestCase(unittest.TestCase):
         card.comment(comment)
         card.fetch(True)
 
-        self.assertEquals(len(card.comments), 1)
-        self.assertEquals(card.comments[0]['data']['text'], comment)
+        self.assertEqual(len(card.comments), 1)
+        self.assertEqual(card.comments[0]['data']['text'], comment)
 
     def test43_get_comments(self):
         name = "Card with comments 2"
@@ -77,8 +77,8 @@ class TrelloBoardTestCase(unittest.TestCase):
         card = self._add_card(name)
         card.comment(comment)
         card._comments = card.get_comments()
-        self.assertEquals(len(card.comments), 1)
-        self.assertEquals(card.comments[0]['data']['text'], comment)
+        self.assertEqual(len(card.comments), 1)
+        self.assertEqual(card.comments[0]['data']['text'], comment)
 
     def test44_attach_url_to_card(self):
         name = "Testing from Python - url"
@@ -86,7 +86,7 @@ class TrelloBoardTestCase(unittest.TestCase):
 
         card.attach(name='lwn', url='http://lwn.net/')
         card.fetch()
-        self.assertEquals(card.badges['attachments'], 1)
+        self.assertEqual(card.badges['attachments'], 1)
         card.delete()
 
     def test52_add_card_set_due(self):
@@ -102,21 +102,21 @@ class TrelloBoardTestCase(unittest.TestCase):
         # Refresh the due date from cloud
         card.fetch()
         actual_due_date = card.due
-        self.assertEquals(expected_due_date[:8], actual_due_date[:8])
+        self.assertEqual(expected_due_date[:8], actual_due_date[:8])
 
     def test_set_name(self):
         name = "Testing set card name"
         card = self._list.add_card('noname')
         card.set_name(name)
-        self.assertEquals(card.name, name)
+        self.assertEqual(card.name, name)
 
     def test_set_desc(self):
         card = self._list.add_card("Testing set card desc")
         description = "Description goes here"
         card.set_description(description)
-        self.assertEquals(card.description, description)
+        self.assertEqual(card.description, description)
         card.fetch()
-        self.assertEquals(card.description, description)
+        self.assertEqual(card.description, description)
 
     def test_set_closed(self):
         name = "Testing set card closed"
