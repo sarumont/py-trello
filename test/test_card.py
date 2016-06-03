@@ -18,7 +18,7 @@ class TrelloBoardTestCase(unittest.TestCase):
         cls._trello = TrelloClient(os.environ['TRELLO_API_KEY'],
                                    token=os.environ['TRELLO_TOKEN'])
         for b in cls._trello.list_boards():
-            if b.name == os.environ['TRELLO_TEST_BOARD_NAME'].encode('utf-8'):
+            if b.name == os.environ['TRELLO_TEST_BOARD_NAME']:
                 cls._board = b
                 break
         if not cls._board:
@@ -30,7 +30,7 @@ class TrelloBoardTestCase(unittest.TestCase):
             card = self._list.add_card(name, description)
             self.assertIsNotNone(card, msg="card is None")
             self.assertIsNotNone(card.id, msg="id not provided")
-            self.assertEquals(card.name, name.encode('utf-8'))
+            self.assertEquals(card.name, name)
             return card
         except Exception as e:
             print(str(e))

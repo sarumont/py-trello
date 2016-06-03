@@ -18,7 +18,7 @@ class TrelloBoardTestCase(unittest.TestCase):
         cls._trello = TrelloClient(os.environ['TRELLO_API_KEY'],
                                    token=os.environ['TRELLO_TOKEN'])
         for b in cls._trello.list_boards():
-            if b.name == os.environ['TRELLO_TEST_BOARD_NAME'].encode('utf-8'):
+            if b.name == os.environ['TRELLO_TEST_BOARD_NAME']:
                 cls._board = b
                 break
         if not cls._board:
@@ -30,7 +30,7 @@ class TrelloBoardTestCase(unittest.TestCase):
             card = self._list.add_card(name, description)
             self.assertIsNotNone(card, msg="card is None")
             self.assertIsNotNone(card.id, msg="id not provided")
-            self.assertEqual(card.name, name.encode('utf-8'))
+            self.assertEqual(card.name, name)
             return card
         except Exception as e:
             print(str(e))
@@ -57,7 +57,7 @@ class TrelloBoardTestCase(unittest.TestCase):
         self.assertEquals(len(cards), len(self._board.open_cards()))
 
         for card in cards:
-            self.assertTrue(card.name.decode('utf-8') in names, 'Unexpected card found')
+            self.assertTrue(card.name in names, 'Unexpected card found')
 
         self.assertIsInstance(self._board.all_cards(), list)
         self.assertIsInstance(self._board.open_cards(), list)
@@ -145,27 +145,27 @@ class TrelloBoardTestCase(unittest.TestCase):
         test_list = test_board.add_list("test_list")
         test_list.add_card("test_card")
         open_boards = self._trello.list_boards(board_filter="open")
-        self.assertEqual(len([x for x in open_boards if x.name == "test_create_board".encode('utf-8')]), 1)
+        self.assertEqual(len([x for x in open_boards if x.name == "test_create_board"]), 1)
 
     def test110_copy_board(self):
         boards = self._trello.list_boards(board_filter="open")
-        source_board = next( x for x in boards if x.name == "test_create_board".encode('utf-8'))
+        source_board = next( x for x in boards if x.name == "test_create_board")
         self._trello.add_board("copied_board", source_board=source_board)
         listed_boards = self._trello.list_boards(board_filter="open")
-        copied_board = next(iter([x for x in listed_boards if x.name == "copied_board".encode('utf-8')]), None)
+        copied_board = next(iter([x for x in listed_boards if x.name == "copied_board"]), None)
         self.assertIsNotNone(copied_board)
         open_lists = copied_board.open_lists()
         self.assertEqual(len(open_lists), 4) # default lists plus mine
         test_list = open_lists[0]
         self.assertEqual(len(test_list.list_cards()), 1)
-        test_card = next ( iter([ x for x in test_list.list_cards() if x.name == "test_card".encode('utf-8')]), None )
+        test_card = next ( iter([ x for x in test_list.list_cards() if x.name == "test_card"]), None )
         self.assertIsNotNone(test_card)
 
     def test120_close_board(self):
         boards = self._trello.list_boards(board_filter="open")
         open_count = len(boards)
-        test_create_board = next( x for x in boards if x.name == "test_create_board".encode('utf-8')) # type: Board
-        copied_board = next( x for x in boards if x.name == "copied_board".encode('utf-8')) # type: Board
+        test_create_board = next( x for x in boards if x.name == "test_create_board") # type: Board
+        copied_board = next( x for x in boards if x.name == "copied_board") # type: Board
         test_create_board.close()
         copied_board.close()
         still_open_boards = self._trello.list_boards(board_filter="open")

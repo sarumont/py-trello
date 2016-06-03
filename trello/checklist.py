@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
+from trello.compat import force_str
 
 
 class Checklist(object):
@@ -128,4 +129,4 @@ class Checklist(object):
             return None
 
     def __repr__(self):
-        return '<Checklist %s>' % self.id
+        return force_str(u'<Checklist %s>' % self.id)

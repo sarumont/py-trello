@@ -2,6 +2,7 @@
 from __future__ import with_statement, print_function, absolute_import
 from dateutil import parser as dateparser
 from datetime import datetime
+from trello.compat import force_str
 from trello.checklist import Checklist
 from trello.label import Label
 
@@ -123,7 +124,7 @@ class Card(object):
             raise Exception("key 'id' is not in json_obj")
         card = cls(parent,
                    json_obj['id'],
-                   name=json_obj['name'].encode('utf-8'))
+                   name=json_obj['name'])
         card.desc = json_obj.get('desc', '')
         card.due = json_obj.get('due', '')
         card.closed = json_obj['closed']
@@ -136,7 +137,7 @@ class Card(object):
         return card
 
     def __repr__(self):
-        return '<Card %s>' % self.name
+        return force_str(u'<Card %s>' % self.name)
 
     def fetch(self, eager=True):
         """
@@ -147,7 +148,7 @@ class Card(object):
             '/cards/' + self.id,
             query_params={'badges': False})
         self.id = json_obj['id']
-        self.name = json_obj['name'].encode('utf-8')
+        self.name = json_obj['name']
         self.desc = json_obj.get('desc', '')
         self.closed = json_obj['closed']
         self.url = json_obj['url']
