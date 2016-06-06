@@ -22,15 +22,16 @@ class Organization(object):
         :trello_client: the trello client
         :json_obj: the board json object
         """
-        organization = Organization(trello_client, json_obj['id'], name=json_obj['name'].encode('utf-8'))
-        organization.description = json_obj.get('desc', '').encode('utf-8')
+        organization = Organization(trello_client, json_obj['id'], name=json_obj['name'])
+        organization.description = json_obj.get('desc', '')
         # cannot close an organization
         # organization.closed = json_obj['closed']
         organization.url = json_obj['url']
         return organization
 
     def __repr__(self):
-        return '<Organization %s>' % self.name
+        return ('Organization(%r, %r, name=%r)'
+                % (self.client, self.id, self.name))
 
     def fetch(self):
         """Fetch all attributes for this organization"""

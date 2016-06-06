@@ -22,7 +22,7 @@ class Label(object):
         """
         label = Label(board.client,
                       label_id=json_obj['id'],
-                      name=json_obj['name'].encode('utf-8'),
+                      name=json_obj['name'],
                       color=json_obj['color'])
         return label
 
@@ -31,11 +31,12 @@ class Label(object):
         return [cls.from_json(board, obj) for obj in json_objs]
 
     def __repr__(self):
-        return '<Label %s>' % self.name
+        return ('Label(%r, %r, %r, color=%r)'
+                % (self.client, self.id, self.name, self.color))
 
     def fetch(self):
         """Fetch all attributes for this label"""
         json_obj = self.client.fetch_json('/labels/' + self.id)
-        self.name = json_obj['name'].encode('utf-8')
+        self.name = json_obj['name']
         self.color = json_obj['color']
         return self

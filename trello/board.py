@@ -52,11 +52,13 @@ class Board(object):
         :json_obj: the json board object
         """
         if organization is None:
-            board = Board(client=trello_client, board_id=json_obj['id'], name=json_obj['name'].encode('utf-8'))
+            board = Board(client=trello_client, board_id=json_obj['id'],
+                          name=json_obj['name'])
         else:
-            board = Board(organization=organization, board_id=json_obj['id'], name=json_obj['name'].encode('utf-8'))
+            board = Board(organization=organization, board_id=json_obj['id'],
+                          name=json_obj['name'])
 
-        board.description = json_obj.get('desc', '').encode('utf-8')
+        board.description = json_obj.get('desc', '')
         board.closed = json_obj['closed']
         board.url = json_obj['url']
 
@@ -68,7 +70,12 @@ class Board(object):
         return board
 
     def __repr__(self):
-        return '<Board %s>' % self.name
+        if self.organization:
+            return ('Board(board_id=%r, name=%r, organization=%r)'
+                    % (self.id, self.organization, self.name))
+        else:
+            return ('Board(board_id=%r, name=%r, client=%r)'
+                    % (self.id, self.client, self.name))
 
     def fetch(self):
         """Fetch all attributes for this board"""
@@ -293,13 +300,13 @@ class Board(object):
         members = list()
         for obj in json_obj:
             m = Member(self.client, obj['id'])
-            m.status = obj.get('status', '').encode('utf-8')
+            m.status = obj.get('status', '')
             m.id = obj.get('id', '')
             m.bio = obj.get('bio', '')
             m.url = obj.get('url', '')
-            m.username = obj['username'].encode('utf-8')
-            m.full_name = obj['fullName'].encode('utf-8')
-            m.initials = obj.get('initials', '').encode('utf-8')
+            m.username = obj['username']
+            m.full_name = obj['fullName']
+            m.initials = obj.get('initials', '')
             members.append(m)
 
         return members

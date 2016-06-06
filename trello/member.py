@@ -13,7 +13,8 @@ class Member(object):
         self.full_name = full_name
 
     def __repr__(self):
-        return '<Member %s>' % self.id
+        return ('Member(%r, %r, full_name=%r)'
+                % (self.client, self.id, self.full_name))
 
     def fetch(self):
         """Fetch all attributes for this member"""
@@ -54,15 +55,14 @@ class Member(object):
     @classmethod
     def from_json(cls, trello_client, json_obj):
         """
-        Deserialize the organization json object to a member object
+        Deserialize the member json object to a member object
 
         :trello_client: the trello client
         :json_obj: the member json object
         """
 
-        member = Member(trello_client, json_obj['id'], full_name=json_obj['fullName'].encode('utf-8'))
-        member.username = json_obj.get('username', '').encode('utf-8')
-        member.initials = json_obj.get('initials', '').encode('utf-8')
-        # cannot close an organization
-        # organization.closed = json_obj['closed']
+        member = Member(trello_client, json_obj['id'],
+                        full_name=json_obj['fullName'])
+        member.username = json_obj.get('username', '')
+        member.initials = json_obj.get('initials', '')
         return member
