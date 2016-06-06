@@ -72,10 +72,10 @@ class Board(object):
     def __repr__(self):
         if self.organization:
             return ('Board(board_id=%r, name=%r, organization=%r)'
-                    % (self.id, self.organization, self.name))
+                    % (self.id, self.name, self.organization))
         else:
             return ('Board(board_id=%r, name=%r, client=%r)'
-                    % (self.id, self.client, self.name))
+                    % (self.id, self.name, self.client))
 
     def fetch(self):
         """Fetch all attributes for this board"""
