@@ -18,7 +18,7 @@ class TrelloChecklistTestCase(unittest.TestCase):
         cls._trello = TrelloClient(os.environ['TRELLO_API_KEY'],
                                    token=os.environ['TRELLO_TOKEN'])
         for b in cls._trello.list_boards():
-            if b.name == os.environ['TRELLO_TEST_BOARD_NAME'].encode('utf-8'):
+            if b.name == os.environ['TRELLO_TEST_BOARD_NAME']:
                 cls._board = b
                 break
         if not cls._board:

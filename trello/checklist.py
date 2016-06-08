@@ -128,4 +128,4 @@ class Checklist(object):
             return None
 
     def __repr__(self):
-        return '<Checklist %s>' % self.id
+        return '<Checklist %r>' % self.id
