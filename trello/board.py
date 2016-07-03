@@ -77,6 +77,10 @@ class Board(object):
         self.description = json_obj.get('desc', '')
         self.closed = json_obj['closed']
         self.url = json_obj['url']
+        try:
+            self.date_last_activity = dateparser.parse(json_obj['dateLastActivity'])
+        except:
+            self.date_last_activity = None
 
     def save(self):
         pass
