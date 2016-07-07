@@ -468,6 +468,13 @@ class Card(object):
         self._set_remote_attribute('closed', closed)
         self.closed = closed
 
+
+    def delete_comment(self,comment):
+        # Delete this card permanently
+        self.client.fetch_json(
+            '/cards/' + self.id + '/actions/' + comment['id'] + '/comments',
+            http_method='DELETE')
+
     def delete(self):
         # Delete this card permanently
         self.client.fetch_json(
@@ -532,7 +539,7 @@ class Card(object):
         self._post_remote_data(
             'attachments', **kwargs
         )
-    
+
     def remove_attachment(self,attachment_id):
         """
         Remove attachment from card
@@ -542,7 +549,7 @@ class Card(object):
         self.client.fetch_json(
             '/cards/' + self.id + '/attachments/' + attachment_id,
             http_method='DELETE')
-            
+
     def change_list(self, list_id):
         self.client.fetch_json(
             '/cards/' + self.id + '/idList',
