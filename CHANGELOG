@@ -149,3 +149,20 @@ refactoring by removing some duplication
 implement clearing of checklists
 Updates to support attachments as per Walter's comments https://trello.com/c/5L574YgX/4-add-attachments-to-card
 Added obtaining all checklists directly from the board and the respective test
+
+HEAD
+
+Once a card has reached done list stop time measurement
+Refactoring to avoid repeated code between Card.listCardMove_date and Card.list_movements
+Complete statistics about Trello cards
+List position should not be computed based on list.pos, it should be computed by an external function passed as a parameter
+Improve the comments in Card.get_stats_by_list
+Adds date filter when extracting card stats. This way we can have a workaround to the limitation of Trello API to get only last 1000 board movements
+added card_created_date() function
+changed oauth section run command into block quote to match the rest of the file
+try this version
+RST hates me
+RST hates me
+it would help if I wasn't previewing on the master branch
+Added remove_attachment shortcut
+Implement delete comments method on card

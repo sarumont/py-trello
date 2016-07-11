@@ -138,3 +138,22 @@
 [view](https://github.com/sarumont/py-trello/commit/1f75070b3688a83baa90c4d8a5eacc33ffc70eb3) &bull; implement clearing of checklists  
 [view](https://github.com/sarumont/py-trello/commit/bec258af618649bab021788ec230089da5c7158f) &bull; Updates to support attachments as per Walter's comments https://trello.com/c/5L574YgX/4-add-attachments-to-card  
 [view](https://github.com/sarumont/py-trello/commit/2d121d33aa9e51acf20a65070606c17309378959) &bull; Added obtaining all checklists directly from the board and the respective test  
+
+
+**HEAD**
+
+
+[view](https://github.com/sarumont/py-trello/commit/f7c235b65fe93c493d1718faa3fdf7a4ede960d9) &bull; Once a card has reached done list stop time measurement  
+[view](https://github.com/sarumont/py-trello/commit/fd0a3d8294645707ac037c20aa1afd575de242ac) &bull; Refactoring to avoid repeated code between Card.listCardMove_date and Card.list_movements  
+[view](https://github.com/sarumont/py-trello/commit/dcf59eb18719c24901b8f91285c13630a65a08f3) &bull; Complete statistics about Trello cards  
+[view](https://github.com/sarumont/py-trello/commit/f77239181e328ad00a5fa57e2be6c5de03878630) &bull; List position should not be computed based on list.pos, it should be computed by an external function passed as a parameter  
+[view](https://github.com/sarumont/py-trello/commit/4cf58437d2e4df65698c19033dabbf587009d796) &bull; Improve the comments in Card.get_stats_by_list  
+[view](https://github.com/sarumont/py-trello/commit/b82cbe3a591e02fc8cf65fc3fb6e8efdab174afc) &bull; Adds date filter when extracting card stats. This way we can have a workaround to the limitation of Trello API to get only last 1000 board movements  
+[view](https://github.com/sarumont/py-trello/commit/60892d4718c696735970f2e2e41c23558895a1e0) &bull; added card_created_date() function  
+[view](https://github.com/sarumont/py-trello/commit/c4db68827bfdfb70a97232762b8689e3ef9a0820) &bull; changed oauth section run command into block quote to match the rest of the file  
+[view](https://github.com/sarumont/py-trello/commit/faa71e421c83145e1051914ad67449ce8a35dade) &bull; try this version  
+[view](https://github.com/sarumont/py-trello/commit/b0e6aa7088d413a0a0bbd7892400821f1efe61a4) &bull; RST hates me  
+[view](https://github.com/sarumont/py-trello/commit/6db587d0c958e68585c56dd8cfa4e1e3c6e98ba6) &bull; RST hates me  
+[view](https://github.com/sarumont/py-trello/commit/bad3c778d468a3fde8c8fc208f947514bba67db3) &bull; it would help if I wasn't previewing on the master branch  
+[view](https://github.com/sarumont/py-trello/commit/751c6b77d6d0b52d0de39324522ab5022cc6b926) &bull; Added remove_attachment shortcut  
+[view](https://github.com/sarumont/py-trello/commit/9fd36c064282cc8bbc6ae18267c33ed23a7cc2ea) &bull; Implement delete comments method on card  
