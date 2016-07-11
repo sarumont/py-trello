@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
 from trello.board import Board
+from trello.compat import force_str
 from trello.member import Member
 
 
@@ -22,15 +23,15 @@ class Organization(object):
         :trello_client: the trello client
         :json_obj: the board json object
         """
-        organization = Organization(trello_client, json_obj['id'], name=json_obj['name'].encode('utf-8'))
-        organization.description = json_obj.get('desc', '').encode('utf-8')
+        organization = Organization(trello_client, json_obj['id'], name=json_obj['name'])
+        organization.description = json_obj.get('desc', '')
         # cannot close an organization
         # organization.closed = json_obj['closed']
         organization.url = json_obj['url']
         return organization
 
     def __repr__(self):
-        return '<Organization %s>' % self.name
+        return force_str(u'<Organization %s>' % self.name)
 
     def fetch(self):
         """Fetch all attributes for this organization"""

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
+from trello.compat import force_str
 
 
 class List(object):
@@ -27,12 +28,12 @@ class List(object):
         :board: the board object that the list belongs to
         :json_obj: the json list object
         """
-        list = List(board, json_obj['id'], name=json_obj['name'].encode('utf-8'))
+        list = List(board, json_obj['id'], name=json_obj['name'])
         list.closed = json_obj['closed']
         return list
 
     def __repr__(self):
-        return '<List %s>' % self.name
+        return force_str(u'<List %s>' % self.name)
 
     def fetch(self):
         """Fetch all attributes for this list"""
