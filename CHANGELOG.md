@@ -157,3 +157,11 @@
 [view](https://github.com/sarumont/py-trello/commit/bad3c778d468a3fde8c8fc208f947514bba67db3) &bull; it would help if I wasn't previewing on the master branch  
 [view](https://github.com/sarumont/py-trello/commit/751c6b77d6d0b52d0de39324522ab5022cc6b926) &bull; Added remove_attachment shortcut  
 [view](https://github.com/sarumont/py-trello/commit/9fd36c064282cc8bbc6ae18267c33ed23a7cc2ea) &bull; Implement delete comments method on card  
+
+**HEAD**
+
+
+[view](https://github.com/sarumont/py-trello/commit/1644e815c053c8d5476d1c58e850484c1fb1ae0e) &bull; Encoding: use unicode everywhere  
+[view](https://github.com/sarumont/py-trello/commit/c566142399deda4b7de9441b13cc574510fc8e09) &bull; tests: add tox support  
+[view](https://github.com/sarumont/py-trello/commit/a4c2fa0947ce66bd145bbf61a9f832cfc5529be1) &bull; tests: replace use of deprecated assertEquals with assertEqual  
+[view](https://github.com/sarumont/py-trello/commit/0023119401dd2e04dd7d214cde583eca96a422de) &bull; README: formatting fixes  

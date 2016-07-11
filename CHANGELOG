@@ -166,3 +166,9 @@ RST hates me
 it would help if I wasn't previewing on the master branch
 Added remove_attachment shortcut
 Implement delete comments method on card
+HEAD
+
+Encoding: use unicode everywhere
+tests: add tox support
+tests: replace use of deprecated assertEquals with assertEqual
+README: formatting fixes
