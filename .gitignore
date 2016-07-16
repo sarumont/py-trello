@@ -8,3 +8,4 @@ dist
 .project
 .pydevproject
 .idea/
+.tox/
