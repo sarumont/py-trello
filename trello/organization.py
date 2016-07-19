@@ -46,10 +46,10 @@ class Organization(object):
         return self.get_boards('all')
 
     def get_boards(self, list_filter):
-        '''Get boards using filter
+        """Get boards using filter
 
-        :rtype: Board
-        '''
+        :rtype: list of Board
+        """
         # error checking
         json_obj = self.client.fetch_json(
             '/organizations/' + self.id + '/boards',
@@ -57,10 +57,10 @@ class Organization(object):
         return [Board.from_json(organization=self, json_obj=obj) for obj in json_obj]
 
     def get_board(self, field_name):
-        '''Get board
+        """Get board
 
-        :rtype: Board
-        '''
+        :rtype: list of Board
+        """
         # error checking
         json_obj = self.client.fetch_json(
             '/organizations/' + self.id + '/boards',
