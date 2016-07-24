@@ -203,14 +203,12 @@ class Card(object):
         return checklists
 
     def fetch_attachments(self, force=False):
-        items = []
-
         if (force is True) or (self.badges['attachments'] > 0):
             items = self.client.fetch_json(
                 '/cards/' + self.id + '/attachments',
                 query_params={'filter':'false'})
             return items
-        return items
+        return []
 
     def get_attachments(self):
         return self.fetch_attachments(force=True)
