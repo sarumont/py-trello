@@ -142,7 +142,8 @@ class Card(object):
     def fetch(self, eager=True):
         """
         Fetch all attributes for this card
-        :param eager: If eager is true comments and checklists will be fetched immediately, otherwise on demand
+
+        :param eager: If eager, comments, checklists and attachments will be fetched immediately, otherwise on demand
         """
         json_obj = self.client.fetch_json(
             '/cards/' + self.id,
