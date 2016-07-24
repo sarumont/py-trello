@@ -224,8 +224,8 @@ class Board(object):
 
     def get_cards(self, filters=None, card_filter=""):
         """
+        :filters: dict containing query parameters. Eg. {'fields': 'all'}
         :card_filter: filters on card status ('open', 'closed', 'all')
-        :query_params: dict containing query parameters. Eg. {'fields': 'all'}
 
         More info on card queries:
         https://trello.com/docs/api/board/index.html#get-1-boards-board-id-cards
