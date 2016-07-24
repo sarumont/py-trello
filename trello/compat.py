@@ -1,6 +1,6 @@
 import sys
 
-PY2 = sys.version_info > (3, 0)
+PY2 = sys.version_info < (3, 0)
 
 
 def force_str(s, encoding='utf-8'):
