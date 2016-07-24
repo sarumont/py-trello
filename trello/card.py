@@ -424,10 +424,10 @@ class Card(object):
         The first 8 characters of the card id is a hexadecimal number.
         Converted to a decimal from hexadecimal, the timestamp is an Unix
         timestamp (the number of seconds that have elapsed since January 1,
-        1970 midnight UTC.See
+        1970 midnight UTC. See
         http://help.trello.com/article/759-getting-the-time-a-card-or-board-was-created
         """
-        unix_time = int(self.id[:8],16)
+        unix_time = int(self.id[:8], 16)
 
         return datetime.fromtimestamp(unix_time)
 
@@ -469,8 +469,8 @@ class Card(object):
         self.closed = closed
 
 
-    def delete_comment(self,comment):
-        # Delete this card permanently
+    def delete_comment(self, comment):
+        # Delete this comment permanently
         self.client.fetch_json(
             '/cards/' + self.id + '/actions/' + comment['id'] + '/comments',
             http_method='DELETE')
@@ -536,11 +536,9 @@ class Card(object):
             kwargs['mimeType'] = mimeType
             kwargs['url'] = url
 
-        self._post_remote_data(
-            'attachments', **kwargs
-        )
+        self._post_remote_data('attachments', **kwargs)
 
-    def remove_attachment(self,attachment_id):
+    def remove_attachment(self, attachment_id):
         """
         Remove attachment from card
         :param attachment_id: Attachment id
