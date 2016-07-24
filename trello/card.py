@@ -336,7 +336,7 @@ class Card(object):
             seconds_to_time_unit = lambda time: time / 3660.0
 
         # Creation datetime of the card
-        creation_datetime = self.create_date
+        creation_datetime = self.created_date
 
         #  Time in seconds stores the seconds that our card lives in a column
         stats_by_list = {list_.id: {"time":0, "forward_moves":0, "backward_moves":0} for list_ in lists}
@@ -402,7 +402,7 @@ class Card(object):
         return dateparser.parse(date_str)
 
     @property
-    def create_date(self):
+    def created_date(self):
         """Will return the creation date of the card.
 
         WARNING: if the card was create via convertion of a checklist item
@@ -412,6 +412,9 @@ class Card(object):
         self.fetch_actions()
         date_str = self.actions[0]['date']
         return dateparser.parse(date_str)
+
+    # backwards compatibility alias; TODO: deprecation message
+    create_date = created_date
 
     @property
     def card_created_date(self):
