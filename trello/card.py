@@ -142,7 +142,8 @@ class Card(object):
     def fetch(self, eager=True):
         """
         Fetch all attributes for this card
-        :param eager: If eager is true comments and checklists will be fetched immediately, otherwise on demand
+
+        :param eager: If eager, comments, checklists and attachments will be fetched immediately, otherwise on demand
         """
         json_obj = self.client.fetch_json(
             '/cards/' + self.id,
@@ -202,14 +203,12 @@ class Card(object):
         return checklists
 
     def fetch_attachments(self, force=False):
-        items = []
-
         if (force is True) or (self.badges['attachments'] > 0):
             items = self.client.fetch_json(
                 '/cards/' + self.id + '/attachments',
                 query_params={'filter':'false'})
             return items
-        return items
+        return []
 
     def get_attachments(self):
         return self.fetch_attachments(force=True)
@@ -337,7 +336,7 @@ class Card(object):
             seconds_to_time_unit = lambda time: time / 3660.0
 
         # Creation datetime of the card
-        creation_datetime = self.create_date
+        creation_datetime = self.created_date
 
         #  Time in seconds stores the seconds that our card lives in a column
         stats_by_list = {list_.id: {"time":0, "forward_moves":0, "backward_moves":0} for list_ in lists}
@@ -403,7 +402,7 @@ class Card(object):
         return dateparser.parse(date_str)
 
     @property
-    def create_date(self):
+    def created_date(self):
         """Will return the creation date of the card.
 
         WARNING: if the card was create via convertion of a checklist item
@@ -413,6 +412,9 @@ class Card(object):
         self.fetch_actions()
         date_str = self.actions[0]['date']
         return dateparser.parse(date_str)
+
+    # backwards compatibility alias; TODO: deprecation message
+    create_date = created_date
 
     @property
     def card_created_date(self):
@@ -425,10 +427,10 @@ class Card(object):
         The first 8 characters of the card id is a hexadecimal number.
         Converted to a decimal from hexadecimal, the timestamp is an Unix
         timestamp (the number of seconds that have elapsed since January 1,
-        1970 midnight UTC.See
+        1970 midnight UTC. See
         http://help.trello.com/article/759-getting-the-time-a-card-or-board-was-created
         """
-        unix_time = int(self.id[:8],16)
+        unix_time = int(self.id[:8], 16)
 
         return datetime.fromtimestamp(unix_time)
 
@@ -470,8 +472,8 @@ class Card(object):
         self.closed = closed
 
 
-    def delete_comment(self,comment):
-        # Delete this card permanently
+    def delete_comment(self, comment):
+        # Delete this comment permanently
         self.client.fetch_json(
             '/cards/' + self.id + '/actions/' + comment['id'] + '/comments',
             http_method='DELETE')
@@ -537,11 +539,9 @@ class Card(object):
             kwargs['mimeType'] = mimeType
             kwargs['url'] = url
 
-        self._post_remote_data(
-            'attachments', **kwargs
-        )
+        self._post_remote_data('attachments', **kwargs)
 
-    def remove_attachment(self,attachment_id):
+    def remove_attachment(self, attachment_id):
         """
         Remove attachment from card
         :param attachment_id: Attachment id

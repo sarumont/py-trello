@@ -40,7 +40,7 @@ class Checklist(object):
 
         :name: name of the checklist item to delete
         """
-        ix = self._get_item_id(name)
+        ix = self._get_item_index(name)
         if ix is None:
             return
 
@@ -63,7 +63,7 @@ class Checklist(object):
         :name: name of the checklist item
         :checked: True if item state should be checked, False otherwise
         """
-        ix = self._get_item_id(name)
+        ix = self._get_item_index(name)
         if ix is None:
             return
 
@@ -99,7 +99,7 @@ class Checklist(object):
         :name: name of the checklist item
         :new_name: new name of item
         """
-        ix = self._get_item_id(name)
+        ix = self._get_item_index(name)
         if ix is None:
             return
 
@@ -119,8 +119,8 @@ class Checklist(object):
             '/checklists/%s' % self.id,
             http_method='DELETE')
 
-    def _get_item_id(self, name):
-        """Locate the id of the checklist item"""
+    def _get_item_index(self, name):
+        """Locate the index of the checklist item"""
         try:
             [ix] = [i for i in range(len(self.items)) if
                     self.items[i]['name'] == name]
