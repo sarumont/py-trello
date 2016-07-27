@@ -261,7 +261,8 @@ class Card(object):
 
         action_since = None if not filter_by_date_interval else filter_by_date_interval[0]
         action_before = None if not filter_by_date_interval else filter_by_date_interval[1]
-        self.fetch_actions('updateCard:idList,', action_since, action_before)
+        if not hasattr(self, "actions") or self.actions is None:
+            self.fetch_actions('updateCard:idList,', action_since, action_before)
 
         movements = []
 
