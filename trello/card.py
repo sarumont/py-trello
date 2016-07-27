@@ -2,10 +2,11 @@
 from __future__ import with_statement, print_function, absolute_import
 from dateutil import parser as dateparser
 from datetime import datetime
+
+from trello import Organization
 from trello.compat import force_str
 from trello.checklist import Checklist
 from trello.label import Label
-from trello.configuration import Configuration
 
 import datetime
 import pytz
@@ -330,7 +331,7 @@ class Card(object):
         :return: dict of the form {list_id: {time:<time card was in that list>, forward_moves: <number>, backward_moves: <number> }}
         """
 
-        tz = pytz.timezone(Configuration.TIMEZONE)
+        tz = pytz.timezone(Organization.TIMEZONE)
 
         # Conversion of units
         seconds_to_time_unit = lambda time: time
@@ -414,7 +415,7 @@ class Card(object):
                 test for the condition.
         """
         if not hasattr(self, "creation_date"):
-            localtz = pytz.timezone(Configuration.TIMEZONE)
+            localtz = pytz.timezone(Organization.TIMEZONE)
             self.creation_date = localtz.localize(datetime.datetime.fromtimestamp(int(self.id[0: 8], 16)))
         return self.creation_date
 
