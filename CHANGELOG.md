@@ -109,3 +109,59 @@
 
 [view](https://github.com/sarumont/py-trello/commit/ec6202b60a85c3b4be4307aa1cea1fb6df547a6b) &bull; Allow cards to unassign members  
 [view](https://github.com/sarumont/py-trello/commit/1d0934c15f83be6d5dac8af7eadac011b94d417e) &bull; Use the proper ref in the lambda (fixes #108)  
+
+
+**v0.5.0**
+
+
+[view](https://github.com/sarumont/py-trello/commit/98a20a1eab377842113bf934dc71b3eb35246629) &bull; Add remove_label function to card  
+[view](https://github.com/sarumont/py-trello/commit/f81227c05396ce5a9e9ffef3f2c6527d15a41ccd) &bull; Members: Add "fetch_cards" and "fetch_notifications" methods.  
+[view](https://github.com/sarumont/py-trello/commit/8a6aa7a60f4cd6aca9208e43ab576e44f4f7d145) &bull; A few things I added for a project of mine: 1. all_boards can now filter, for example open (https://developers.trello.com/advanced-reference/member#get-1-members-idmember-or-username-boards) 2. Cards and boards parse dateLastActivity without needing another fetch (as it is returned in the original json).  
+[view](https://github.com/sarumont/py-trello/commit/f4c160d48856119a1302d13043150edf9bd448ae) &bull; None out the date_last_activity as I "promoted" it to the json parsing, so it'll be weird if it just didn't exist if parse failed.  
+[view](https://github.com/sarumont/py-trello/commit/06765127704cd795744bc0aeb9616e3cf02e0634) &bull; How the hell did I manage to add tabs? :)  
+[view](https://github.com/sarumont/py-trello/commit/11945eaf9380654ffe7ae545fc239445e0745836) &bull; fix #66 - strings are encoded with UTF-8 to be compatible with python 2 and decoded with utf-8 to be compatible with python 3  
+[view](https://github.com/sarumont/py-trello/commit/7e51b10b7e3e15f0fec0e62e090e86de6078151c) &bull; Revert "fix #66 - strings are encoded with UTF-8 to be compatible with python 2 and decoded with utf-8 to be compatible with python 3"  
+[view](https://github.com/sarumont/py-trello/commit/0ad3eb20338dfad47be481bd2ef21544ddb8da29) &bull; Add card filter parameter to List.list_cards()  
+[view](https://github.com/sarumont/py-trello/commit/1d3464de716983516dd396280afd5cfcdcef94e1) &bull; Add cloning from a source card to add_card()  
+[view](https://github.com/sarumont/py-trello/commit/2519f2460fc63a6e263cef86c5be8d3034eed219) &bull; Add functionality to retrieve a Label object  
+[view](https://github.com/sarumont/py-trello/commit/dc4a2841cf573bf6577485c1917f9dd59bc7c99e) &bull; Add URL shorturl property  
+[view](https://github.com/sarumont/py-trello/commit/a1f7dd22a3cd7d5ef44a98526cb8272d9f4852be) &bull; Added card_filter argument to Board.get_cards()  
+[view](https://github.com/sarumont/py-trello/commit/0d43bce31037cd26ed65da8301224a03373614ee) &bull; Fixed gh-124.  -Added support for a source_board parameter to add_board  - Added tests for add_board, copy_board, close_board  - Modified list boards to only look at open boards  - This commit now causes the test account to accumulate closed boards  
+[view](https://github.com/sarumont/py-trello/commit/51e3a8f7b61ce9377aea024b7214d87213d132d0) &bull; gh-124 Fix for original PR, unit tests had flaw that hid non-working code for copying board.  
+[view](https://github.com/sarumont/py-trello/commit/c7e8f089372a156ba667f7bbc76c6b7fc6073fc3) &bull; added test for closed cards, fixed tests for python3(except test_delete_cards)  
+[view](https://github.com/sarumont/py-trello/commit/ac2f581dbd7b04ea9efe88296577a2064b04865e) &bull; added action_limit for board. plus the unittests  
+[view](https://github.com/sarumont/py-trello/commit/3107195bcda8395210bca51992ba2d2f51868d4d) &bull; action_limit is an optional parameter  
+[view](https://github.com/sarumont/py-trello/commit/33404517a08a3090a503a91ae00429ce1860e766) &bull; add due date  
+[view](https://github.com/sarumont/py-trello/commit/baef0fa2a716dd38b6d54fdcb4f7162f54a90901) &bull; Add ability to specify which organization to create a board on  
+[view](https://github.com/sarumont/py-trello/commit/77eb3f44137632d3fab9d0966a022d4eb02080d9) &bull; implement deletion of single checklist items  
+[view](https://github.com/sarumont/py-trello/commit/f2e754171fa59490cc014a4a2986e3b8eb5cb082) &bull; refactoring by removing some duplication  
+[view](https://github.com/sarumont/py-trello/commit/1f75070b3688a83baa90c4d8a5eacc33ffc70eb3) &bull; implement clearing of checklists  
+[view](https://github.com/sarumont/py-trello/commit/bec258af618649bab021788ec230089da5c7158f) &bull; Updates to support attachments as per Walter's comments https://trello.com/c/5L574YgX/4-add-attachments-to-card  
+[view](https://github.com/sarumont/py-trello/commit/2d121d33aa9e51acf20a65070606c17309378959) &bull; Added obtaining all checklists directly from the board and the respective test  
+
+
+**HEAD**
+
+
+[view](https://github.com/sarumont/py-trello/commit/f7c235b65fe93c493d1718faa3fdf7a4ede960d9) &bull; Once a card has reached done list stop time measurement  
+[view](https://github.com/sarumont/py-trello/commit/fd0a3d8294645707ac037c20aa1afd575de242ac) &bull; Refactoring to avoid repeated code between Card.listCardMove_date and Card.list_movements  
+[view](https://github.com/sarumont/py-trello/commit/dcf59eb18719c24901b8f91285c13630a65a08f3) &bull; Complete statistics about Trello cards  
+[view](https://github.com/sarumont/py-trello/commit/f77239181e328ad00a5fa57e2be6c5de03878630) &bull; List position should not be computed based on list.pos, it should be computed by an external function passed as a parameter  
+[view](https://github.com/sarumont/py-trello/commit/4cf58437d2e4df65698c19033dabbf587009d796) &bull; Improve the comments in Card.get_stats_by_list  
+[view](https://github.com/sarumont/py-trello/commit/b82cbe3a591e02fc8cf65fc3fb6e8efdab174afc) &bull; Adds date filter when extracting card stats. This way we can have a workaround to the limitation of Trello API to get only last 1000 board movements  
+[view](https://github.com/sarumont/py-trello/commit/60892d4718c696735970f2e2e41c23558895a1e0) &bull; added card_created_date() function  
+[view](https://github.com/sarumont/py-trello/commit/c4db68827bfdfb70a97232762b8689e3ef9a0820) &bull; changed oauth section run command into block quote to match the rest of the file  
+[view](https://github.com/sarumont/py-trello/commit/faa71e421c83145e1051914ad67449ce8a35dade) &bull; try this version  
+[view](https://github.com/sarumont/py-trello/commit/b0e6aa7088d413a0a0bbd7892400821f1efe61a4) &bull; RST hates me  
+[view](https://github.com/sarumont/py-trello/commit/6db587d0c958e68585c56dd8cfa4e1e3c6e98ba6) &bull; RST hates me  
+[view](https://github.com/sarumont/py-trello/commit/bad3c778d468a3fde8c8fc208f947514bba67db3) &bull; it would help if I wasn't previewing on the master branch  
+[view](https://github.com/sarumont/py-trello/commit/751c6b77d6d0b52d0de39324522ab5022cc6b926) &bull; Added remove_attachment shortcut  
+[view](https://github.com/sarumont/py-trello/commit/9fd36c064282cc8bbc6ae18267c33ed23a7cc2ea) &bull; Implement delete comments method on card  
+
+**HEAD**
+
+
+[view](https://github.com/sarumont/py-trello/commit/1644e815c053c8d5476d1c58e850484c1fb1ae0e) &bull; Encoding: use unicode everywhere  
+[view](https://github.com/sarumont/py-trello/commit/c566142399deda4b7de9441b13cc574510fc8e09) &bull; tests: add tox support  
+[view](https://github.com/sarumont/py-trello/commit/a4c2fa0947ce66bd145bbf61a9f832cfc5529be1) &bull; tests: replace use of deprecated assertEquals with assertEqual  
+[view](https://github.com/sarumont/py-trello/commit/0023119401dd2e04dd7d214cde583eca96a422de) &bull; README: formatting fixes  

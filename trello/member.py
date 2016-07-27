@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
+from trello.compat import force_str
 
 
 class Member(object):
@@ -13,7 +14,7 @@ class Member(object):
         self.full_name = full_name
 
     def __repr__(self):
-        return '<Member %s>' % self.id
+        return force_str(u'<Member %s>' % self.id)
 
     def fetch(self):
         """Fetch all attributes for this member"""
@@ -43,14 +44,14 @@ class Member(object):
             '/members/' + self.id + '/cards',
             query_params={'filter': 'visible'})
         return sorted(cards, key=lambda card: card['dateLastActivity'])
-    
+
     def fetch_notifications(self, filters = []):
         """ Fetches all the notifications for this member """
         notifications = self.client.fetch_json(
             '/members/' + self.id + '/notifications',
             query_params={'filter': ",".join(filters)})
         return sorted(notifications, key=lambda notification: notification['date'])
-    
+
     @classmethod
     def from_json(cls, trello_client, json_obj):
         """
@@ -60,9 +61,9 @@ class Member(object):
         :json_obj: the member json object
         """
 
-        member = Member(trello_client, json_obj['id'], full_name=json_obj['fullName'].encode('utf-8'))
-        member.username = json_obj.get('username', '').encode('utf-8')
-        member.initials = json_obj.get('initials', '').encode('utf-8')
+        member = Member(trello_client, json_obj['id'], full_name=json_obj['fullName'])
+        member.username = json_obj.get('username', '')
+        member.initials = json_obj.get('initials', '')
         # cannot close an organization
         # organization.closed = json_obj['closed']
         return member

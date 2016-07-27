@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
 from dateutil import parser as dateparser
+from datetime import datetime
+from trello.compat import force_str
 from trello.checklist import Checklist
 from trello.label import Label
 from trello.configuration import Configuration
@@ -124,7 +126,7 @@ class Card(object):
             raise Exception("key 'id' is not in json_obj")
         card = cls(parent,
                    json_obj['id'],
-                   name=json_obj['name'].encode('utf-8'))
+                   name=json_obj['name'])
         card.desc = json_obj.get('desc', '')
         card.due = json_obj.get('due', '')
         card.closed = json_obj['closed']
@@ -137,18 +139,19 @@ class Card(object):
         return card
 
     def __repr__(self):
-        return '<Card %s>' % self.name
+        return force_str(u'<Card %s>' % self.name)
 
     def fetch(self, eager=True):
         """
         Fetch all attributes for this card
-        :param eager: If eager is true comments and checklists will be fetched immediately, otherwise on demand
+
+        :param eager: If eager, comments, checklists and attachments will be fetched immediately, otherwise on demand
         """
         json_obj = self.client.fetch_json(
             '/cards/' + self.id,
             query_params={'badges': False})
         self.id = json_obj['id']
-        self.name = json_obj['name'].encode('utf-8')
+        self.name = json_obj['name']
         self.desc = json_obj.get('desc', '')
         self.closed = json_obj['closed']
         self.url = json_obj['url']
@@ -202,14 +205,12 @@ class Card(object):
         return checklists
 
     def fetch_attachments(self, force=False):
-        items = []
-
         if (force is True) or (self.badges['attachments'] > 0):
             items = self.client.fetch_json(
                 '/cards/' + self.id + '/attachments',
                 query_params={'filter':'false'})
             return items
-        return items
+        return []
 
     def get_attachments(self):
         return self.fetch_attachments(force=True)
@@ -339,7 +340,7 @@ class Card(object):
             seconds_to_time_unit = lambda time: time / 3660.0
 
         # Creation datetime of the card
-        creation_datetime = self.create_date
+        creation_datetime = self.created_date
 
         #  Time in seconds stores the seconds that our card lives in a column
         stats_by_list = {list_.id: {"time":0, "forward_moves":0, "backward_moves":0} for list_ in lists}
@@ -405,7 +406,7 @@ class Card(object):
         return dateparser.parse(date_str)
 
     @property
-    def create_date(self):
+    def created_date(self):
         """Will return the creation date of the card.
 
         WARNING: if the card was create via convertion of a checklist item
@@ -416,6 +417,27 @@ class Card(object):
             localtz = pytz.timezone(Configuration.TIMEZONE)
             self.creation_date = localtz.localize(datetime.datetime.fromtimestamp(int(self.id[0: 8], 16)))
         return self.creation_date
+
+    # backwards compatibility alias; TODO: deprecation message
+    create_date = created_date
+
+    @property
+    def card_created_date(self):
+        """Will return the creation date of the card.
+
+        NOTE: This will return the date the card was created, even if it
+        was created on another board. The created_date() above actually just
+        returns the first activity and has the issue described in the warning.
+
+        The first 8 characters of the card id is a hexadecimal number.
+        Converted to a decimal from hexadecimal, the timestamp is an Unix
+        timestamp (the number of seconds that have elapsed since January 1,
+        1970 midnight UTC. See
+        http://help.trello.com/article/759-getting-the-time-a-card-or-board-was-created
+        """
+        unix_time = int(self.id[:8], 16)
+
+        return datetime.fromtimestamp(unix_time)
 
     @property
     def due_date(self):
@@ -453,6 +475,13 @@ class Card(object):
     def set_closed(self, closed):
         self._set_remote_attribute('closed', closed)
         self.closed = closed
+
+
+    def delete_comment(self, comment):
+        # Delete this comment permanently
+        self.client.fetch_json(
+            '/cards/' + self.id + '/actions/' + comment['id'] + '/comments',
+            http_method='DELETE')
 
     def delete(self):
         # Delete this card permanently
@@ -515,9 +544,17 @@ class Card(object):
             kwargs['mimeType'] = mimeType
             kwargs['url'] = url
 
-        self._post_remote_data(
-            'attachments', **kwargs
-        )
+        self._post_remote_data('attachments', **kwargs)
+
+    def remove_attachment(self, attachment_id):
+        """
+        Remove attachment from card
+        :param attachment_id: Attachment id
+        :return: None
+        """
+        self.client.fetch_json(
+            '/cards/' + self.id + '/attachments/' + attachment_id,
+            http_method='DELETE')
 
     def change_list(self, list_id):
         self.client.fetch_json(

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
 from trello.board import Board
+from trello.compat import force_str
 from trello.member import Member
 
 
@@ -25,15 +26,15 @@ class Organization(object):
         :trello_client: the trello client
         :json_obj: the board json object
         """
-        organization = Organization(trello_client, json_obj['id'], name=json_obj['name'].encode('utf-8'))
-        organization.description = json_obj.get('desc', '').encode('utf-8')
+        organization = Organization(trello_client, json_obj['id'], name=json_obj['name'])
+        organization.description = json_obj.get('desc', '')
         # cannot close an organization
         # organization.closed = json_obj['closed']
         organization.url = json_obj['url']
         return organization
 
     def __repr__(self):
-        return '<Organization %s>' % self.name
+        return force_str(u'<Organization %s>' % self.name)
 
     def fetch(self):
         """Fetch all attributes for this organization"""
@@ -48,10 +49,10 @@ class Organization(object):
         return self.get_boards('all')
 
     def get_boards(self, list_filter):
-        '''Get boards using filter
+        """Get boards using filter
 
-        :rtype: Board
-        '''
+        :rtype: list of Board
+        """
         # error checking
         json_obj = self.client.fetch_json(
             '/organizations/' + self.id + '/boards',
@@ -59,10 +60,10 @@ class Organization(object):
         return [Board.from_json(organization=self, json_obj=obj) for obj in json_obj]
 
     def get_board(self, field_name):
-        '''Get board
+        """Get board
 
-        :rtype: Board
-        '''
+        :rtype: list of Board
+        """
         # error checking
         json_obj = self.client.fetch_json(
             '/organizations/' + self.id + '/boards',

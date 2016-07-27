@@ -72,7 +72,7 @@ class TrelloClient(object):
         Returns all boards for your Trello user
 
         :return: a list of Python objects representing the Trello boards.
-        :rtype: Board
+        :rtype: list of Board
 
         Each board has the following noteworthy attributes:
             - id: the board's identifier
@@ -90,7 +90,7 @@ class TrelloClient(object):
         Returns all organizations for your Trello user
 
         :return: a list of Python objects representing the Trello organizations.
-        :rtype: Organization
+        :rtype: list of Organization
 
         Each organization has the following noteworthy attributes:
             - id: the organization's identifier
@@ -104,28 +104,28 @@ class TrelloClient(object):
         return [Organization.from_json(self, obj) for obj in json_obj]
 
     def get_organization(self, organization_id):
-        '''Get organization
+        """Get organization
 
         :rtype: Organization
-        '''
+        """
         obj = self.fetch_json('/organizations/' + organization_id)
 
         return Organization.from_json(self, obj)
 
     def get_board(self, board_id):
-        '''Get board
+        """Get board
 
         :rtype: Board
-        '''
+        """
         obj = self.fetch_json('/boards/' + board_id)
         return Board.from_json(self, json_obj=obj)
 
     def add_board(self, board_name, source_board=None, organization_id=None):
-        '''Create board
+        """Create board
         :param board_name: Name of the board to create
         :param source_board: Optional Board to copy
         :rtype: Board
-        '''
+        """
         post_args={'name': board_name}
         if source_board is not None:
             post_args['idBoardSource'] = source_board.id
@@ -137,29 +137,29 @@ class TrelloClient(object):
         return Board.from_json(self, json_obj=obj)
 
     def get_member(self, member_id):
-        '''Get member
+        """Get member
 
         :rtype: Member
-        '''
+        """
         return Member(self, member_id).fetch()
 
     def get_card(self, card_id):
-        '''Get card
+        """Get card
 
         :rtype: Card
-        '''
+        """
         card_json = self.fetch_json('/cards/' + card_id)
         list_json = self.fetch_json('/lists/' + card_json['idList'])
         board = self.get_board(card_json['idBoard'])
         return Card.from_json(List.from_json(board, list_json), card_json)
 
     def get_label(self, label_id, board_id):
-        '''Get Label
+        """Get Label
 
         Requires the parent board id the label is on
 
         :rtype: Label
-        '''
+        """
         board = self.get_board(board_id)
         label_json = self.fetch_json('/labels/' + label_id)
         return Label.from_json(board, label_json)

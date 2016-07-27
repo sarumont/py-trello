@@ -2,6 +2,7 @@
 from __future__ import with_statement, print_function, absolute_import
 from trello.member import Member
 from trello.card import Card
+from trello.compat import force_str
 from trello.trellolist import List
 from trello.label import Label
 from trello.checklist import Checklist
@@ -52,11 +53,11 @@ class Board(object):
         :json_obj: the json board object
         """
         if organization is None:
-            board = Board(client=trello_client, board_id=json_obj['id'], name=json_obj['name'].encode('utf-8'))
+            board = Board(client=trello_client, board_id=json_obj['id'], name=json_obj['name'])
         else:
-            board = Board(organization=organization, board_id=json_obj['id'], name=json_obj['name'].encode('utf-8'))
+            board = Board(organization=organization, board_id=json_obj['id'], name=json_obj['name'])
 
-        board.description = json_obj.get('desc', '').encode('utf-8')
+        board.description = json_obj.get('desc', '')
         board.closed = json_obj['closed']
         board.url = json_obj['url']
 
@@ -68,7 +69,7 @@ class Board(object):
         return board
 
     def __repr__(self):
-        return '<Board %s>' % self.name
+        return force_str(u'<Board %s>' % self.name)
 
     def fetch(self):
         """Fetch all attributes for this board"""
@@ -100,39 +101,39 @@ class Board(object):
         self.closed = False
 
     def get_list(self, list_id):
-        '''Get list
+        """Get list
 
         :rtype: List
-        '''
+        """
         obj = self.client.fetch_json('/lists/' + list_id)
         return List.from_json(board=self, json_obj=obj)
 
     def all_lists(self):
         """Returns all lists on this board
 
-        :rtype: List
+        :rtype: list of List
         """
         return self.get_lists('all')
 
     def open_lists(self):
         """Returns all open lists on this board
 
-        :rtype: List
+        :rtype: list of List
         """
         return self.get_lists('open')
 
     def closed_lists(self):
         """Returns all closed lists on this board
 
-        :rtype: List
+        :rtype: list of List
         """
         return self.get_lists('closed')
 
     def get_lists(self, list_filter):
-        '''Get lists from filter
+        """Get lists from filter
 
-        :rtype: List
-        '''
+        :rtype: list of List
+        """
         # error checking
         json_obj = self.client.fetch_json(
             '/boards/' + self.id + '/lists',
@@ -140,20 +141,20 @@ class Board(object):
         return [List.from_json(board=self, json_obj=obj) for obj in json_obj]
 
     def get_labels(self, fields='all', limit=50):
-        '''Get label
+        """Get label
 
-        :rtype: Label
-        '''
+        :rtype: list of Label
+        """
         json_obj = self.client.fetch_json(
               '/boards/' + self.id + '/labels',
               query_params={'fields': fields, 'limit': limit})
         return Label.from_json_list(self, json_obj)
 
     def get_checklists(self, cards='all'):
-        '''Get checklists
+        """Get checklists
 
-        :rtype: Checklist
-        '''
+        :rtype: list of Checklist
+        """
         checklists = []
         json_obj = self.client.fetch_json(
               '/boards/' + self.id + '/checklists',
@@ -195,7 +196,7 @@ class Board(object):
     def all_cards(self):
         """Returns all cards on this board
 
-        :rtype: Card
+        :rtype: list of Card
         """
         filters = {
             'filter': 'all',
@@ -206,7 +207,7 @@ class Board(object):
     def open_cards(self):
         """Returns all open cards on this board
 
-        :rtype: Card
+        :rtype: list of Card
         """
         filters = {
             'filter': 'open',
@@ -217,7 +218,7 @@ class Board(object):
     def closed_cards(self):
         """Returns all closed cards on this board
 
-        :rtype: Card
+        :rtype: list of Card
         """
         filters = {
             'filter': 'closed',
@@ -227,13 +228,13 @@ class Board(object):
 
     def get_cards(self, filters=None, card_filter=""):
         """
+        :filters: dict containing query parameters. Eg. {'fields': 'all'}
         :card_filter: filters on card status ('open', 'closed', 'all')
-        :query_params: dict containing query parameters. Eg. {'fields': 'all'}
 
         More info on card queries:
         https://trello.com/docs/api/board/index.html#get-1-boards-board-id-cards
 
-        :rtype: Card
+        :rtype: list of Card
         """
         json_obj = self.client.fetch_json(
             '/boards/' + self.id + '/cards/' + card_filter,
@@ -245,7 +246,7 @@ class Board(object):
     def all_members(self):
         """Returns all members on this board
 
-        :rtype: Member
+        :rtype: list of Member
         """
         filters = {
             'filter': 'all',
@@ -256,7 +257,7 @@ class Board(object):
     def normal_members(self):
         """Returns all normal members on this board
 
-        :rtype: Member
+        :rtype: list of Member
         """
         filters = {
             'filter': 'normal',
@@ -267,7 +268,7 @@ class Board(object):
     def admin_members(self):
         """Returns all admin members on this board
 
-        :rtype: Member
+        :rtype: list of Member
         """
         filters = {
             'filter': 'admins',
@@ -278,7 +279,7 @@ class Board(object):
     def owner_members(self):
         """Returns all owner members on this board
 
-        :rtype: Member
+        :rtype: list of Member
         """
         filters = {
             'filter': 'owners',
@@ -289,7 +290,7 @@ class Board(object):
     def get_members(self, filters=None):
         """Get members with filter
 
-        :rtype: Member
+        :rtype: list of Member
         """
         json_obj = self.client.fetch_json(
             '/boards/' + self.id + '/members',
@@ -297,13 +298,13 @@ class Board(object):
         members = list()
         for obj in json_obj:
             m = Member(self.client, obj['id'])
-            m.status = obj.get('status', '').encode('utf-8')
+            m.status = obj.get('status', '')
             m.id = obj.get('id', '')
             m.bio = obj.get('bio', '')
             m.url = obj.get('url', '')
-            m.username = obj['username'].encode('utf-8')
-            m.full_name = obj['fullName'].encode('utf-8')
-            m.initials = obj.get('initials', '').encode('utf-8')
+            m.username = obj['username']
+            m.full_name = obj['fullName']
+            m.initials = obj.get('initials', '')
             members.append(m)
 
         return members
