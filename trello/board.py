@@ -309,9 +309,13 @@ class Board(object):
 
         return members
 
-    def fetch_actions(self, action_filter, action_limit=50):
-        json_obj = self.client.fetch_json(
-            '/boards/' + self.id + '/actions',
-            query_params={'filter': action_filter,
-                          'limit':  action_limit})
+    def fetch_actions(self, action_filter, action_limit=50, since=None):
+        query_params = {'filter': action_filter, 'limit':  action_limit}
+        
+        if since:
+            query_params["since"] = since
+
+        json_obj = self.client.fetch_json('/boards/' + self.id + '/actions', query_params=query_params)
+
         self.actions = json_obj
+        return self.actions
