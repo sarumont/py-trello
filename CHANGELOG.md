@@ -140,7 +140,7 @@
 [view](https://github.com/sarumont/py-trello/commit/2d121d33aa9e51acf20a65070606c17309378959) &bull; Added obtaining all checklists directly from the board and the respective test  
 
 
-**HEAD**
+**0.5.1**
 
 
 [view](https://github.com/sarumont/py-trello/commit/f7c235b65fe93c493d1718faa3fdf7a4ede960d9) &bull; Once a card has reached done list stop time measurement  
@@ -158,10 +158,24 @@
 [view](https://github.com/sarumont/py-trello/commit/751c6b77d6d0b52d0de39324522ab5022cc6b926) &bull; Added remove_attachment shortcut  
 [view](https://github.com/sarumont/py-trello/commit/9fd36c064282cc8bbc6ae18267c33ed23a7cc2ea) &bull; Implement delete comments method on card  
 
-**HEAD**
+**0.6.0**
 
 
 [view](https://github.com/sarumont/py-trello/commit/1644e815c053c8d5476d1c58e850484c1fb1ae0e) &bull; Encoding: use unicode everywhere  
 [view](https://github.com/sarumont/py-trello/commit/c566142399deda4b7de9441b13cc574510fc8e09) &bull; tests: add tox support  
 [view](https://github.com/sarumont/py-trello/commit/a4c2fa0947ce66bd145bbf61a9f832cfc5529be1) &bull; tests: replace use of deprecated assertEquals with assertEqual  
 [view](https://github.com/sarumont/py-trello/commit/0023119401dd2e04dd7d214cde583eca96a422de) &bull; README: formatting fixes  
+
+**0.6.1**
+
+
+[view](https://github.com/sarumont/py-trello/commit/5980421f35e0de3016ac488ed593def3a2e20b13) &bull; README: fix hybrid markdow/rst syntax  
+[view](https://github.com/sarumont/py-trello/commit/f3622e5c66b34f41194f622d0a8c3d0f0902aedd) &bull; add gitignore .tox/\nupdate all of comment about :rtype: to remove warning  
+[view](https://github.com/sarumont/py-trello/commit/a263c488d6e8b96324741bccbbaa0de79433a9f1) &bull; fix inverted logic in python2 check  
+[view](https://github.com/sarumont/py-trello/commit/8f09276984ba335e7f0780b7e38bbb946038205b) &bull; Python 2 is less than Python 3  
+[view](https://github.com/sarumont/py-trello/commit/7269cca82a0577410b4dc0b5f04fab4a65b98987) &bull; Don't call it a checklist item id if it's actually an index  
+[view](https://github.com/sarumont/py-trello/commit/8caa67f24067e1106f27653afdba6897304c7119) &bull; Fix the docstring to match the call signature  
+[view](https://github.com/sarumont/py-trello/commit/1ef99f3307a23fba07b99a03a381fc761e186178) &bull; Note that 'eager' fetches attachments also  
+[view](https://github.com/sarumont/py-trello/commit/8ac5d4a709736d410c0d7a6b52d52e0d71a5132f) &bull; Don't be coy about returning an empty list if there are no attachments  
+[view](https://github.com/sarumont/py-trello/commit/8de0ac103ca7536f6c427aa259649cb129e1bc07) &bull; Some whitespace tweaks and a comment fix  
+[view](https://github.com/sarumont/py-trello/commit/571fb2ccf9e89ace9f4a49aa50f327f762d6099d) &bull; 'create_date' is evidently a typo  

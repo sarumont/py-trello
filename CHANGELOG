@@ -150,7 +150,7 @@ implement clearing of checklists
 Updates to support attachments as per Walter's comments https://trello.com/c/5L574YgX/4-add-attachments-to-card
 Added obtaining all checklists directly from the board and the respective test
 
-HEAD
+v0.5.1
 
 Once a card has reached done list stop time measurement
 Refactoring to avoid repeated code between Card.listCardMove_date and Card.list_movements
@@ -166,9 +166,23 @@ RST hates me
 it would help if I wasn't previewing on the master branch
 Added remove_attachment shortcut
 Implement delete comments method on card
-HEAD
+
+v0.6.0
 
 Encoding: use unicode everywhere
 tests: add tox support
 tests: replace use of deprecated assertEquals with assertEqual
 README: formatting fixes
+
+v0.6.1
+
+README: fix hybrid markdow/rst syntax
+add gitignore .tox/\nupdate all of comment about :rtype: to remove warning
+fix inverted logic in python2 check
+Python 2 is less than Python 3
+Don't call it a checklist item id if it's actually an index
+Fix the docstring to match the call signature
+Note that 'eager' fetches attachments also
+Don't be coy about returning an empty list if there are no attachments
+Some whitespace tweaks and a comment fix
+'create_date' is evidently a typo
