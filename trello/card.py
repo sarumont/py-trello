@@ -2,11 +2,14 @@
 from __future__ import with_statement, print_function, absolute_import
 from dateutil import parser as dateparser
 from datetime import datetime
+
+from trello.organization import Organization
 from trello.compat import force_str
 from trello.checklist import Checklist
 from trello.label import Label
 
 import datetime
+import pytz
 
 
 class Card(object):
@@ -129,6 +132,9 @@ class Card(object):
         card.due = json_obj.get('due', '')
         card.closed = json_obj['closed']
         card.url = json_obj['url']
+        card.pos = json_obj['pos']
+        card.shortUrl = json_obj['shortUrl']
+        card.idMembers = json_obj['idMembers']
         card.member_ids = json_obj['idMembers']
         card.idLabels = json_obj['idLabels']
         card.idList = json_obj['idList']
@@ -260,7 +266,8 @@ class Card(object):
 
         action_since = None if not filter_by_date_interval else filter_by_date_interval[0]
         action_before = None if not filter_by_date_interval else filter_by_date_interval[1]
-        self.fetch_actions('updateCard:idList,', action_since, action_before)
+        if not hasattr(self, "actions") or self.actions is None:
+            self.fetch_actions('updateCard:idList,', action_since, action_before)
 
         movements = []
 
@@ -309,7 +316,7 @@ class Card(object):
         return self._list_movements(movement_function=movement_as_dict_function, filter_by_date_interval=filter_by_date_interval)
 
 
-    def get_stats_by_list(self, tz, lists, list_cmp=None, done_list=None, time_unit="seconds", card_movements_filter=None):
+    def get_stats_by_list(self, lists, list_cmp=None, done_list=None, time_unit="seconds", card_movements_filter=None):
         """
         Gets several stats about the card by each list of the board:
         - time: The time that the card has been in each column in seconds (minutes or hours).
@@ -319,7 +326,6 @@ class Card(object):
         Returns a dict where the key is list id and value is a dict with keys
         time, forward_moves and backward_moves.
 
-        :param tz: timezone to make comparison timezone-aware
         :param lists: list of board lists.
         :param list_cmp: function that compares two lists a,b given id_a, id_b. If b is in a forward position returns 1 else -1.
         :param time_unit: default to seconds. Allow specifying time in "minutes" or "hours".
@@ -327,6 +333,8 @@ class Card(object):
         :param card_movements_filter: Pair of two dates (two strings in YYYY-MM-DD format) that will filter the movements of the card. Optional.
         :return: dict of the form {list_id: {time:<time card was in that list>, forward_moves: <number>, backward_moves: <number> }}
         """
+
+        tz = pytz.timezone(Organization.TIMEZONE)
 
         # Conversion of units
         seconds_to_time_unit = lambda time: time
@@ -409,9 +417,10 @@ class Card(object):
                 it fails. attriExp('convertToCardFromCheckItem') allows to
                 test for the condition.
         """
-        self.fetch_actions()
-        date_str = self.actions[0]['date']
-        return dateparser.parse(date_str)
+        if not hasattr(self, "creation_date"):
+            localtz = pytz.timezone(Organization.TIMEZONE)
+            self.creation_date = localtz.localize(datetime.datetime.fromtimestamp(int(self.id[0: 8], 16)))
+        return self.creation_date
 
     # backwards compatibility alias; TODO: deprecation message
     create_date = created_date

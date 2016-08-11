@@ -78,6 +78,10 @@ class Board(object):
         self.description = json_obj.get('desc', '')
         self.closed = json_obj['closed']
         self.url = json_obj['url']
+        try:
+            self.date_last_activity = dateparser.parse(json_obj['dateLastActivity'])
+        except:
+            self.date_last_activity = None
 
     def save(self):
         pass
@@ -305,9 +309,13 @@ class Board(object):
 
         return members
 
-    def fetch_actions(self, action_filter, action_limit=50):
-        json_obj = self.client.fetch_json(
-            '/boards/' + self.id + '/actions',
-            query_params={'filter': action_filter,
-                          'limit':  action_limit})
+    def fetch_actions(self, action_filter, action_limit=50, since=None):
+        query_params = {'filter': action_filter, 'limit':  action_limit}
+        
+        if since:
+            query_params["since"] = since
+
+        json_obj = self.client.fetch_json('/boards/' + self.id + '/actions', query_params=query_params)
+
         self.actions = json_obj
+        return self.actions

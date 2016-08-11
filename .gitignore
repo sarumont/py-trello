@@ -9,3 +9,4 @@ dist
 .pydevproject
 .idea/
 .tox/
+.DS_Store
