@@ -198,6 +198,10 @@ class Card(object):
         return self.fetch_comments(force=True)
 
     def fetch_checklists(self):
+
+        if not hasattr(self, "checked") or self.checked is None:
+            self.fetch(eager=False)
+
         checklists = []
         json_obj = self.client.fetch_json(
             '/cards/' + self.id + '/checklists', )
