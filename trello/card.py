@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
 from dateutil import parser as dateparser
-from datetime import datetime
 
 from trello.organization import Organization
 from trello.compat import force_str
@@ -445,7 +444,7 @@ class Card(object):
         """
         unix_time = int(self.id[:8], 16)
 
-        return datetime.fromtimestamp(unix_time)
+        return datetime.datetime.fromtimestamp(unix_time)
 
     @property
     def due_date(self):
