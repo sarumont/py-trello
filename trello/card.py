@@ -136,6 +136,7 @@ class Card(object):
         card.idMembers = json_obj['idMembers']
         card.member_ids = json_obj['idMembers']
         card.idLabels = json_obj['idLabels']
+        card.idBoard = json_obj['idBoard']
         card.idList = json_obj['idList']
         card.labels = Label.from_json_list(card.board, json_obj['labels'])
         card.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
