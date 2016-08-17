@@ -19,6 +19,8 @@ class List(object):
         self.client = board.client
         self.id = list_id
         self.name = name
+        self.closed = None
+        self.pos = None
 
     @classmethod
     def from_json(cls, board, json_obj):
@@ -30,6 +32,7 @@ class List(object):
         """
         list = List(board, json_obj['id'], name=json_obj['name'])
         list.closed = json_obj['closed']
+        list.pos = json_obj['pos']
         return list
 
     def __repr__(self):
@@ -40,6 +43,7 @@ class List(object):
         json_obj = self.client.fetch_json('/lists/' + self.id)
         self.name = json_obj['name']
         self.closed = json_obj['closed']
+        self.pos = json_obj['pos']
 
     def list_cards(self, card_filter="open"):
         """Lists all cards in this list"""
