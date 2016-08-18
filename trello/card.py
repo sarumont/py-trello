@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
 from dateutil import parser as dateparser
-from datetime import datetime
 
 from trello.organization import Organization
 from trello.compat import force_str
@@ -137,7 +136,9 @@ class Card(object):
         card.idMembers = json_obj['idMembers']
         card.member_ids = json_obj['idMembers']
         card.idLabels = json_obj['idLabels']
+        card.idBoard = json_obj['idBoard']
         card.idList = json_obj['idList']
+        card.idShort = json_obj['idShort']
         card.labels = Label.from_json_list(card.board, json_obj['labels'])
         card.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
         return card
@@ -445,7 +446,7 @@ class Card(object):
         """
         unix_time = int(self.id[:8], 16)
 
-        return datetime.fromtimestamp(unix_time)
+        return datetime.datetime.fromtimestamp(unix_time)
 
     @property
     def due_date(self):
