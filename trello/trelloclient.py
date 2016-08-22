@@ -120,13 +120,14 @@ class TrelloClient(object):
         obj = self.fetch_json('/boards/' + board_id)
         return Board.from_json(self, json_obj=obj)
 
-    def add_board(self, board_name, source_board=None, organization_id=None):
+    def add_board(self, board_name, source_board=None, organization_id=None, permission_level='private'):
         """Create board
         :param board_name: Name of the board to create
         :param source_board: Optional Board to copy
+        :param permission_level: Permission level, defaults to private
         :rtype: Board
         """
-        post_args={'name': board_name}
+        post_args={'name': board_name, 'prefs_permissionLevel': permission_level}
         if source_board is not None:
             post_args['idBoardSource'] = source_board.id
         if organization_id is not None:
