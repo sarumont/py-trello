@@ -140,6 +140,13 @@ class Board(object):
             query_params={'cards': 'none', 'filter': list_filter})
         return [List.from_json(board=self, json_obj=obj) for obj in json_obj]
 
+    def list_lists(self, list_filter='all'):
+        """Get lists from filter
+
+        :rtype: list of List
+        """
+        return self.get_lists(list_filter=list_filter)
+
     def get_labels(self, fields='all', limit=50):
         """Get label
 
