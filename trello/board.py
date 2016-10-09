@@ -83,8 +83,15 @@ class Board(object):
         except:
             self.date_last_activity = None
 
+    # Saves a Trello Board
     def save(self):
-        pass
+        json_obj = self.client.fetch_json(
+            '/boards/',
+            http_method='POST',
+            post_args={'name': self.name, "desc": self.description}, )
+        # Set initial data from Trello
+        self.from_json(json_obj=json_obj)
+        self.id = json_obj["id"]
 
     def close(self):
         self.client.fetch_json(
