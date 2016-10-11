@@ -83,8 +83,15 @@ class Board(object):
         except:
             self.date_last_activity = None
 
+    # Saves a Trello Board
     def save(self):
-        pass
+        json_obj = self.client.fetch_json(
+            '/boards/',
+            http_method='POST',
+            post_args={'name': self.name, "desc": self.description, "defaultLists": False}, )
+        # Set initial data from Trello
+        self.from_json(json_obj=json_obj)
+        self.id = json_obj["id"]
 
     def close(self):
         self.client.fetch_json(
@@ -172,17 +179,21 @@ class Board(object):
                                         trello_card=cl.get('idCard')))
         return checklists
 
-    def add_list(self, name):
+    def add_list(self, name, pos=None):
         """Add a list to this board
 
         :name: name for the list
+        :pos: position of the list: "bottom", "top" or a positive number
         :return: the list
         :rtype: List
         """
+        arguments = {'name': name, 'idBoard': self.id}
+        if pos:
+            arguments["pos"] = pos
         obj = self.client.fetch_json(
             '/lists',
             http_method='POST',
-            post_args={'name': name, 'idBoard': self.id}, )
+            post_args=arguments, )
         return List.from_json(board=self, json_obj=obj)
 
     def add_label(self, name, color):
