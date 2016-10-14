@@ -327,7 +327,7 @@ class Board(object):
 
         return members
 
-def fetch_actions(self, action_filter, action_limit=50, before=None, since=None):
+    def fetch_actions(self, action_filter, action_limit=50, before=None, since=None):
         query_params = {'filter': action_filter, 'limit':  action_limit}
         
         if since:
