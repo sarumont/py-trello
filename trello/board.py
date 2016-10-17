@@ -83,8 +83,15 @@ class Board(object):
         except:
             self.date_last_activity = None
 
+    # Saves a Trello Board
     def save(self):
-        pass
+        json_obj = self.client.fetch_json(
+            '/boards/',
+            http_method='POST',
+            post_args={'name': self.name, "desc": self.description, "defaultLists": False}, )
+        # Set initial data from Trello
+        self.from_json(json_obj=json_obj)
+        self.id = json_obj["id"]
 
     def close(self):
         self.client.fetch_json(
@@ -140,6 +147,13 @@ class Board(object):
             query_params={'cards': 'none', 'filter': list_filter})
         return [List.from_json(board=self, json_obj=obj) for obj in json_obj]
 
+    def list_lists(self, list_filter='all'):
+        """Get lists from filter
+
+        :rtype: list of List
+        """
+        return self.get_lists(list_filter=list_filter)
+
     def get_labels(self, fields='all', limit=50):
         """Get label
 
@@ -165,17 +179,21 @@ class Board(object):
                                         trello_card=cl.get('idCard')))
         return checklists
 
-    def add_list(self, name):
+    def add_list(self, name, pos=None):
         """Add a list to this board
 
         :name: name for the list
+        :pos: position of the list: "bottom", "top" or a positive number
         :return: the list
         :rtype: List
         """
+        arguments = {'name': name, 'idBoard': self.id}
+        if pos:
+            arguments["pos"] = pos
         obj = self.client.fetch_json(
             '/lists',
             http_method='POST',
-            post_args={'name': name, 'idBoard': self.id}, )
+            post_args=arguments, )
         return List.from_json(board=self, json_obj=obj)
 
     def add_label(self, name, color):
@@ -309,11 +327,14 @@ class Board(object):
 
         return members
 
-    def fetch_actions(self, action_filter, action_limit=50, since=None):
+    def fetch_actions(self, action_filter, action_limit=50, before=None, since=None):
         query_params = {'filter': action_filter, 'limit':  action_limit}
         
         if since:
             query_params["since"] = since
+
+        if before:
+            query_params["before"] = before
 
         json_obj = self.client.fetch_json('/boards/' + self.id + '/actions', query_params=query_params)
 

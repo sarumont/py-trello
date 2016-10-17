@@ -517,10 +517,11 @@ class Card(object):
 
     def comment(self, comment_text):
         """Add a comment to a card."""
-        self.client.fetch_json(
+        comment_data = self.client.fetch_json(
             '/cards/' + self.id + '/actions/comments',
             http_method='POST',
             post_args={'text': comment_text})
+        return comment_data
 
     def add_label(self, label):
         self.client.fetch_json(
