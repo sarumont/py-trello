@@ -566,6 +566,12 @@ class Card(object):
             '/cards/' + self.id + '/attachments/' + attachment_id,
             http_method='DELETE')
 
+    def change_pos(self, position):
+        self.client.fetch_json(
+            '/cards/' + self.id + '/pos',
+            http_method='PUT',
+            post_args={'value': position})
+
     def change_list(self, list_id):
         self.client.fetch_json(
             '/cards/' + self.id + '/idList',
