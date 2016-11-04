@@ -180,13 +180,16 @@ class Card(object):
         self._comments = self.fetch_comments() if eager else None
         self._attachments = self.fetch_attachments() if eager else None
 
-    def fetch_comments(self, force=False):
+    def fetch_comments(self, force=False, limit=None):
         comments = []
 
         if (force is True) or (self.badges['comments'] > 0):
+            query_params = {'filter': 'commentCard'}
+            if limit is not None:
+                query_params['limit'] = limit
             comments = self.client.fetch_json(
                 '/cards/' + self.id + '/actions',
-                query_params={'filter': 'commentCard'})
+                query_params=query_params)
             return sorted(comments, key=lambda comment: comment['date'])
         return comments
 
@@ -565,6 +568,12 @@ class Card(object):
         self.client.fetch_json(
             '/cards/' + self.id + '/attachments/' + attachment_id,
             http_method='DELETE')
+
+    def change_pos(self, position):
+        self.client.fetch_json(
+            '/cards/' + self.id + '/pos',
+            http_method='PUT',
+            post_args={'value': position})
 
     def change_list(self, list_id):
         self.client.fetch_json(
