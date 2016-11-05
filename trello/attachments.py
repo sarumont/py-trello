@@ -27,10 +27,32 @@ class Attachments(object):
         isUpload = json_obj.get("isUpload")
         mimeType = json_obj.get("mimeType")
         name = json_obj.get("name")
-        previews = json_obj.get("previews")
+        previews = [AttachmentsPreview.from_json(preview_json) for preview_json in json_obj.get("previews")]
         url = json_obj.get("url")
 
         return Attachments(id, bytes, date, edgeColor, idMember, isUpload, mimeType, name, previews, url)
 
     def __repr__(self):
         return u"<Attachments {0}>".format(self.name)
+
+
+class AttachmentsPreview(object):
+    def __init__(self, bytes, url, width, height, scaled):
+        self.bytes = bytes
+        self.url = url
+        self.width = width
+        self.height = height
+        self.is_scaled = scaled
+
+    @staticmethod
+    def from_json(json_obj):
+        bytes = json_obj.get("bytes")
+        url = json_obj.get("url")
+        width = json_obj.get("width")
+        height = json_obj.get("height")
+        scaled = json_obj.get("scaled")
+
+        return AttachmentsPreview(bytes, url, width, height, scaled)
+
+    def __repr__(self):
+        return u"<Attachments Preview {0}x{1}".format(self.width, self.height)
