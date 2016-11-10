@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from trello.attachments import *
 from trello.board import *
 from trello.card import *
 from trello.checklist import *

@@ -2,6 +2,7 @@
 from __future__ import with_statement, print_function, absolute_import
 from dateutil import parser as dateparser
 
+from trello.attachments import Attachments
 from trello.organization import Organization
 from trello.compat import force_str
 from trello.checklist import Checklist
@@ -225,7 +226,7 @@ class Card(object):
         return []
 
     def get_attachments(self):
-        return self.fetch_attachments(force=True)
+        return [Attachments.from_json(attachments_json) for attachments_json in self.fetch_attachments(force=True)]
 
     def fetch_actions(self, action_filter='createCard', since=None, before=None):
         """
