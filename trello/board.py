@@ -100,6 +100,13 @@ class Board(object):
             post_args={'value': name})
         self.name = name
 
+    def set_description(self, desc):
+        self.client.fetch_json(
+            '/boards/{board_id}/desc'.format(board_id=self.id),
+            http_method='PUT',
+            post_args={'value': desc})
+        self.description = desc
+
     def close(self):
         self.client.fetch_json(
             '/boards/' + self.id + '/closed',
