@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from dateutil import parser as dateparser
 
 
 class Attachments(object):
@@ -8,7 +9,7 @@ class Attachments(object):
     def __init__(self, id, bytes, date, edge_color, idMember, is_upload, mime_type, name, previews, url):
         self.id = id
         self.bytes = bytes
-        self.date = date
+        self.date = dateparser.parse(date)
         self.edge_color = edge_color
         self.idMember = idMember
         self.is_upload = is_upload
