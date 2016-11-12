@@ -93,6 +93,20 @@ class Board(object):
         self.from_json(json_obj=json_obj)
         self.id = json_obj["id"]
 
+    def set_name(self, name):
+        self.client.fetch_json(
+            '/boards/{board_id}/name'.format(board_id=self.id),
+            http_method='PUT',
+            post_args={'value': name})
+        self.name = name
+
+    def set_description(self, desc):
+        self.client.fetch_json(
+            '/boards/{board_id}/desc'.format(board_id=self.id),
+            http_method='PUT',
+            post_args={'value': desc})
+        self.description = desc
+
     def close(self):
         self.client.fetch_json(
             '/boards/' + self.id + '/closed',
@@ -329,7 +343,7 @@ class Board(object):
 
     def fetch_actions(self, action_filter, action_limit=50, before=None, since=None):
         query_params = {'filter': action_filter, 'limit':  action_limit}
-        
+
         if since:
             query_params["since"] = since
 
