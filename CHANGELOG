@@ -186,3 +186,41 @@ Note that 'eager' fetches attachments also
 Don't be coy about returning an empty list if there are no attachments
 Some whitespace tweaks and a comment fix
 'create_date' is evidently a typo
+
+v0.7.0
+
+Don't use actions to compute creation_date, use id of the card that contains the creation_date
+Don't use actions to compute creation_date, use id of the card that contains the creation_date
+Card and timezone configuration
+Don't pass tz to Card.get_stats_by_list because it is already defined in Configuration
+dateLastActivity was not initialized in Board when fetching data
+Check if actions are already fetched in _list_movements
+Ignoring MacOS .DS_Store files
+Deleting Configuration class that has been replaced by Organization. Organization was created by upstream
+Fix bad import of Organization class. It is trello.organization not trello
+Fix circular import in organization.Organization
+Board.fetch_actions allows pagination with since parameter
+Card needs more attributes to be created from Board.all_cards
+Initialize on fetch_checklists() (Closes #145)
+Fix  "datetime.fromtimestamp(unix_time)" => "datetime.datetime.fromtimestamp(unix_time)"
+Fix "AttributeError: 'Card' object has no attribute 'idBoard'"
+Fix "AttributeError: 'Card' object has no attribute 'idShort'"
+Add list position attribute (pos) to list. This attribute is fetched by default when calling Board.get_lists
+Add support for creating public boards
+Fix ":token_key:" => ":token:"
+Add Board.list_lists
+Saves a new Trello board
+Saves a new Trello board. Avoid creating default lists.
+Add 'pos' parameter to Board.add_list to allow creation of lists with an initial position
+Return the new comment data when creating a comment
+Adding before parameter to Board.fetch_actions to enable pagination
+Adding before parameter to Board.fetch_actions to enable pagination
+add change_pos functionality
+Add limit param to card comments (now is limited to 50 by default)
+Add `Attachments`
+Add `Attachments Preview`
+Refactoring params
+Return python-object "Attachments"
+Add new method `Board.set_name`
+Add new method `Board.set_description()`
+Edit `Attachments.date` return python datetime object

@@ -179,3 +179,43 @@
 [view](https://github.com/sarumont/py-trello/commit/8ac5d4a709736d410c0d7a6b52d52e0d71a5132f) &bull; Don't be coy about returning an empty list if there are no attachments  
 [view](https://github.com/sarumont/py-trello/commit/8de0ac103ca7536f6c427aa259649cb129e1bc07) &bull; Some whitespace tweaks and a comment fix  
 [view](https://github.com/sarumont/py-trello/commit/571fb2ccf9e89ace9f4a49aa50f327f762d6099d) &bull; 'create_date' is evidently a typo  
+
+
+**0.7.0**
+
+
+[view](https://github.com/sarumont/py-trello/commit/108f7aefe063b095e9fdae238f6ca0cbd06f05e5) &bull; Don't use actions to compute creation_date, use id of the card that contains the creation_date  
+[view](https://github.com/sarumont/py-trello/commit/a3006a5c7fe697bff8975e197c1c2fb413ebc344) &bull; Don't use actions to compute creation_date, use id of the card that contains the creation_date  
+[view](https://github.com/sarumont/py-trello/commit/d824836fc3fa373f04eb5ab5b53f14f93882815a) &bull; Card and timezone configuration  
+[view](https://github.com/sarumont/py-trello/commit/d27708f599c355b7768436c54271df2d5f8314f1) &bull; Don't pass tz to Card.get_stats_by_list because it is already defined in Configuration  
+[view](https://github.com/sarumont/py-trello/commit/ae2032069d7f3b74bdf50915c74aed9e7073e831) &bull; dateLastActivity was not initialized in Board when fetching data  
+[view](https://github.com/sarumont/py-trello/commit/78bd270d0c0b0d2f0cd30d9d8c30a0fde57319d7) &bull; Check if actions are already fetched in _list_movements  
+[view](https://github.com/sarumont/py-trello/commit/1af1dc178d29473bbd65a7d9317b6fbbaf8b854e) &bull; Ignoring MacOS .DS_Store files  
+[view](https://github.com/sarumont/py-trello/commit/85c37841f852d92efc0a013aff1a9bc4ede7a5e0) &bull; Deleting Configuration class that has been replaced by Organization. Organization was created by upstream  
+[view](https://github.com/sarumont/py-trello/commit/08d3a6fb6f95fe57937b5570e4c142dffe03a5c6) &bull; Fix bad import of Organization class. It is trello.organization not trello  
+[view](https://github.com/sarumont/py-trello/commit/83ffae9cfa2ec3dfb805739a1e0e8e67345d3686) &bull; Fix circular import in organization.Organization  
+[view](https://github.com/sarumont/py-trello/commit/6b85694f377c9fbe6f2ae0f081e20500a8362f7a) &bull; Board.fetch_actions allows pagination with since parameter  
+[view](https://github.com/sarumont/py-trello/commit/4494bce1b7e5946ee6162ee8505fea32f71fc7b0) &bull; Card needs more attributes to be created from Board.all_cards  
+[view](https://github.com/sarumont/py-trello/commit/e0d7417ae68a60c07bc3c6f6df5e54bc8f93206e) &bull; Initialize on fetch_checklists() (Closes #145)  
+[view](https://github.com/sarumont/py-trello/commit/af8668c2e667b46a57a45dc2c87001d8107f4dff) &bull; Fix  "datetime.fromtimestamp(unix_time)" => "datetime.datetime.fromtimestamp(unix_time)"  
+[view](https://github.com/sarumont/py-trello/commit/4c5d3bd0f5105ba02f293be1950714d164a5dbf7) &bull; Fix "AttributeError: 'Card' object has no attribute 'idBoard'"  
+[view](https://github.com/sarumont/py-trello/commit/f642144f753fe76896402359106c7f08492464ef) &bull; Fix "AttributeError: 'Card' object has no attribute 'idShort'"  
+[view](https://github.com/sarumont/py-trello/commit/3c8014b53a2fa5e62956c830a904948b08bb37ea) &bull; Add list position attribute (pos) to list. This attribute is fetched by default when calling Board.get_lists  
+[view](https://github.com/sarumont/py-trello/commit/f6fe04fbaa0813875d8f2bac959b61d66e5f6268) &bull; Add support for creating public boards  
+[view](https://github.com/sarumont/py-trello/commit/f95e0bc4b2f053a9330bde366170d5458518a773) &bull; Fix ":token_key:" => ":token:"  
+[view](https://github.com/sarumont/py-trello/commit/dab2ac85572653d7654b67fee22fb09e4ab23f88) &bull; Add Board.list_lists  
+[view](https://github.com/sarumont/py-trello/commit/2ec62cd6aed8feccfa8ede2e5c3a170ca8815d1a) &bull; Saves a new Trello board  
+[view](https://github.com/sarumont/py-trello/commit/b6f9afa12f4ee9fc89b704bd38bd4215155f425b) &bull; Saves a new Trello board. Avoid creating default lists.  
+[view](https://github.com/sarumont/py-trello/commit/ca67ffcdc598bdcb9161a36b8297616080eba1d3) &bull; Add 'pos' parameter to Board.add_list to allow creation of lists with an initial position  
+[view](https://github.com/sarumont/py-trello/commit/f16a28bbb5be79f2fe23570c59a9c4b9d09fe5c7) &bull; Return the new comment data when creating a comment  
+[view](https://github.com/sarumont/py-trello/commit/4a5eefa85dcaf0333849b826e806abd0defedd8d) &bull; Adding before parameter to Board.fetch_actions to enable pagination  
+[view](https://github.com/sarumont/py-trello/commit/a01613080081848cd7265eec5527c6ade0ac5c23) &bull; Adding before parameter to Board.fetch_actions to enable pagination  
+[view](https://github.com/sarumont/py-trello/commit/4efab4546c7deab9b37a667fe77afd33298db6bc) &bull; add change_pos functionality  
+[view](https://github.com/sarumont/py-trello/commit/814c2a486357dbb1525f75dda74348bb63ee727b) &bull; Add limit param to card comments (now is limited to 50 by default)  
+[view](https://github.com/sarumont/py-trello/commit/fe3f01577b73f26bd349926a17986031b623d98d) &bull; Add `Attachments`  
+[view](https://github.com/sarumont/py-trello/commit/4a8bb0341e65afbdcce4e0289e56247edfdf0c4f) &bull; Add `Attachments Preview`  
+[view](https://github.com/sarumont/py-trello/commit/8c666329bb0736d79ce23611460b038bf708766c) &bull; Refactoring params  
+[view](https://github.com/sarumont/py-trello/commit/d13c08da46fbe200cd0359c7770b8377940789e7) &bull; Return python-object "Attachments"  
+[view](https://github.com/sarumont/py-trello/commit/e2c0611d286d6494edb85b503c78b6320f345540) &bull; Add new method `Board.set_name`  
+[view](https://github.com/sarumont/py-trello/commit/1d02b9e4dc4a16df47e9f09c4c41c23ef71ac736) &bull; Add new method `Board.set_description()`  
+[view](https://github.com/sarumont/py-trello/commit/7e13e5143944f73042ca5f023ad9d889748c3c9e) &bull; Edit `Attachments.date` return python datetime object  
