@@ -24,7 +24,7 @@ setup(
             'Programming Language :: Python :: 3',
             'Programming Language :: Python :: 3.3',
     ],
-    install_requires=["requests", "requests-oauthlib >= 0.4.1", "python-dateutil"],
+    install_requires=["requests", "requests-oauthlib >= 0.4.1", "python-dateutil", "pytz"],
     packages=find_packages(),
     include_package_data=True,
 )
