@@ -527,6 +527,15 @@ class Card(object):
             post_args={'text': comment_text})
         return comment_data
 
+    def update_comment(self, comment_id, comment_text):
+        """Update a comment."""
+        comment_data = self.client.fetch_json(
+            '/actions/' + comment_id,
+            http_method='PUT',
+            post_args={'text': comment_text}
+        )
+        return comment_data
+
     def add_label(self, label):
         self.client.fetch_json(
             '/cards/' + self.id + '/idLabels',
