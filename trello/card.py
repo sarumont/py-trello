@@ -373,9 +373,18 @@ class Card(object):
             stats_by_list[self.idList]["time"] += card_life_time
 
         else:
-            # Changes in card are in reversed order (closer to now are first)
+            # Changes in card are ordered to get the dates in order
             last_list = None
-            for change in reversed(changes):
+            def change_cmp(change1, change2):
+                if change1["datetime"] < change2["datetime"]:
+                    return -1
+                if change1["datetime"] > change2["datetime"]:
+                    return 1
+                return 0
+            ordered_changes = sorted(changes, cmp=change_cmp)
+            # For each arrival to a list, its datetime will be used to compute the time this card is in
+            # that destination list
+            for change in ordered_changes:
                 source_list = change["source"]
                 destination_list = change["destination"]
                 change_datetime = change["datetime"]
