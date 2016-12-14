@@ -224,3 +224,9 @@ Return python-object "Attachments"
 Add new method `Board.set_name`
 Add new method `Board.set_description()`
 Edit `Attachments.date` return python datetime object
+
+v0.8.0
+
+Add pytz in install_requires
+Add update_comment for card.
+Card.get_stats_by_list: sort card movements to get the time the card spends in each list
