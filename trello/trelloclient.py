@@ -301,6 +301,11 @@ class TrelloClient(object):
         if card_ids:
             query_params['idCards'] = card_ids
 
+        # Request result fields required to instantiate class objects
+        query_params['board_fields'] = ['name,url,desc,closed']
+        query_params['member_fields'] = ['fullName,initials,username']
+        query_params['organization_fields'] = ['name,url,desc']
+
         json_obj = self.fetch_json('/search', query_params=query_params)
         if not json_obj:
             return []
@@ -311,8 +316,8 @@ class TrelloClient(object):
         for board_json in json_obj.get('boards', []):
             # Cache board objects
             if board_json['id'] not in board_cache:
-                board_cache[board_json['id']] = Board(self, board_json['id'])
-                board_cache[board_json['id']].fetch()
+                board_cache[board_json['id']] = Board.from_json(
+                    self, json_obj=board_json)
             results.append(board_cache[board_json['id']])
 
         for card_json in json_obj.get('cards', []):
@@ -320,6 +325,9 @@ class TrelloClient(object):
             if card_json['idBoard'] not in board_cache:
                 board_cache[card_json['idBoard']] = Board(
                     self, card_json['idBoard'])
+                # Fetch the board attributes as the Board object created
+                # from the card initially result lacks a URL and name.
+                # This Board will be stored in Card.parent
                 board_cache[card_json['idBoard']].fetch()
             results.append(Card.from_json(board_cache[card_json['idBoard']],
                                           card_json))
@@ -328,8 +336,7 @@ class TrelloClient(object):
             results.append(Member.from_json(self, member_json))
 
         for org_json in json_obj.get('organizations', []):
-            org = Organization(self, org_json['id'])
-            org.fetch()
+            org = Organization.from_json(self, org_json)
             results.append(org)
 
         return results
