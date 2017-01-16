@@ -277,7 +277,10 @@ class TrelloClient(object):
         :param card_ids: Comma-separated list of cards to limit search
 
         :return: All objects matching the search criterial.  These can
-            be Cards, Boards, Organizations, and Members
+            be Cards, Boards, Organizations, and Members.  The attributes
+            of the objects in the results are minimal; the user must call
+            the fetch method on the resulting objects to get a full set
+            of attributes populated.
         :rtype list:
         """
 
