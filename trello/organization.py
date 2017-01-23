@@ -48,7 +48,7 @@ class Organization(object):
 
         :rtype: list of Board
         """
-        # error checking
+        from trello.board import Board
         json_obj = self.client.fetch_json(
             '/organizations/' + self.id + '/boards',
             query_params={'lists': 'none', 'filter': list_filter})
@@ -59,7 +59,7 @@ class Organization(object):
 
         :rtype: list of Board
         """
-        # error checking
+        from trello.board import Board
         json_obj = self.client.fetch_json(
             '/organizations/' + self.id + '/boards',
             query_params={'filter': 'open', 'fields': field_name})
