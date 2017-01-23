@@ -260,3 +260,83 @@ class TrelloClient(object):
             return WebHook(self, token, hook_id, desc, id_model, callback_url, True)
         else:
             return False
+
+    def search(self, query, partial_match=False, models=[],
+               board_ids=[], org_ids=[], card_ids=[]):
+        """
+        Search trello given a query string.
+
+        :param str query: A query string up to 16K characters
+        :param bool partial_match: True means that trello will look for
+                content that starts with any of the words in your query.
+        :param list models: Comma-separated list of types of objects to search.
+                This can be 'actions', 'boards', 'cards', 'members',
+                or 'organizations'.  The default is 'all' models.
+        :param list board_ids: Comma-separated list of boards to limit search
+        :param org_ids: Comma-separated list of organizations to limit search
+        :param card_ids: Comma-separated list of cards to limit search
+
+        :return: All objects matching the search criterial.  These can
+            be Cards, Boards, Organizations, and Members.  The attributes
+            of the objects in the results are minimal; the user must call
+            the fetch method on the resulting objects to get a full set
+            of attributes populated.
+        :rtype list:
+        """
+
+        query_params = {'query': query}
+
+        if partial_match:
+            query_params['partial'] = 'true'
+
+        # Limit search to one or more object types
+        if models:
+            query_params['modelTypes'] = models
+
+        # Limit search to a particular subset of objects
+        if board_ids:
+            query_params['idBoards'] = board_ids
+        if org_ids:
+            query_params['idOrganizations'] = org_ids
+        if card_ids:
+            query_params['idCards'] = card_ids
+
+        # Request result fields required to instantiate class objects
+        query_params['board_fields'] = ['name,url,desc,closed']
+        query_params['member_fields'] = ['fullName,initials,username']
+        query_params['organization_fields'] = ['name,url,desc']
+
+        json_obj = self.fetch_json('/search', query_params=query_params)
+        if not json_obj:
+            return []
+
+        results = []
+        board_cache = {}
+
+        for board_json in json_obj.get('boards', []):
+            # Cache board objects
+            if board_json['id'] not in board_cache:
+                board_cache[board_json['id']] = Board.from_json(
+                    self, json_obj=board_json)
+            results.append(board_cache[board_json['id']])
+
+        for card_json in json_obj.get('cards', []):
+            # Cache board objects
+            if card_json['idBoard'] not in board_cache:
+                board_cache[card_json['idBoard']] = Board(
+                    self, card_json['idBoard'])
+                # Fetch the board attributes as the Board object created
+                # from the card initially result lacks a URL and name.
+                # This Board will be stored in Card.parent
+                board_cache[card_json['idBoard']].fetch()
+            results.append(Card.from_json(board_cache[card_json['idBoard']],
+                                          card_json))
+
+        for member_json in json_obj.get('members', []):
+            results.append(Member.from_json(self, member_json))
+
+        for org_json in json_obj.get('organizations', []):
+            org = Organization.from_json(self, org_json)
+            results.append(org)
+
+        return results

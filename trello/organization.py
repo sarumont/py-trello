@@ -26,8 +26,6 @@ class Organization(object):
         """
         organization = Organization(trello_client, json_obj['id'], name=json_obj['name'])
         organization.description = json_obj.get('desc', '')
-        # cannot close an organization
-        # organization.closed = json_obj['closed']
         organization.url = json_obj['url']
         return organization
 
@@ -39,7 +37,6 @@ class Organization(object):
         json_obj = self.client.fetch_json('/organizations/' + self.id)
         self.name = json_obj['name']
         self.description = json_obj.get('desc', '')
-        self.closed = json_obj['closed']
         self.url = json_obj['url']
 
     def all_boards(self):
