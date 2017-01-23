@@ -71,5 +71,6 @@ class Organization(object):
     def get_members(self):
         json_obj = self.client.fetch_json(
             '/organizations/' + self.id + '/members',
-            query_params={'filter': 'all'})
+            query_params={'filter': 'all',
+                          'fields': 'id,fullName,username,initials'})
         return [Member.from_json(trello_client=self.client, json_obj=obj) for obj in json_obj]
