@@ -50,7 +50,7 @@ class List(object):
         json_obj = self.client.fetch_json('/lists/' + self.id + '/cards/' + card_filter)
         return [Card.from_json(self, c) for c in json_obj]
 
-    def add_card(self, name, desc=None, labels=None, due="null", source=None, position="bottom"):
+    def add_card(self, name, desc=None, labels=None, due="null", source=None, position=None):
         """Add a card to this list
 
         :name: name for the card
@@ -66,18 +66,21 @@ class List(object):
             for label in labels:
                 labels_str += label.id + ","
 
+        post_args = {
+            'name': name,
+            'idList': self.id,
+            'desc': desc,
+            'idLabels': labels_str[:-1],
+            'due': due,
+            'idCardSource': source,
+        }
+        if position is not None:
+            post_args["pos"] = position
+
         json_obj = self.client.fetch_json(
             '/cards',
             http_method='POST',
-            post_args={
-                'name': name,
-                'idList': self.id,
-                'desc': desc,
-                'idLabels': labels_str[:-1],
-                'due': due,
-                'idCardSource': source,
-                'pos': position
-            })
+            post_args=post_args)
         return Card.from_json(self, json_obj)
 
     def archive_all_cards(self):
@@ -114,6 +117,14 @@ class List(object):
             http_method='PUT',
             post_args={'value': 'false', }, )
         self.closed = False
+
+    # Move this list
+    def move(self, position):
+        self.client.fetch_json(
+            '/lists/' + self.id + '/pos',
+            http_method='PUT',
+            post_args={'value': position, }, )
+        self.pos = position
 
     def cardsCnt(self):
         return len(self.list_cards())
