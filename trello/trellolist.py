@@ -50,7 +50,7 @@ class List(object):
         json_obj = self.client.fetch_json('/lists/' + self.id + '/cards/' + card_filter)
         return [Card.from_json(self, c) for c in json_obj]
 
-    def add_card(self, name, desc=None, labels=[], due="null", source=None):
+    def add_card(self, name, desc=None, labels=None, due="null", source=None, position="bottom"):
         """Add a card to this list
 
         :name: name for the card
@@ -58,15 +58,26 @@ class List(object):
         :labels: a list of label IDs to be added
         :due: due date for the card
         :source: card ID from which to clone from
+        :position: position of the card in the list. Must be "top", "bottom" or a positive number.
         :return: the card
         """
         labels_str = ""
-        for label in labels:
-            labels_str += label.id + ","
+        if labels:
+            for label in labels:
+                labels_str += label.id + ","
+
         json_obj = self.client.fetch_json(
             '/cards',
             http_method='POST',
-            post_args={'name': name, 'idList': self.id, 'desc': desc, 'idLabels': labels_str[:-1], 'due': due, 'idCardSource': source})
+            post_args={
+                'name': name,
+                'idList': self.id,
+                'desc': desc,
+                'idLabels': labels_str[:-1],
+                'due': due,
+                'idCardSource': source,
+                'pos': position
+            })
         return Card.from_json(self, json_obj)
 
     def archive_all_cards(self):
