@@ -26,8 +26,6 @@ class Organization(object):
         """
         organization = Organization(trello_client, json_obj['id'], name=json_obj['name'])
         organization.description = json_obj.get('desc', '')
-        # cannot close an organization
-        # organization.closed = json_obj['closed']
         organization.url = json_obj['url']
         return organization
 
@@ -39,7 +37,6 @@ class Organization(object):
         json_obj = self.client.fetch_json('/organizations/' + self.id)
         self.name = json_obj['name']
         self.description = json_obj.get('desc', '')
-        self.closed = json_obj['closed']
         self.url = json_obj['url']
 
     def all_boards(self):
@@ -51,7 +48,7 @@ class Organization(object):
 
         :rtype: list of Board
         """
-        # error checking
+        from trello.board import Board
         json_obj = self.client.fetch_json(
             '/organizations/' + self.id + '/boards',
             query_params={'lists': 'none', 'filter': list_filter})
@@ -62,7 +59,7 @@ class Organization(object):
 
         :rtype: list of Board
         """
-        # error checking
+        from trello.board import Board
         json_obj = self.client.fetch_json(
             '/organizations/' + self.id + '/boards',
             query_params={'filter': 'open', 'fields': field_name})
@@ -71,5 +68,6 @@ class Organization(object):
     def get_members(self):
         json_obj = self.client.fetch_json(
             '/organizations/' + self.id + '/members',
-            query_params={'filter': 'all'})
+            query_params={'filter': 'all',
+                          'fields': 'id,fullName,username,initials'})
         return [Member.from_json(trello_client=self.client, json_obj=obj) for obj in json_obj]

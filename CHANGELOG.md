@@ -219,3 +219,11 @@
 [view](https://github.com/sarumont/py-trello/commit/e2c0611d286d6494edb85b503c78b6320f345540) &bull; Add new method `Board.set_name`  
 [view](https://github.com/sarumont/py-trello/commit/1d02b9e4dc4a16df47e9f09c4c41c23ef71ac736) &bull; Add new method `Board.set_description()`  
 [view](https://github.com/sarumont/py-trello/commit/7e13e5143944f73042ca5f023ad9d889748c3c9e) &bull; Edit `Attachments.date` return python datetime object  
+
+
+**0.8.0**
+
+
+[view](https://github.com/sarumont/py-trello/commit/ef0a8762f01e07b34e4899f38a9054c55fa8b218) &bull; Add pytz in install_requires  
+[view](https://github.com/sarumont/py-trello/commit/1d30a8799ed31a6684eb7c7fb9d4622fd1f0c1f6) &bull; Add update_comment for card.  
+[view](https://github.com/sarumont/py-trello/commit/5600b154b5260f679e9db1fe35e1d6d487bee1cc) &bull; Card.get_stats_by_list: sort card movements to get the time the card spends in each list  
