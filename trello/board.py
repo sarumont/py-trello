@@ -341,6 +341,24 @@ class Board(object):
 
         return members
 
+    # Add a member to a board
+    def add_member(self, member, member_type="normal"):
+        json_obj = self.client.fetch_json(
+            '/boards/{0}/members/{1}'.format(self.id, member.id),
+            http_method='PUT',
+            post_args={'idMember': member.id, "type": member_type},
+        )
+        return json_obj
+
+    # Removes an existing member of a board
+    def remove_member(self, member):
+        json_obj = self.client.fetch_json(
+            '/boards/{0}/members/{1}'.format(self.id, member.id),
+            http_method='DELETE',
+            post_args={'idMember': member.id},
+        )
+        return json_obj
+
     def fetch_actions(self, action_filter, action_limit=50, before=None, since=None):
         query_params = {'filter': action_filter, 'limit':  action_limit}
 
