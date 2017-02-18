@@ -230,3 +230,18 @@ v0.8.0
 Add pytz in install_requires
 Add update_comment for card.
 Card.get_stats_by_list: sort card movements to get the time the card spends in each list
+
+v0.9.0
+
+Fix #172
+Add missing initials for members of an organization (fixes #176)
+Organizations do not have a 'closed' attribute
+Implement partial search API
+Improve documenation of TrelloClient.search return values
+Eliminate unnecessary fetch calls for search results
+Add position attribute to TrelloList's add_card method to allow creating cards in the top, bottom or an specific position of the list
+Position must be optional in List.add_card. Adding new method move(position) that allows moving a List in a board
+New operations: add and remove member of a board
+New feature: move all list from a card to another list
+Add remove due datetime from a card
+Add the member type when calling board's get_members
