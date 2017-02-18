@@ -227,3 +227,20 @@
 [view](https://github.com/sarumont/py-trello/commit/ef0a8762f01e07b34e4899f38a9054c55fa8b218) &bull; Add pytz in install_requires  
 [view](https://github.com/sarumont/py-trello/commit/1d30a8799ed31a6684eb7c7fb9d4622fd1f0c1f6) &bull; Add update_comment for card.  
 [view](https://github.com/sarumont/py-trello/commit/5600b154b5260f679e9db1fe35e1d6d487bee1cc) &bull; Card.get_stats_by_list: sort card movements to get the time the card spends in each list  
+
+
+**0.9.0**
+
+
+[view](https://github.com/sarumont/py-trello/commit/56aaff1e33c1a547251a0a6075398f610d62e362) &bull; Fix #172  
+[view](https://github.com/sarumont/py-trello/commit/86ef2f0184bd690d7d0714c2109480e21761064a) &bull; Add missing initials for members of an organization (fixes #176)  
+[view](https://github.com/sarumont/py-trello/commit/aac3b3d007ca0a5bbe6e426d9a8f7f3bcbd38cbf) &bull; Organizations do not have a 'closed' attribute  
+[view](https://github.com/sarumont/py-trello/commit/a8bad96afc768584006d2f304f22d5bdc99e2fd6) &bull; Implement partial search API  
+[view](https://github.com/sarumont/py-trello/commit/3d12518b632188b550631df68c35f5ad243dd780) &bull; Improve documenation of TrelloClient.search return values  
+[view](https://github.com/sarumont/py-trello/commit/e023fded840d34c7f592b67a26e8685f4c279a09) &bull; Eliminate unnecessary fetch calls for search results  
+[view](https://github.com/sarumont/py-trello/commit/8ef5552104548dd75706f2135e7a80814ee07f53) &bull; Add position attribute to TrelloList's add_card method to allow creating cards in the top, bottom or an specific position of the list  
+[view](https://github.com/sarumont/py-trello/commit/f2524319894f22c523f5c316b04eb7527b948d1d) &bull; Position must be optional in List.add_card. Adding new method move(position) that allows moving a List in a board  
+[view](https://github.com/sarumont/py-trello/commit/d1b6d46f139521f052248eef5f8e10b6f9094a9f) &bull; New operations: add and remove member of a board  
+[view](https://github.com/sarumont/py-trello/commit/75c319370b63920cc0d00639aa887a6061e332a9) &bull; New feature: move all list from a card to another list  
+[view](https://github.com/sarumont/py-trello/commit/aa8d01aa19e30cef5dcd5325c343980c49fd88c5) &bull; Add remove due datetime from a card  
+[view](https://github.com/sarumont/py-trello/commit/562e8c35337825e0f4fd3a042e04d82839d05a12) &bull; Add the member type when calling board's get_members  
