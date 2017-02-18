@@ -485,6 +485,13 @@ class Card(object):
         self._set_remote_attribute('due', datestr)
         self.due = datestr
 
+    def remove_due(self):
+        """
+        Remove the due datetime of this card.
+        """
+        self._set_remote_attribute('due', None)
+        self.due = ''
+
     def set_pos(self, pos):
         """
         Update card position in list

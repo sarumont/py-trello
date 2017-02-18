@@ -88,6 +88,20 @@ class List(object):
             '/lists/' + self.id + '/archiveAllCards',
             http_method='POST')
 
+    def move_all_cards(self, destination_list):
+        """
+        Move all cards of this list to another list.
+        The list can be in the same board (or not).
+        """
+
+        self.client.fetch_json(
+            '/lists/' + self.id + '/moveAllCards',
+            http_method='POST',
+            post_args = {
+                "idBoard": destination_list.board.id,
+                "idList": destination_list.id,
+            })
+
     def fetch_actions(self, action_filter):
         """
         Fetch actions for this list can give more argv to action_filter,

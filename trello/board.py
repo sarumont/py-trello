@@ -337,6 +337,7 @@ class Board(object):
             m.username = obj['username']
             m.full_name = obj['fullName']
             m.initials = obj.get('initials', '')
+            m.member_type = obj.get('memberType', '')
             members.append(m)
 
         return members
