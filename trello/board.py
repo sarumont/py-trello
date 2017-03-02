@@ -322,6 +322,12 @@ class Board(object):
     def get_members(self, filters=None):
         """Get members with filter
 
+        :filters: dict containing query parameters.
+            Eg. {'fields': 'all', 'filter': 'admins'}
+
+        More info on possible filters:
+        https://developers.trello.com/advanced-reference/board#get-1-boards-board-id-members
+
         :rtype: list of Member
         """
         json_obj = self.client.fetch_json(
