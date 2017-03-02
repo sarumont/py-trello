@@ -363,7 +363,8 @@ class Board(object):
     def fetch_actions(self, action_filter, action_limit=50, before=None, since=None):
         """Returns all actions that conform to the given filters.
 
-        :action_filter: str of possible actions separated by comma ie. 'createCard,updateCard'
+        :action_filter: str of possible actions separated by comma
+            ie. 'createCard,updateCard'
         :action_limit: int of max items returned
         :before: datetime obj
         :since: datetime obj
@@ -373,7 +374,7 @@ class Board(object):
 
         :rtype: json list of past actions
         """
-        query_params = {'filter': action_filter, 'limit':  action_limit}
+        query_params = {'filter': action_filter, 'limit': action_limit}
 
         if since:
             query_params["since"] = since
@@ -381,7 +382,8 @@ class Board(object):
         if before:
             query_params["before"] = before
 
-        json_obj = self.client.fetch_json('/boards/' + self.id + '/actions', query_params=query_params)
+        json_obj = self.client.fetch_json('/boards/' + self.id + '/actions',
+                                          query_params=query_params)
 
         self.actions = json_obj
         return self.actions
