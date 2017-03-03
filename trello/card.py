@@ -102,7 +102,7 @@ class Card(object):
 
     def __init__(self, parent, card_id, name=''):
         """
-        :trello_list: reference to the parent list
+        :parent: reference to the parent trello list
         :card_id: ID for this card
         """
         if isinstance(parent, List):
