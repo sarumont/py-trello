@@ -122,6 +122,8 @@ class Card(object):
 
         :parent: the list object that the card belongs to
         :json_obj: json object
+
+        :rtype: Card
         """
         if 'id' not in json_obj:
             raise Exception("key 'id' is not in json_obj")
