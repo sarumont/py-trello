@@ -201,7 +201,9 @@ class Card(object):
         return List.from_json(board=self, json_obj=obj)
 
     def get_comments(self):
-        """Alias for fetch_comments for backward compatibility. Always contact server"""
+        """Alias for fetch_comments for backward compatibility.
+        Always contact server
+        """
         return self.fetch_comments(force=True)
 
     def fetch_checklists(self):
@@ -212,7 +214,8 @@ class Card(object):
         checklists = []
         json_obj = self.client.fetch_json(
             '/cards/' + self.id + '/checklists', )
-        # Thanks https://github.com/HuffAndPuff for noticing checklist were not sorted
+        # Thanks https://github.com/HuffAndPuff for noticing checklist
+        # were not sorted
         json_obj = sorted(json_obj, key=lambda checklist: checklist['pos'])
         for cl in json_obj:
             checklists.append(Checklist(self.client, self.checked, cl,
@@ -237,7 +240,9 @@ class Card(object):
         """
         json_obj = self.client.fetch_json(
             '/cards/' + self.id + '/actions',
-            query_params={'filter': action_filter, "since": since, "before": before})
+            query_params={'filter': action_filter,
+                           "since": since,
+                           "before": before})
         self.actions = json_obj
 
     def attriExp(self, multiple):
@@ -248,11 +253,9 @@ class Card(object):
         self.fetch_actions(multiple)
         return self.actions
 
-
     @staticmethod
     def _movement_as_triplet(source_list, destination_list, movement_datetime):
         return [source_list["name"], destination_list["name"], movement_datetime]
-
 
     @staticmethod
     def _movement_as_dict(source_list, destination_list, movement_datetime):
@@ -262,7 +265,6 @@ class Card(object):
             "datetime": movement_datetime,
         }
         return _movement
-
 
     def _list_movements(self, movement_function, filter_by_date_interval=None):
         """
@@ -292,29 +294,27 @@ class Card(object):
 
         return movements
 
-
     def listCardMove_date(self):
-        """
-            Will return the history of transitions of a card from one list to another
-            The lower the index the more resent the historical item
+        """Will return the history of transitions of a card from one list to
+        another. The lower the index the more resent the historical item.
 
-            It returns a list of lists. The sublists are triplets of
-            starting list, ending list and when the transition occurred.
+        It returns a list of lists. The sublists are triplets of
+        starting list, ending list and when the transition occurred.
         """
         return self._list_movements(movement_function=Card._movement_as_triplet)
 
-
     def list_movements(self, list_cmp=None, filter_by_date_interval=None):
-        """
-        Will return the history of transitions of a card from one list to another
-        The lower the index the more resent the historical item
+        """Will return the history of transitions of a card from one list to
+        another. The lower the index the more resent the historical item.
 
-        It returns a list of dicts in date and time descending order (the first movement is the earliest).
-        Dicts are of the form source: <listobj> destination: <listobj> datetime: <datetimeobj>
+        It returns a list of dicts in date and time descending order (the
+        first movement is the earliest).
+        Dicts are of the form source:
+        <listobj> destination: <listobj> datetime: <datetimeobj>
+
         :param: list_cmp Comparison function between lists. For list_cmp(a, b) returns -1 if list a is greater that list b. Returns 1 otherwise.
         :param: filter_by_date_interval: pair of two dates (two strings in YYYY-MM-DD format) to filter card movements by date.
         """
-
         movement_as_dict_function = Card._movement_as_dict
         if list_cmp:
             def movement_as_dict_function(_source_list, _destination_list, _movement_datetime):
@@ -326,10 +326,8 @@ class Card(object):
 
         return self._list_movements(movement_function=movement_as_dict_function, filter_by_date_interval=filter_by_date_interval)
 
-
     def get_stats_by_list(self, lists, list_cmp=None, done_list=None, time_unit="seconds", card_movements_filter=None):
-        """
-        Gets several stats about the card by each list of the board:
+        """Gets several stats about the card by each list of the board:
         - time: The time that the card has been in each column in seconds (minutes or hours).
         - forward_moves: How many times this card has been the source of a forward movement.
         - backward_moves: How many times this card has been the source of a backward movement.
@@ -344,7 +342,6 @@ class Card(object):
         :param card_movements_filter: Pair of two dates (two strings in YYYY-MM-DD format) that will filter the movements of the card. Optional.
         :return: dict of the form {list_id: {time:<time card was in that list>, forward_moves: <number>, backward_moves: <number> }}
         """
-
         tz = pytz.timezone(Organization.TIMEZONE)
 
         # Conversion of units
@@ -377,15 +374,17 @@ class Card(object):
         else:
             # Changes in card are ordered to get the dates in order
             last_list = None
+
             def change_cmp(change1, change2):
                 if change1["datetime"] < change2["datetime"]:
                     return -1
                 if change1["datetime"] > change2["datetime"]:
                     return 1
                 return 0
+
             ordered_changes = sorted(changes, cmp=change_cmp)
-            # For each arrival to a list, its datetime will be used to compute the time this card is in
-            # that destination list
+            # For each arrival to a list, its datetime will be used to compute
+            # the time this card is in that destination list
             for change in ordered_changes:
                 source_list = change["source"]
                 destination_list = change["destination"]
@@ -418,13 +417,9 @@ class Card(object):
 
         return stats_by_list
 
-
     @property
     def latestCardMove_date(self):
-        """
-            returns the date of the last card transition
-
-        """
+        """Returns the date of the last card transition"""
         self.fetch_actions('updateCard:idList')
         date_str = self.actions[0]['date']
         return dateparser.parse(date_str)
@@ -506,7 +501,6 @@ class Card(object):
     def set_closed(self, closed):
         self._set_remote_attribute('closed', closed)
         self.closed = closed
-
 
     def delete_comment(self, comment):
         # Delete this comment permanently
@@ -619,7 +613,6 @@ class Card(object):
             post_args=args)
 
     def add_checklist(self, title, items, itemstates=None):
-
         """Add a checklist to this card
 
         :title: title of the checklist
