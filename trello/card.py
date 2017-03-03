@@ -463,8 +463,9 @@ class Card(object):
         return dateparser.parse(self.due) if self.due else ''
 
     def set_name(self, new_name):
-        """
-        Update the name on the card to :new_name:
+        """Update the name on the card to :new_name:
+
+        :new_name: str
         """
         self._set_remote_attribute('name', new_name)
         self.name = new_name
