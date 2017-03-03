@@ -120,7 +120,7 @@ class Card(object):
         """
         Deserialize the card json object to a Card object
 
-        :trello_list: the list object that the card belongs to
+        :parent: the list object that the card belongs to
         :json_obj: json object
         """
         if 'id' not in json_obj:
