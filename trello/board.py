@@ -322,6 +322,12 @@ class Board(object):
     def get_members(self, filters=None):
         """Get members with filter
 
+        :filters: dict containing query parameters.
+            Eg. {'fields': 'all', 'filter': 'admins'}
+
+        More info on possible filters:
+        https://developers.trello.com/advanced-reference/board#get-1-boards-board-id-members
+
         :rtype: list of Member
         """
         json_obj = self.client.fetch_json(
@@ -361,7 +367,20 @@ class Board(object):
         return json_obj
 
     def fetch_actions(self, action_filter, action_limit=50, before=None, since=None):
-        query_params = {'filter': action_filter, 'limit':  action_limit}
+        """Returns all actions that conform to the given filters.
+
+        :action_filter: str of possible actions separated by comma
+            ie. 'createCard,updateCard'
+        :action_limit: int of max items returned
+        :before: datetime obj
+        :since: datetime obj
+
+        More info on action filter values:
+        https://developers.trello.com/advanced-reference/board#get-1-boards-board-id-actions
+
+        :rtype: json list of past actions
+        """
+        query_params = {'filter': action_filter, 'limit': action_limit}
 
         if since:
             query_params["since"] = since
@@ -369,7 +388,8 @@ class Board(object):
         if before:
             query_params["before"] = before
 
-        json_obj = self.client.fetch_json('/boards/' + self.id + '/actions', query_params=query_params)
+        json_obj = self.client.fetch_json('/boards/' + self.id + '/actions',
+                                          query_params=query_params)
 
         self.actions = json_obj
         return self.actions
