@@ -143,5 +143,16 @@ class List(object):
     def cardsCnt(self):
         return len(self.list_cards())
 
+    # Change the name of the list
+    def set_name(self, name):
+        self.client.fetch_json(
+            '/lists/{list_id}/name'.format(list_id=self.id),
+            http_method='PUT',
+            post_args={'value': name})
+        self.name = name
+
+    # Change the position of the list
+    def set_pos(self, position):
+        self.move(position)
 
 from trello.card import Card
