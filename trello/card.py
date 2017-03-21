@@ -144,6 +144,10 @@ class Card(object):
         card.idShort = json_obj['idShort']
         card.labels = Label.from_json_list(card.board, json_obj['labels'])
         card.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
+        if "attachments" in json_obj:
+            card._attachments = []
+            for attachment_json in json_obj["attachments"]:
+                card._attachments.append(attachment_json)
         return card
 
     def __repr__(self):
