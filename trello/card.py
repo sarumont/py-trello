@@ -144,6 +144,10 @@ class Card(object):
         card.idShort = json_obj['idShort']
         card.labels = Label.from_json_list(card.board, json_obj['labels'])
         card.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
+        if "attachments" in json_obj:
+            card._attachments = []
+            for attachment_json in json_obj["attachments"]:
+                card._attachments.append(attachment_json)
         return card
 
     def __repr__(self):
@@ -583,7 +587,7 @@ class Card(object):
             kwargs['mimeType'] = mimeType
             kwargs['url'] = url
 
-        self._post_remote_data('attachments', **kwargs)
+        return self._post_remote_data('attachments', **kwargs)
 
     def remove_attachment(self, attachment_id):
         """
@@ -650,7 +654,7 @@ class Card(object):
             post_args={'value': value}, )
 
     def _post_remote_data(self, attribute, files=None, **kwargs):
-        self.client.fetch_json(
+        return self.client.fetch_json(
             '/cards/' + self.id + '/' + attribute,
             http_method='POST',
             files=files,
