@@ -45,9 +45,15 @@ class List(object):
         self.closed = json_obj['closed']
         self.pos = json_obj['pos']
 
-    def list_cards(self, card_filter="open"):
+    def list_cards(self, card_filter="open", actions=None):
         """Lists all cards in this list"""
-        json_obj = self.client.fetch_json('/lists/' + self.id + '/cards/' + card_filter)
+        query_params = {}
+        if card_filter:
+            query_params['filter'] = card_filter
+        if actions:
+            query_params['actions'] = actions
+        json_obj = self.client.fetch_json('/lists/' + self.id + '/cards',
+                                          query_params=query_params)
         return [Card.from_json(self, c) for c in json_obj]
 
     def add_card(self, name, desc=None, labels=None, due="null", source=None, position=None):

@@ -10,3 +10,6 @@ dist
 .idea/
 .tox/
 .DS_Store
+
+/tmp
+/venv
