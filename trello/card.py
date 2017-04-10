@@ -160,6 +160,8 @@ class Card(object):
             card._attachments = []
             for attachment_json in json_obj["attachments"]:
                 card._attachments.append(attachment_json)
+        if 'actions' in json_obj:
+            card.actions = json_obj['actions']
         return card
 
     def __repr__(self):
