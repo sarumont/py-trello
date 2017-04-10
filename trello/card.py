@@ -89,6 +89,18 @@ class Card(object):
         return self._checklists
 
     @property
+    def plugin_data(self):
+        """
+        Lazily loads and returns the plugin data
+        """
+        try:
+            if self._plugin_data is None:
+                self._plugin_data = self.fetch_plugin_data()
+        except AttributeError:
+            self._plugin_data = None
+        return self._plugin_data
+
+    @property
     def attachments(self):
         """
         Lazily loads and returns the attachments
@@ -183,6 +195,7 @@ class Card(object):
         self.checked = json_obj['checkItemStates']
         self.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
 
+        self._plugin_data = self.fetch_plugin_data() if eager else None
         self._checklists = self.fetch_checklists() if eager else None
         self._comments = self.fetch_comments() if eager else None
         self._attachments = self.fetch_attachments() if eager else None
@@ -225,6 +238,11 @@ class Card(object):
             checklists.append(Checklist(self.client, self.checked, cl,
                                         trello_card=self.id))
         return checklists
+
+    def fetch_plugin_data(self):
+        items = self.client.fetch_json(
+            '/cards/' + self.id + '/pluginData')
+        return items
 
     def fetch_attachments(self, force=False):
         if (force is True) or (self.badges['attachments'] > 0):
