@@ -461,9 +461,6 @@ class Card(object):
             self.creation_date = localtz.localize(datetime.datetime.fromtimestamp(int(self.id[0: 8], 16)))
         return self.creation_date
 
-    # backwards compatibility alias; TODO: deprecation message
-    create_date = created_date
-
     @property
     def card_created_date(self):
         """Will return the creation date of the card.
