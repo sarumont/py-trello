@@ -507,6 +507,21 @@ class Card(object):
         self._set_remote_attribute('due', datestr)
         self.due = datestr
 
+    def set_due_complete(self):
+        """Set due complete
+        
+        :return: None
+        """
+        self._set_due_complete(True)
+
+    def remove_due_complete(self):
+        """Remove due complete
+        
+        :return: None
+        """
+        self._set_due_complete(False)
+
+
     def remove_due(self):
         """
         Remove the due datetime of this card.
@@ -666,6 +681,17 @@ class Card(object):
 
         self.fetch()
         return cl
+
+    def _set_due_complete(self, is_complete):
+        """Set due is complete or not complete
+        
+        https://developers.trello.com/advanced-reference/card#put-1-cards-card-id-or-shortlink-dueComplete
+        :param is_complete: boolean
+        :return: None
+        """
+        self.client.fetch_json('/cards/' + self.id + '/dueComplete',
+                               http_method='PUT',
+                               post_args={'value': is_complete})
 
     def _set_remote_attribute(self, attribute, value):
         self.client.fetch_json(
