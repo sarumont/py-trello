@@ -146,6 +146,7 @@ class Card(object):
                    name=json_obj['name'])
         card.desc = json_obj.get('desc', '')
         card.due = json_obj.get('due', '')
+        card.is_due_complete = json_obj['dueComplete']
         card.closed = json_obj['closed']
         card.url = json_obj['url']
         card.pos = json_obj['pos']
