@@ -16,6 +16,8 @@ class Card(object):
     """
     Class representing a Trello card. Card attributes are stored on
     the object
+    
+    https://developers.trello.com/advanced-reference/card
     """
 
     @property
