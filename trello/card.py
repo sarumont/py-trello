@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
+
+import datetime
+
+import pytz
 from dateutil import parser as dateparser
 
 from trello.attachments import Attachments
-from trello.organization import Organization
-from trello.compat import force_str
 from trello.checklist import Checklist
+from trello.compat import force_str
 from trello.label import Label
-
-import datetime
-import pytz
+from trello.organization import Organization
 
 
 class Card(object):
