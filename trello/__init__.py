@@ -10,5 +10,6 @@ from trello.organization import *
 from trello.trelloclient import *
 from trello.trellolist import *
 from trello.webhook import *
+from trello.util import *
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
