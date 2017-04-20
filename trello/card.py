@@ -1,21 +1,24 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
+
+import datetime
+
+import pytz
 from dateutil import parser as dateparser
 
 from trello.attachments import Attachments
-from trello.organization import Organization
-from trello.compat import force_str
 from trello.checklist import Checklist
+from trello.compat import force_str
 from trello.label import Label
-
-import datetime
-import pytz
+from trello.organization import Organization
 
 
 class Card(object):
     """
     Class representing a Trello card. Card attributes are stored on
     the object
+    
+    https://developers.trello.com/advanced-reference/card
     """
 
     @property
@@ -144,6 +147,7 @@ class Card(object):
                    name=json_obj['name'])
         card.desc = json_obj.get('desc', '')
         card.due = json_obj.get('due', '')
+        card.is_due_complete = json_obj['dueComplete']
         card.closed = json_obj['closed']
         card.url = json_obj['url']
         card.pos = json_obj['pos']
@@ -461,9 +465,6 @@ class Card(object):
             self.creation_date = localtz.localize(datetime.datetime.fromtimestamp(int(self.id[0: 8], 16)))
         return self.creation_date
 
-    # backwards compatibility alias; TODO: deprecation message
-    create_date = created_date
-
     @property
     def card_created_date(self):
         """Will return the creation date of the card.
@@ -506,6 +507,21 @@ class Card(object):
         datestr = due.strftime('%Y-%m-%dT%H:%M:%S')
         self._set_remote_attribute('due', datestr)
         self.due = datestr
+
+    def set_due_complete(self):
+        """Set due complete
+        
+        :return: None
+        """
+        self._set_due_complete(True)
+
+    def remove_due_complete(self):
+        """Remove due complete
+        
+        :return: None
+        """
+        self._set_due_complete(False)
+
 
     def remove_due(self):
         """
@@ -666,6 +682,17 @@ class Card(object):
 
         self.fetch()
         return cl
+
+    def _set_due_complete(self, is_complete):
+        """Set due is complete or not complete
+        
+        https://developers.trello.com/advanced-reference/card#put-1-cards-card-id-or-shortlink-dueComplete
+        :param is_complete: boolean
+        :return: None
+        """
+        self.client.fetch_json('/cards/' + self.id + '/dueComplete',
+                               http_method='PUT',
+                               post_args={'value': is_complete})
 
     def _set_remote_attribute(self, attribute, value):
         self.client.fetch_json(
