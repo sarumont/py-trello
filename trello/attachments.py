@@ -36,6 +36,15 @@ class Attachments(object):
     def __repr__(self):
         return u"<Attachments {0}>".format(self.name)
 
+    def __hash__(self):
+        class_name = type(self).__name__
+        return hash(class_name) ^ hash(self.id)
+
+    def __eq__(self, other):
+        if isinstance(other, type(self)):
+            return hash(self) == hash(other)
+        raise NotImplementedError
+
 
 class AttachmentsPreview(object):
     def __init__(self, bytes, url, width, height, is_scaled):

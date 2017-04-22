@@ -34,13 +34,6 @@ class Label(object):
     def __repr__(self):
         return force_str(u'<Label %s>' % self.name)
 
-    def fetch(self):
-        """Fetch all attributes for this label"""
-        json_obj = self.client.fetch_json('/labels/' + self.id)
-        self.name = json_obj['name']
-        self.color = json_obj['color']
-        return self
-
     def __hash__(self):
         class_name = type(self).__name__
         return hash(class_name) ^ hash(self.id)
@@ -49,3 +42,10 @@ class Label(object):
         if isinstance(other, type(self)):
             return hash(self) == hash(other)
         raise NotImplementedError
+
+    def fetch(self):
+        """Fetch all attributes for this label"""
+        json_obj = self.client.fetch_json('/labels/' + self.id)
+        self.name = json_obj['name']
+        self.color = json_obj['color']
+        return self

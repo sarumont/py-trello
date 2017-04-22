@@ -38,6 +38,15 @@ class List(object):
     def __repr__(self):
         return force_str(u'<List %s>' % self.name)
 
+    def __hash__(self):
+        class_name = type(self).__name__
+        return hash(class_name) ^ hash(self.id)
+
+    def __eq__(self, other):
+        if isinstance(other, type(self)):
+            return hash(self) == hash(other)
+        raise NotImplementedError
+
     def fetch(self):
         """Fetch all attributes for this list"""
         json_obj = self.client.fetch_json('/lists/' + self.id)
