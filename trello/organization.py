@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
+
+from trello import TrelloBase
 from trello.compat import force_str
 from trello.member import Member
 
 
-class Organization(object):
+class Organization(TrelloBase):
 
     TIMEZONE = None
 
@@ -12,6 +14,7 @@ class Organization(object):
     Class representing an organization
     """
     def __init__(self, client, organization_id, name=''):
+        super().__init__()
         self.client = client
         self.id = organization_id
         self.name = name
@@ -31,15 +34,6 @@ class Organization(object):
 
     def __repr__(self):
         return force_str(u'<Organization %s>' % self.name)
-
-    def __hash__(self):
-        class_name = type(self).__name__
-        return hash(class_name) ^ hash(self.id)
-
-    def __eq__(self, other):
-        if isinstance(other, type(self)):
-            return hash(self) == hash(other)
-        raise NotImplementedError
 
     def fetch(self):
         """Fetch all attributes for this organization"""

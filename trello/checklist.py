@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
+
+from trello import TrelloBase
 from trello.compat import force_str
 
 
-class Checklist(object):
+class Checklist(TrelloBase):
     """
     Class representing a Trello checklist.
     """
 
     def __init__(self, client, checked, obj, trello_card=None):
+        super().__init__()
         self.client = client
         self.trello_card = trello_card
         self.id = obj['id']
@@ -130,12 +133,3 @@ class Checklist(object):
 
     def __repr__(self):
         return force_str(u'<Checklist %s>' % self.id)
-
-    def __hash__(self):
-        class_name = type(self).__name__
-        return hash(class_name) ^ hash(self.id)
-
-    def __eq__(self, other):
-        if isinstance(other, type(self)):
-            return hash(self) == hash(other)
-        raise NotImplementedError
