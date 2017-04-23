@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 from dateutil import parser as dateparser
 
+from trello import TrelloBase
 
-class Attachments(object):
+
+class Attachments(TrelloBase):
     """
     https://developers.trello.com/advanced-reference/card#get-1-cards-card-id-or-shortlink-attachments
     """
     def __init__(self, id, bytes, date, edge_color, idMember, is_upload, mime_type, name, previews, url):
+        super().__init__()
         self.id = id
         self.bytes = bytes
         self.date = dateparser.parse(date)

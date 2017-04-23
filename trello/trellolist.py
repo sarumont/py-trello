@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
+
+from trello import TrelloBase
 from trello.compat import force_str
 
 
-class List(object):
+class List(TrelloBase):
     """
     Class representing a Trello list. List attributes are stored on the object,
     but access to sub-objects (Cards) require an API call
@@ -15,6 +17,7 @@ class List(object):
         :board: reference to the parent board
         :list_id: ID for this list
         """
+        super().__init__()
         self.board = board
         self.client = board.client
         self.id = list_id

@@ -6,6 +6,7 @@ import datetime
 import pytz
 from dateutil import parser as dateparser
 
+from trello import TrelloBase
 from trello.attachments import Attachments
 from trello.checklist import Checklist
 from trello.compat import force_str
@@ -13,7 +14,7 @@ from trello.label import Label
 from trello.organization import Organization
 
 
-class Card(object):
+class Card(TrelloBase):
     """
     Class representing a Trello card. Card attributes are stored on
     the object
@@ -120,6 +121,7 @@ class Card(object):
         :parent: reference to the parent trello list
         :card_id: ID for this card
         """
+        super().__init__()
         if isinstance(parent, List):
             self.trello_list = parent
             self.board = parent.board

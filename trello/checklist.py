@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
+
+from trello import TrelloBase
 from trello.compat import force_str
 
 
-class Checklist(object):
+class Checklist(TrelloBase):
     """
     Class representing a Trello checklist.
     """
 
     def __init__(self, client, checked, obj, trello_card=None):
+        super().__init__()
         self.client = client
         self.trello_card = trello_card
         self.id = obj['id']
