@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
+
+from trello import TrelloBase
 from trello.compat import force_str
 from trello.member import Member
 
 
-class Organization(object):
+class Organization(TrelloBase):
 
     TIMEZONE = None
 
@@ -12,6 +14,7 @@ class Organization(object):
     Class representing an organization
     """
     def __init__(self, client, organization_id, name=''):
+        super().__init__()
         self.client = client
         self.id = organization_id
         self.name = name

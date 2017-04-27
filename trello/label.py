@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
+
+from trello import TrelloBase
 from trello.compat import force_str
 
 
-class Label(object):
+class Label(TrelloBase):
     """
     Class representing a Trello Label.
     """
     def __init__(self, client, label_id, name, color=""):
+        super().__init__()
         self.client = client
         self.id = label_id
         self.name = name
@@ -40,12 +43,3 @@ class Label(object):
         self.name = json_obj['name']
         self.color = json_obj['color']
         return self
-
-    def __hash__(self):
-        class_name = type(self).__name__
-        return hash(class_name) ^ hash(self.id)
-
-    def __eq__(self, other):
-        if isinstance(other, type(self)):
-            return hash(self) == hash(other)
-        raise NotImplementedError
