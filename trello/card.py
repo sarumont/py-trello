@@ -121,7 +121,7 @@ class Card(TrelloBase):
         :parent: reference to the parent trello list
         :card_id: ID for this card
         """
-        super().__init__()
+        super(Card, self).__init__()
         if isinstance(parent, List):
             self.trello_list = parent
             self.board = parent.board

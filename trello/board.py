@@ -29,7 +29,7 @@ class Board(TrelloBase):
 		:board_id: ID for this board
 
 		"""
-		super().__init__()
+		super(Board, self).__init__()
 		if organization is None:
 			self.client = client
 		else:

@@ -14,7 +14,7 @@ class Organization(TrelloBase):
     Class representing an organization
     """
     def __init__(self, client, organization_id, name=''):
-        super().__init__()
+        super(Organization, self).__init__()
         self.client = client
         self.id = organization_id
         self.name = name

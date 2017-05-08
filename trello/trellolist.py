@@ -17,7 +17,7 @@ class List(TrelloBase):
         :board: reference to the parent board
         :list_id: ID for this list
         """
-        super().__init__()
+        super(List, self).__init__()
         self.board = board
         self.client = board.client
         self.id = list_id

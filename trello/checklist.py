@@ -11,7 +11,7 @@ class Checklist(TrelloBase):
     """
 
     def __init__(self, client, checked, obj, trello_card=None):
-        super().__init__()
+        super(Checklist, self).__init__()
         self.client = client
         self.trello_card = trello_card
         self.id = obj['id']
