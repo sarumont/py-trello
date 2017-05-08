@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from dateutil import parser as dateparser
 
-from trello import TrelloBase
+from trello.base import TrelloBase
 
 
 class Attachments(TrelloBase):
