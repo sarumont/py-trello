@@ -11,7 +11,7 @@ class Member(TrelloBase):
     """
 
     def __init__(self, client, member_id, full_name=''):
-        super().__init__()
+        super(Member, self).__init__()
         self.client = client
         self.id = member_id
         self.full_name = full_name

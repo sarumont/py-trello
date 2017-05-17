@@ -10,7 +10,7 @@ class Label(TrelloBase):
     Class representing a Trello Label.
     """
     def __init__(self, client, label_id, name, color=""):
-        super().__init__()
+        super(Label, self).__init__()
         self.client = client
         self.id = label_id
         self.name = name
