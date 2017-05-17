@@ -59,7 +59,7 @@ class List(TrelloBase):
                                           query_params=query_params)
         return [Card.from_json(self, c) for c in json_obj]
 
-    def add_card(self, name, desc=None, labels=None, due="null", source=None, position=None):
+    def add_card(self, name, desc=None, labels=None, due="null", source=None, position=None, assign=None):
         """Add a card to this list
 
         :name: name for the card
@@ -75,12 +75,18 @@ class List(TrelloBase):
             for label in labels:
                 labels_str += label.id + ","
 
+        members_str = ""
+        if assign:
+            for assignee in assign:
+                members_str += assignee.id + ","
+
         post_args = {
             'name': name,
             'idList': self.id,
             'desc': desc,
             'idLabels': labels_str[:-1],
             'due': due,
+            'idMembers': members_str[:-1],
             'idCardSource': source,
         }
         if position is not None:
