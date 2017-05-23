@@ -73,11 +73,3 @@ To run the tests, run ``python -m unittest discover``. Four environment variable
 To run tests across various Python versions,
 `tox <https://tox.readthedocs.io/en/latest/>`_ is supported. Install it
 and simply run ``tox`` from the ``py-trello`` directory.
-
-Contributors
-============
-
-* `Adrien Lemaire <https://github.com/Fandekasp>`_
-* `Kyle Valade <https://github.com/kdazzle>`_
-* `Rick van Hattem <https://github.com/WoLpH>`_
-* `Nathan Mustaki <https://github.com/nMustaki>`_
