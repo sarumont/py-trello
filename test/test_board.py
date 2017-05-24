@@ -191,6 +191,10 @@ class TrelloBoardTestCase(unittest.TestCase):
         self.assertEqual(i2['name'], "item2")
         self.assertEqual(i2['state'], "incomplete")
 
+    def test_last_activity(self):
+        self.assertIsInstance(self._board.date_last_activity, datetime)
+        self.assertIsInstance(self._board.get_last_activity(), datetime)
+
 def suite():
     # tests = ['test01_list_boards', 'test10_board_attrs', 'test20_add_card']
     # return unittest.TestSuite(map(TrelloBoardTestCase, tests))
