@@ -37,8 +37,7 @@ class Board(TrelloBase):
 			self.client = organization.client
 		self.id = board_id
 		self.name = name
-
-		self.date_last_activity = None
+		self.date_last_activity = self.get_last_activity()
 
 	@classmethod
 	def from_json(cls, trello_client=None, organization=None, json_obj=None):
@@ -64,11 +63,6 @@ class Board(TrelloBase):
 		board.closed = json_obj['closed']
 		board.url = json_obj['url']
 
-		try:
-			board.date_last_activity = dateparser.parse(json_obj['dateLastActivity'])
-		except:
-			pass
-
 		return board
 
 	def __repr__(self):
@@ -81,10 +75,6 @@ class Board(TrelloBase):
 		self.description = json_obj.get('desc', '')
 		self.closed = json_obj['closed']
 		self.url = json_obj['url']
-		try:
-			self.date_last_activity = dateparser.parse(json_obj['dateLastActivity'])
-		except:
-			self.date_last_activity = None
 
 	# Saves a Trello Board
 	def save(self):
@@ -396,3 +386,12 @@ class Board(TrelloBase):
 
 		self.actions = json_obj
 		return self.actions
+
+	def get_last_activity(self):
+		"""Return the date of the last action done on the board.
+
+		:rtype: datetime.datetime
+		"""
+		json_obj = self.client.fetch_json(
+                '/boards/{0}/dateLastActivity'.format(self.id))
+		return dateparser.parse(json_obj['_value'])
