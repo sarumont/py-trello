@@ -611,6 +611,17 @@ class Card(TrelloBase):
             '/cards/' + self.id + '/idLabels/' + label.id,
             http_method='DELETE')
 
+    def add_member(self, member):
+        self.client.fetch_json(
+            '/cards/' + self.id + '/idMembers',
+            http_method='POST',
+            post_args={'value': member.id})
+
+    def remove_member(self, member):
+        self.client.fetch_json(
+            '/cards/' + self.id + '/idMembers/' + member.id,
+            http_method='DELETE')
+
     def attach(self, name=None, mimeType=None, file=None, url=None):
         """
         Add an attachment to the card. The attachment can be either a
