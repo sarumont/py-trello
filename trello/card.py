@@ -274,6 +274,7 @@ class Card(TrelloBase):
                            "since": since,
                            "before": before})
         self.actions = json_obj
+        return self.actions
 
     def attriExp(self, multiple):
         """

@@ -126,6 +126,7 @@ class List(TrelloBase):
             '/lists/' + self.id + '/actions',
             query_params={'filter': action_filter})
         self.actions = json_obj
+        return self.actions
 
     def _set_remote_attribute(self, attribute, value):
         self.client.fetch_json(
