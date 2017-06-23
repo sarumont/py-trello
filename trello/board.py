@@ -394,4 +394,5 @@ class Board(TrelloBase):
 		"""
 		json_obj = self.client.fetch_json(
                 '/boards/{0}/dateLastActivity'.format(self.id))
-		return dateparser.parse(json_obj['_value'])
+		if json_obj['_value']:
+			return dateparser.parse(json_obj['_value'])
