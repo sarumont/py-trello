@@ -154,6 +154,15 @@ class TrelloClient(object):
         board = self.get_board(card_json['idBoard'])
         return Card.from_json(List.from_json(board, list_json), card_json)
 
+    def get_list(self, list_id):
+        """Get list
+
+        :rtype: List
+        """
+        list_json = self.fetch_json('/lists/' + list_id)
+        board = self.get_board(list_json['idBoard'])
+        return List.from_json(board, list_json)
+
     def get_label(self, label_id, board_id):
         """Get Label
 
