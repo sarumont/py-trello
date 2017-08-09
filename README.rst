@@ -32,6 +32,30 @@ Where ``token`` and ``token_secret`` come from the 3-legged OAuth process and
 ``api_key`` and ``api_secret`` are your Trello API credentials that are
 (`generated here <https://trello.com/1/appKey/generate>`_).
 
+
+Working with boards
+--------------------
+
+.. code-block:: python
+
+    all_boards = client.list_boards()
+    last_board = all_boards[-1]
+    print(last_board.name)
+
+working with board lists and cards
+----------------------------------
+
+.. code-block:: python
+
+    all_boards = client.list_boards()
+    last_board = all_boards[-1]
+    last_board.list_lists()
+    my_list = last_board.get_list(list_id)
+
+    for card in my_list.list_cards():
+        print(card.name)
+
+
 Getting your Trello OAuth Token
 ===============================
 Make sure the following environment variables are set:
