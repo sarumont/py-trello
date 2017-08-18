@@ -8,7 +8,7 @@ from trello.member import Member
 
 class Organization(TrelloBase):
 
-    TIMEZONE = None
+    TIMEZONE = 'UTC'
 
     """
     Class representing an organization
