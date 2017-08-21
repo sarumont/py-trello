@@ -59,7 +59,7 @@ class TrelloBoardTestCase(unittest.TestCase):
         self.assertIsNotNone(card.list_id)
         self.assertIsNotNone(card.comments)
         self.assertIsNotNone(card.checklists)
-        self.assertIsInstance(card.create_date, datetime)
+        self.assertIsInstance(card.created_date, datetime)
 
     def test42_add_card_with_comments_fetch(self):
         name = "Card with comments"
