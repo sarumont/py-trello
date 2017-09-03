@@ -263,16 +263,22 @@ class Card(TrelloBase):
     def get_attachments(self):
         return [Attachments.from_json(attachments_json) for attachments_json in self.fetch_attachments(force=True)]
 
-    def fetch_actions(self, action_filter='createCard', since=None, before=None):
+    def fetch_actions(self, action_filter='createCard', since=None, before=None, action_limit=50):
         """
         Fetch actions for this card can give more argv to action_filter,
         split for ',' json_obj is list
         """
+        query_params={'filter': action_filter, 'limit': action_limit}
+        if since:
+            query_params["since"] = since
+
+        if before:
+            query_params["before"] = before
+
         json_obj = self.client.fetch_json(
             '/cards/' + self.id + '/actions',
-            query_params={'filter': action_filter,
-                           "since": since,
-                           "before": before})
+            query_params=query_params)
+
         self.actions = json_obj
         return self.actions
 
