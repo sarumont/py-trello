@@ -613,6 +613,12 @@ class Card(TrelloBase):
             http_method='POST',
             post_args={'value': label.id})
 
+    def create_label(self, name, color):
+        self.client.fetch_json(
+            "/cards/" + self.id + "/labels",
+            http_method='POST',
+            post_args={"name": name, "color": color})
+
     def remove_label(self, label):
         self.client.fetch_json(
             '/cards/' + self.id + '/idLabels/' + label.id,
