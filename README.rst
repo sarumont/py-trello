@@ -32,6 +32,7 @@ Where ``token`` and ``token_secret`` come from the 3-legged OAuth process and
 ``api_key`` and ``api_secret`` are your Trello API credentials that are
 (`generated here <https://trello.com/1/appKey/generate>`_).
 
+To use without 3-legged OAuth, use only ``api_key`` and ``api_secret`` on client.
 
 Working with boards
 --------------------
