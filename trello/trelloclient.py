@@ -127,7 +127,7 @@ class TrelloClient(object):
         :param permission_level: Permission level, defaults to private
         :rtype: Board
         """
-        post_args={'name': board_name, 'prefs_permissionLevel': permission_level}
+        post_args = {'name': board_name, 'prefs_permissionLevel': permission_level}
         if source_board is not None:
             post_args['idBoardSource'] = source_board.id
         if organization_id is not None:
@@ -207,6 +207,10 @@ class TrelloClient(object):
         if uri_path[0] == '/':
             uri_path = uri_path[1:]
         url = 'https://api.trello.com/1/%s' % uri_path
+
+        if self.oauth is None:
+            query_params['key'] = self.api_key
+            query_params['token'] = self.api_secret
 
         # perform the HTTP requests, if possible uses OAuth authentication
         response = requests.request(http_method, url, params=query_params,
