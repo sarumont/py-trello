@@ -38,7 +38,7 @@ class TrelloClient(object):
         """
 
         # client key and secret for oauth1 session
-        if api_key or token:
+        if token or token_secret:
             self.oauth = OAuth1(client_key=api_key, client_secret=api_secret,
                                 resource_owner_key=token, resource_owner_secret=token_secret)
         else:

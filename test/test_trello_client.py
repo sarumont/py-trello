@@ -112,10 +112,33 @@ class TrelloClientTestCase(unittest.TestCase):
                           self._trello.get_card, '0')
 
 
+class TrelloClientTestCaseWithoutOAuth(unittest.TestCase):
+    """
+
+    Tests for TrelloClient API when OAuth not activated.
+
+    """
+
+    def setUp(self):
+        self._trello = TrelloClient(os.environ['TRELLO_API_KEY'],
+                                    api_secret=os.environ['TRELLO_TOKEN'])
+
+    def test01_oauth_not_activated(self):
+        self.assertIsNone(self._trello.oauth)
+
+
 def suite():
-    # tests = ['test01_list_boards', 'test10_board_attrs', 'test20_add_card']
-    # return unittest.TestSuite(map(TrelloClientTestCase, tests))
-    return unittest.TestLoader().loadTestsFromTestCase(TrelloClientTestCase)
+    test_classes_to_run = [TrelloClientTestCase,
+                           TrelloClientTestCaseWithoutOAuth]
+
+    loader = unittest.TestLoader()
+
+    suites_list = []
+    for test_class in test_classes_to_run:
+        suite = loader.loadTestsFromTestCase(test_class)
+        suites_list.append(suite)
+
+    return unittest.TestSuite(suites_list)
 
 
 if __name__ == "__main__":
