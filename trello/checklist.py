@@ -16,7 +16,7 @@ class Checklist(TrelloBase):
         self.trello_card = trello_card
         self.id = obj['id']
         self.name = obj['name']
-        self.items = obj['checkItems']
+        self.items = sorted(obj['checkItems'], key=lambda items: items.get('pos'))
         for i in self.items:
             i['checked'] = False
             for cis in checked:
