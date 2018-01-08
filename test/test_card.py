@@ -6,7 +6,7 @@ import os
 from trello import TrelloClient, ResourceUnavailable
 
 
-class TrelloBoardTestCase(unittest.TestCase):
+class TrelloCardTestCase(unittest.TestCase):
     """
     Tests for TrelloClient API. Note these test are in order to
     preserve dependencies, as an API integration cannot be tested
@@ -136,6 +136,7 @@ def suite():
     # tests = ['test01_list_boards', 'test10_board_attrs', 'test20_add_card']
     # return unittest.TestSuite(map(TrelloBoardTestCase, tests))
     return unittest.TestLoader().loadTestsFromTestCase(TrelloBoardTestCase)
+
 
 if __name__ == "__main__":
     unittest.main()
