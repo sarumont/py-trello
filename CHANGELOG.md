@@ -244,3 +244,53 @@
 [view](https://github.com/sarumont/py-trello/commit/75c319370b63920cc0d00639aa887a6061e332a9) &bull; New feature: move all list from a card to another list  
 [view](https://github.com/sarumont/py-trello/commit/aa8d01aa19e30cef5dcd5325c343980c49fd88c5) &bull; Add remove due datetime from a card  
 [view](https://github.com/sarumont/py-trello/commit/562e8c35337825e0f4fd3a042e04d82839d05a12) &bull; Add the member type when calling board's get_members  
+
+
+**0.10.0**
+
+
+[view](https://github.com/sarumont/py-trello/commit/06f643b339290a2c619127a879e07273baa0fc47) &bull; fix checklist item not sorted  
+[view](https://github.com/sarumont/py-trello/commit/11ea9ab1fbcfdb3aebaf3256c2532a4a1af0fd8c) &bull; Third authentication: initialize TrelloClient correctly  
+[view](https://github.com/sarumont/py-trello/commit/c04847ba7044ba7e42b23aee5df4edf8f4f27cd7) &bull; Add the option to choose the third authentication  
+[view](https://github.com/sarumont/py-trello/commit/25c4e9a5fe94d438435554812499121ed8036f7e) &bull; add function create_label in card.py, which could create new label of the card by given name and color  
+[view](https://github.com/sarumont/py-trello/commit/6b818c66d62007aeb7df79439d96d58b7a6c6696) &bull; Fixed fetch_actions for individual cards.  
+[view](https://github.com/sarumont/py-trello/commit/3d373fe0a5108853674bc2e52164ffeb159555f3) &bull; Use UTC as default  
+[view](https://github.com/sarumont/py-trello/commit/e786d9a5dc0558f7af4b7813b8f77873eb641d74) &bull; Fix typo  
+[view](https://github.com/sarumont/py-trello/commit/a1b3b80110201d9e95f0e07e07ddc3424a18c867) &bull; Added little documentation for new users of py-trello  
+[view](https://github.com/sarumont/py-trello/commit/d9e3a5c4c939b3a26755dc7e48baed0834fee3a0) &bull; Regenerate the docs  
+[view](https://github.com/sarumont/py-trello/commit/192adbfda4e00b07cea748088f057fa2db1ce2ff) &bull; Add get_list() to TrelloClient  
+[view](https://github.com/sarumont/py-trello/commit/3d4a30f3789267ad4ef42caadc6ad291bfecb6c9) &bull; Handle dateLastActivity being empty  
+[view](https://github.com/sarumont/py-trello/commit/e30b4cc920e3ddf083918d0241dc79fa54be932d) &bull; Make card.fetch_actions() and list.fetch_actions() return the result  
+[view](https://github.com/sarumont/py-trello/commit/e8bc3c8705943f8f55ff7349270f0f690edfad76) &bull; Add/Remove member to card functions  
+[view](https://github.com/sarumont/py-trello/commit/a94a8134c340e755259b1908ddaebc1dcffc76cb) &bull; introduce Board.get_last_activity()  
+[view](https://github.com/sarumont/py-trello/commit/ba8787cff23cb87052256c8bfcd436164edcb12a) &bull; Remove out-of-date contributors list  
+[view](https://github.com/sarumont/py-trello/commit/6430753813344685fb44c95d861b12ce938f65d2) &bull; add AUTHORS file (closes #206)  
+[view](https://github.com/sarumont/py-trello/commit/ac82230fe532c715bebbe50f106d7166886ffde8) &bull; Add assignee to list.add_card  
+[view](https://github.com/sarumont/py-trello/commit/5c13756550943a594a23a491100eb42700049b48) &bull; Python 2 constructor style  
+[view](https://github.com/sarumont/py-trello/commit/7d8396bbbfcd5aa117a472d897fe515022254bea) &bull; Fix TrelloBase import path in attachments.py  
+[view](https://github.com/sarumont/py-trello/commit/ac9e3b9e3de0c5e12046aa485b31565f60e6d954) &bull; Fix Card.get_stats_by_list. In case a movement is from/to a list in other board, it is ignored  
+[view](https://github.com/sarumont/py-trello/commit/60af41bcab0a13fad2dda3d4d15e11fc0abb657f) &bull; Concentrated hash and eq inside TrelloBase to avoid repetition  
+[view](https://github.com/sarumont/py-trello/commit/46e468c6f1be34a9b2d3507239ebddfad7d7872a) &bull; - Added __hash__ and __eq__ for some more modules  
+[view](https://github.com/sarumont/py-trello/commit/41e07ef8612f1237ffee97399ea42730cf6125ea) &bull; Add util to __init__.py  
+[view](https://github.com/sarumont/py-trello/commit/736eecc8f76e622c167b23091757ea6b48e876ca) &bull; Refactoring import  
+[view](https://github.com/sarumont/py-trello/commit/f8990a2a1cd08832f975f5e02fb9136ec3207431) &bull; Add `Card.set_due_complete` and `Card.remove_due_complete`  
+[view](https://github.com/sarumont/py-trello/commit/a5fc4205c7e18c8665aab30d5bd67e9646b50a8c) &bull; Add `Card.is_due_complete`  
+[view](https://github.com/sarumont/py-trello/commit/8fc3c8cf91311b168293318110d6a5b220e6bcf1) &bull; Added a link to the documentation  
+[view](https://github.com/sarumont/py-trello/commit/7f226616dea82965d59d8e5933d3bd3da20ea7e4) &bull; Delete `Card.create_date` is deprecated  
+[view](https://github.com/sarumont/py-trello/commit/5f6e6c81c9207f6e666f933b1ae952d9983bc27e) &bull; close #187  
+[view](https://github.com/sarumont/py-trello/commit/3040ab1ef996a4623dc901a62934353a37a232b7) &bull; add new properrty - plugin_data to cover https://developers.trello.com/advanced-reference/card#get-1-cards-card-id-or-shortlink-pluginData  
+[view](https://github.com/sarumont/py-trello/commit/f172a49e06ae81db78bf6899057d2fe56d75dcd8) &bull; enhance trellolist list_cards  
+[view](https://github.com/sarumont/py-trello/commit/ce2b29115d2c4373f5648ae76f8cc0dc97df9cf6) &bull; Add attachements to the card if present in the response JSON  
+[view](https://github.com/sarumont/py-trello/commit/89331cf2e9132c367c414feb05607c3c295bbdfa) &bull; Add a way to know what id assigns Trello to a new attachment  
+[view](https://github.com/sarumont/py-trello/commit/a3efa16c8e89f4dc3dc211db2e1be02f641a70e3) &bull; Set name of the list  
+[view](https://github.com/sarumont/py-trello/commit/e4dc488374d8236caa03dcdd90355c4e5bbb28d7) &bull; card comment docstring param  
+[view](https://github.com/sarumont/py-trello/commit/ec81b804b2c55085c9ecb25ec5049958ff1e65a0) &bull; card set_name docstring  
+[view](https://github.com/sarumont/py-trello/commit/767b825cce01deba10ab2e068990d8ed9cab703b) &bull; card a bit of pep8 fixes  
+[view](https://github.com/sarumont/py-trello/commit/249f4fc7f31575ceaf4d0b2feea7bdf9536392fc) &bull; card from_json docstring return type  
+[view](https://github.com/sarumont/py-trello/commit/8382fe7dc789f8f610b2d1e4e313cbcdb858a777) &bull; card from_json method - parameter is named `parent`, but in docstring it was `trello_list`  
+[view](https://github.com/sarumont/py-trello/commit/086455fb77ea5e719d76e3901f248a77eb1e9677) &bull; card init - parameter is named `parent`, but in docstring it was `trello_list`  
+[view](https://github.com/sarumont/py-trello/commit/30c60b3378146106141de1fe8c4398ade8dbb53d) &bull; board get_members docstring  
+[view](https://github.com/sarumont/py-trello/commit/eef0d3f8e9925fcf23be08a4d4638276710c570f) &bull; boards fetch_actions pep8 fix  
+[view](https://github.com/sarumont/py-trello/commit/451bf8bea9bdfb488fc0c32476d44af0dd7f543e) &bull; add board fetch_actions docstring  
+[view](https://github.com/sarumont/py-trello/commit/72a889d5138c9d56cf49fa639f14806b9f8e9049) &bull; prep for 0.9.0 (fixes #184)  
+[view](https://github.com/sarumont/py-trello/commit/92637e1e5a5f490ef80012e64c7319ee38f65924) &bull; prep for 0.9.0  

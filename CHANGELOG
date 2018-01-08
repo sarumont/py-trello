@@ -245,3 +245,51 @@ New operations: add and remove member of a board
 New feature: move all list from a card to another list
 Add remove due datetime from a card
 Add the member type when calling board's get_members
+
+v0.10.0
+
+fix checklist item not sorted
+Third authentication: initialize TrelloClient correctly
+Add the option to choose the third authentication
+add function create_label in card.py, which could create new label of the card by given name and color
+Fixed fetch_actions for individual cards.
+Use UTC as default
+Fix typo
+Added little documentation for new users of py-trello
+Regenerate the docs
+Add get_list() to TrelloClient
+Handle dateLastActivity being empty
+Make card.fetch_actions() and list.fetch_actions() return the result
+Add/Remove member to card functions
+introduce Board.get_last_activity()
+Remove out-of-date contributors list
+add AUTHORS file (closes #206)
+Add assignee to list.add_card
+Python 2 constructor style
+Fix TrelloBase import path in attachments.py
+Fix Card.get_stats_by_list. In case a movement is from/to a list in other board, it is ignored
+Concentrated hash and eq inside TrelloBase to avoid repetition
+- Added __hash__ and __eq__ for some more modules
+Add util to __init__.py
+Refactoring import
+Add `Card.set_due_complete` and `Card.remove_due_complete`
+Add `Card.is_due_complete`
+Added a link to the documentation
+Delete `Card.create_date` is deprecated
+close #187
+add new properrty - plugin_data to cover https://developers.trello.com/advanced-reference/card#get-1-cards-card-id-or-shortlink-pluginData
+enhance trellolist list_cards
+Add attachements to the card if present in the response JSON
+Add a way to know what id assigns Trello to a new attachment
+Set name of the list
+card comment docstring param
+card set_name docstring
+card a bit of pep8 fixes
+card from_json docstring return type
+card from_json method - parameter is named `parent`, but in docstring it was `trello_list`
+card init - parameter is named `parent`, but in docstring it was `trello_list`
+board get_members docstring
+boards fetch_actions pep8 fix
+add board fetch_actions docstring
+prep for 0.9.0 (fixes #184)
+prep for 0.9.0
