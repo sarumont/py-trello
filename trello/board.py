@@ -218,6 +218,19 @@ class Board(TrelloBase):
 				post_args={'name': name, 'idBoard': self.id, 'color': color}, )
 		return Label.from_json(board=self, json_obj=obj)
 
+	def delete_label(self, label_id):
+		"""Delete a label from this board
+
+		:label_id: the ID of the label to delete.
+		:return: the label
+		:rtype: json
+		"""
+		json_obj = self.client.fetch_json(
+			    '/labels/{0}'.format(label_id),
+			    http_method='DELETE',
+		    	post_args={'id': label_id}, )
+		return json_obj
+
 	def all_cards(self):
 		"""Returns all cards on this board
 
