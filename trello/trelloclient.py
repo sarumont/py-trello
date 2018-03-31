@@ -353,3 +353,26 @@ class TrelloClient(object):
             results.append(org)
 
         return results
+
+    def list_stars():
+        """
+        Returns all boardStars for your Trello user
+
+        :return: a list of Python objects representing the Trello board stars.
+        :rtype: list of Board Stars
+
+        Each board has the following noteworthy attributes:
+            - id: the board star's identifier
+            - idBoard: ID of starred board
+            - pos: position of the board star
+        """
+        json_obj = self.fetch_json('/members/me/boards/boardStars')
+        return [Star.from_json(self, json_obj=obj) for obj in json_obj]
+
+    def add_star(self, ):
+
+        return "Add star"
+
+    def delete_star():
+
+        return "Delete star"
