@@ -11,6 +11,7 @@ from trello.member import Member
 from trello.webhook import WebHook
 from trello.exceptions import *
 from trello.label import Label
+from trello.star import Star
 
 try:
     # PyOpenSSL works around some issues in python ssl modules
@@ -354,7 +355,7 @@ class TrelloClient(object):
 
         return results
 
-    def list_stars():
+    def list_stars(self):
         """
         Returns all boardStars for your Trello user
 
@@ -366,13 +367,25 @@ class TrelloClient(object):
             - idBoard: ID of starred board
             - pos: position of the board star
         """
-        json_obj = self.fetch_json('/members/me/boards/boardStars')
-        return [Star.from_json(self, json_obj=obj) for obj in json_obj]
+        json_obj = self.fetch_json('/members/me/boardStars')
+        return [Star.from_json(json_obj=obj) for obj in json_obj]
 
-    def add_star(self, ):
+    def add_star(self, board_id, position = "bottom"):
+        """Create a star
+        :param board_iid: Id of the board to star
+        :param position: Optional position of the board star
+        :rtype: Star
+        """
+        post_args = {'idBoard': board_id, 'pos': position}
+        obj = self.fetch_json('members/me/boardStars', http_method='POST',
+                              post_args=post_args)
+        return Star.from_json(json_obj=obj)
 
-        return "Add star"
-
-    def delete_star():
-
-        return "Delete star"
+    def delete_star(self, star):
+        """Deletes a star
+        :param board_iid: Id of the board to star
+        :param position: Optional position of the board star
+        :rtype: Star
+        """
+        self.fetch_json(f'members/me/boardStars/{star.id}', http_method='DELETE')
+        return star
