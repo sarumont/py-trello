@@ -24,6 +24,7 @@ class List(TrelloBase):
         self.name = name
         self.closed = None
         self.pos = None
+        self.subscribed = None
 
     @classmethod
     def from_json(cls, board, json_obj):
@@ -36,6 +37,9 @@ class List(TrelloBase):
         list = List(board, json_obj['id'], name=json_obj['name'])
         list.closed = json_obj['closed']
         list.pos = json_obj['pos']
+		#this method is also called from board.py with a different json object, so we need to make sure 'subscribed' is there
+        if 'subscribed' in json_obj:
+            list.subscribed = json_obj['subscribed']
         return list
 
     def __repr__(self):
@@ -47,7 +51,8 @@ class List(TrelloBase):
         self.name = json_obj['name']
         self.closed = json_obj['closed']
         self.pos = json_obj['pos']
-
+        self.subscribed = json_obj['subscribed']
+		
     def list_cards(self, card_filter="open", actions=None):
         """Lists all cards in this list"""
         query_params = {}
@@ -156,6 +161,22 @@ class List(TrelloBase):
             post_args={'value': position, }, )
         self.pos = position
 
+    # Subscribe to this list
+    def subscribe(self):
+        self.client.fetch_json(
+        '/lists/' + self.id + '/subscribed',
+        http_method='PUT',
+            post_args={'value': 'true', }, )
+        self.subscribed = True	
+
+    # Unsubscribe from this list
+    def unsubscribe(self):
+        self.client.fetch_json(
+        '/lists/' + self.id + '/subscribed',
+        http_method='PUT',
+            post_args={'value': 'false', }, )
+        self.subscribed = False		
+	
     def cardsCnt(self):
         return len(self.list_cards())
 
