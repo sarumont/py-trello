@@ -37,7 +37,7 @@ class List(TrelloBase):
         list = List(board, json_obj['id'], name=json_obj['name'])
         list.closed = json_obj['closed']
         list.pos = json_obj['pos']
-		#this method is also called from board.py with a different json object, so we need to make sure 'subscribed' is there
+	#this method is also called from board.py with a different json object, so we need to make sure 'subscribed' is there
         if 'subscribed' in json_obj:
             list.subscribed = json_obj['subscribed']
         return list
