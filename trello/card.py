@@ -18,7 +18,7 @@ class Card(TrelloBase):
     """
     Class representing a Trello card. Card attributes are stored on
     the object
-    
+
     https://developers.trello.com/advanced-reference/card
     """
 
@@ -73,11 +73,8 @@ class Card(TrelloBase):
         """
         Lazily loads and returns the comments
         """
-        try:
-            if self._comments is None:
-                self._comments = self.fetch_comments()
-        except AttributeError:
-            self._comments = None
+        if self._comments is None:
+            self._comments = self.fetch_comments()
         return self._comments
 
     @property
@@ -85,11 +82,8 @@ class Card(TrelloBase):
         """
         Lazily loads and returns the checklists
         """
-        try:
-            if self._checklists is None:
-                self._checklists = self.fetch_checklists()
-        except AttributeError:
-            self._checklists = None
+        if self._checklists is None:
+            self._checklists = self.fetch_checklists()
         return self._checklists
 
     @property
@@ -97,11 +91,8 @@ class Card(TrelloBase):
         """
         Lazily loads and returns the plugin data
         """
-        try:
-            if self._plugin_data is None:
-                self._plugin_data = self.fetch_plugin_data()
-        except AttributeError:
-            self._plugin_data = None
+        if self._plugin_data is None:
+            self._plugin_data = self.fetch_plugin_data()
         return self._plugin_data
 
     @property
@@ -109,11 +100,8 @@ class Card(TrelloBase):
         """
         Lazily loads and returns the attachments
         """
-        try:
-            if self._attachments is None:
-                self._attachments = self.fetch_attachments()
-        except AttributeError:
-            self._attachments = None
+        if self._attachments is None:
+            self._attachments = self.fetch_attachments()
         return self._attachments
 
     def __init__(self, parent, card_id, name=''):
@@ -131,6 +119,11 @@ class Card(TrelloBase):
         self.client = parent.client
         self.id = card_id
         self.name = name
+
+        self._checklists = None
+        self._comments = None
+        self._plugin_data = None
+        self._attachments = None
 
     @classmethod
     def from_json(cls, parent, json_obj):
@@ -525,14 +518,14 @@ class Card(TrelloBase):
 
     def set_due_complete(self):
         """Set due complete
-        
+
         :return: None
         """
         self._set_due_complete(True)
 
     def remove_due_complete(self):
         """Remove due complete
-        
+
         :return: None
         """
         self._set_due_complete(False)
@@ -717,7 +710,7 @@ class Card(TrelloBase):
 
     def _set_due_complete(self, is_complete):
         """Set due is complete or not complete
-        
+
         https://developers.trello.com/advanced-reference/card#put-1-cards-card-id-or-shortlink-dueComplete
         :param is_complete: boolean
         :return: None
