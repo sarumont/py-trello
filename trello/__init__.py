@@ -7,6 +7,7 @@ from trello.exceptions import *
 from trello.label import *
 from trello.member import *
 from trello.organization import *
+from trello.star import*
 from trello.trelloclient import *
 from trello.trellolist import *
 from trello.webhook import *
