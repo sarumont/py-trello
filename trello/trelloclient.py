@@ -27,7 +27,7 @@ except:
 class TrelloClient(object):
     """ Base class for Trello API access """
 
-    def __init__(self, api_key, api_secret=None, token=None, token_secret=None):
+    def __init__(self, api_key, api_secret=None, token=None, token_secret=None, http_service=requests):
         """
         Constructor
 
@@ -50,6 +50,7 @@ class TrelloClient(object):
         self.api_secret = api_secret
         self.resource_owner_key = token
         self.resource_owner_secret = token_secret
+        self.http_service = http_service
 
     def info_for_all_boards(self, actions):
         """
@@ -214,7 +215,7 @@ class TrelloClient(object):
             query_params['token'] = self.api_secret
 
         # perform the HTTP requests, if possible uses OAuth authentication
-        response = requests.request(http_method, url, params=query_params,
+        response = self.http_service.request(http_method, url, params=query_params,
                                     headers=headers, data=data,
                                     auth=self.oauth, files=files)
 
@@ -267,7 +268,7 @@ class TrelloClient(object):
         data = {'callbackURL': callback_url, 'idModel': id_model,
                 'description': desc}
 
-        response = requests.post(url, data=data, auth=self.oauth)
+        response = self.http_service.post(url, data=data, auth=self.oauth)
 
         if response.status_code == 200:
             hook_id = response.json()['id']

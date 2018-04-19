@@ -55,6 +55,19 @@ class Member(TrelloBase):
             query_params={'filter': ",".join(filters)})
         return sorted(notifications, key=lambda notification: notification['date'])
 
+    def get_boards(self, list_filter):
+        """Get boards using filter
+
+        :rtype: list of Board
+        """
+        from trello.board import Board
+        from trello.organization import Organization
+        json_obj = self.client.fetch_json(
+            '/members/' + self.id + '/boards',
+            query_params={'lists': 'none', 'filter': list_filter})
+        organizations = {obj['idOrganization']: self.client.get_organization(obj['idOrganization']) for obj in json_obj if obj['idOrganization']}
+        return [Board.from_json(trello_client=self.client, organization=organizations.get(obj['idOrganization']), json_obj=obj) for obj in json_obj]
+
     @classmethod
     def from_json(cls, trello_client, json_obj):
         """

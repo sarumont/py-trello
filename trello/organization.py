@@ -74,3 +74,19 @@ class Organization(TrelloBase):
             query_params={'filter': 'all',
                           'fields': 'id,fullName,username,initials'})
         return [Member.from_json(trello_client=self.client, json_obj=obj) for obj in json_obj]
+
+    def add_member(self, member, member_type="normal"):
+        json_obj = self.client.fetch_json(
+                '/organizations/{0}/members/{1}'.format(self.id, member.id),
+                http_method='PUT',
+                post_args={'idMember': member.id, "type": member_type},
+        )
+        return json_obj
+
+    def remove_member(self, member):
+        json_obj = self.client.fetch_json(
+                '/organizations/{0}/members/{1}'.format(self.id, member.id),
+                http_method='DELETE',
+                post_args={'idMember': member.id},
+        )
+        return json_obj
