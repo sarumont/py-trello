@@ -100,6 +100,13 @@ class Board(TrelloBase):
 				post_args={'value': desc})
 		self.description = desc
 
+	def set_organization(self, desc):
+		self.client.fetch_json(
+				'/boards/{board_id}/idOrganization'.format(board_id=self.id),
+				http_method='PUT',
+				post_args={'value': desc})
+		self.description = desc
+
 	def close(self):
 		self.client.fetch_json(
 				'/boards/' + self.id + '/closed',
