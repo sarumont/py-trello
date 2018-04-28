@@ -12,6 +12,7 @@ from trello.checklist import Checklist
 from trello.compat import force_str
 from trello.label import Label
 from trello.organization import Organization
+from trello.customfield import CustomField
 
 
 class Card(TrelloBase):
@@ -153,6 +154,7 @@ class Card(TrelloBase):
         card.idBoard = json_obj['idBoard']
         card.idList = json_obj['idList']
         card.idShort = json_obj['idShort']
+        card.customFields = CustomField.from_json_list(card, json_obj['customFieldItems'])
         card.labels = Label.from_json_list(card.board, json_obj['labels'])
         card.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
         if "attachments" in json_obj:
@@ -174,7 +176,7 @@ class Card(TrelloBase):
         """
         json_obj = self.client.fetch_json(
             '/cards/' + self.id,
-            query_params={'badges': False})
+            query_params={'badges': False, 'customFieldItems': 'true'})
         self.id = json_obj['id']
         self.name = json_obj['name']
         self.desc = json_obj.get('desc', '')
@@ -186,6 +188,7 @@ class Card(TrelloBase):
         self.idList = json_obj['idList']
         self.idBoard = json_obj['idBoard']
         self.idLabels = json_obj['idLabels']
+        self.customFields = CustomField.from_json_list(self, json_obj['customFieldItems'])
         self.labels = Label.from_json_list(self.board, json_obj['labels'])
         self.badges = json_obj['badges']
         self.pos = json_obj['pos']

@@ -8,6 +8,7 @@ from trello.compat import force_str
 from trello.trellolist import List
 from trello.label import Label
 from trello.checklist import Checklist
+from trello.customfield import CustomFieldDefinition
 from dateutil import parser as dateparser
 
 
@@ -38,6 +39,7 @@ class Board(TrelloBase):
 		self.id = board_id
 		self.name = name
 		self.date_last_activity = self.get_last_activity()
+		self.customFieldDefinitions = None
 
 	@classmethod
 	def from_json(cls, trello_client=None, organization=None, json_obj=None):
@@ -75,6 +77,7 @@ class Board(TrelloBase):
 		self.description = json_obj.get('desc', '')
 		self.closed = json_obj['closed']
 		self.url = json_obj['url']
+		self.customFieldDefinitions = None
 
 	# Saves a Trello Board
 	def save(self):
@@ -167,6 +170,16 @@ class Board(TrelloBase):
 		:rtype: list of List
 		"""
 		return self.get_lists(list_filter=list_filter)
+
+	def get_custom_field_definitions(self):
+		"""Get all custom field definitions for this board
+
+		:rtype: list of CustomFieldDefinition
+		"""
+		if self.customFieldDefinitions is None:
+			json_obj = self.client.fetch_json('/boards/' + self.id + '/customFields')
+			self.customFieldDefinitions = CustomFieldDefinition.from_json_list(self, json_obj)
+		return self.customFieldDefinitions
 
 	def get_labels(self, fields='all', limit=50):
 		"""Get label

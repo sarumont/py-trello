@@ -60,6 +60,7 @@ class List(TrelloBase):
             query_params['filter'] = card_filter
         if actions:
             query_params['actions'] = actions
+        query_params['customFieldItems'] = 'true'
         json_obj = self.client.fetch_json('/lists/' + self.id + '/cards',
                                           query_params=query_params)
         return [Card.from_json(self, c) for c in json_obj]
