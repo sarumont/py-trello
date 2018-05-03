@@ -12,7 +12,7 @@ from trello.checklist import Checklist
 from trello.compat import force_str
 from trello.label import Label
 from trello.organization import Organization
-from trello.customfield import CustomField
+from trello.customfield import CustomField, CustomFieldText, CustomFieldCheckbox, CustomFieldNumber, CustomFieldDate, CustomFieldList
 
 
 class Card(TrelloBase):
@@ -736,5 +736,28 @@ class Card(TrelloBase):
             files=files,
             post_args=kwargs)
 
+    def get_custom_field_by_name(self, cf_name):
+        """
+        Returns existing custom field by name or creates a new one.
+        """
+        for cf in self.customFields:
+            if cf.name == cf_name:
+                return cf
+
+        cf_class = None
+        cf_def_id = None
+        for definition in self.board.get_custom_field_definitions():
+            if definition.name == cf_name:
+                cf_def_id = definition.id
+                cf_class = {
+                    'checkbox': CustomFieldCheckbox,
+                    'date': CustomFieldDate,
+                    'list': CustomFieldList,
+                    'number': CustomFieldNumber,
+                    'text': CustomFieldText,
+                }.get(definition.field_type)
+        if cf_class is None:
+            raise ValueError('Unknown custom field name specified ({})'.format(cf_name))
+        return cf_class(self, 'unknown', cf_def_id, '')
 
 from trello.trellolist import List
