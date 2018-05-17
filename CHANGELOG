@@ -293,3 +293,18 @@ boards fetch_actions pep8 fix
 add board fetch_actions docstring
 prep for 0.9.0 (fixes #184)
 prep for 0.9.0
+
+v0.11.0
+
+Add basic support for custom fields
+Add set_organization method to Board object to work with organizations
+commit check
+Fix lazy loading in Card
+Inject request
+Add get_boards method to Member object with organization support
+Update trellolist.py
+Added support to get subscription status for lists as well as subscribe/unsubscribe from lists
+List, add, and delete stars.
+add remove_member and add_member methods to Organization object
+untested star implementation
+Adds method to delete label from board
