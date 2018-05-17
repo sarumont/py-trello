@@ -388,5 +388,5 @@ class TrelloClient(object):
         :param position: Optional position of the board star
         :rtype: Star
         """
-        self.fetch_json(f'members/me/boardStars/{star.id}', http_method='DELETE')
+        self.fetch_json('members/me/boardStars/{}'.format(star.id), http_method='DELETE')
         return star
