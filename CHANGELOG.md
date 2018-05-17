@@ -294,3 +294,19 @@
 [view](https://github.com/sarumont/py-trello/commit/451bf8bea9bdfb488fc0c32476d44af0dd7f543e) &bull; add board fetch_actions docstring  
 [view](https://github.com/sarumont/py-trello/commit/72a889d5138c9d56cf49fa639f14806b9f8e9049) &bull; prep for 0.9.0 (fixes #184)  
 [view](https://github.com/sarumont/py-trello/commit/92637e1e5a5f490ef80012e64c7319ee38f65924) &bull; prep for 0.9.0  
+
+
+**0.11.0**
+
+[view](https://github.com/sarumont/py-trello/commit/f6021e79f2cb986cd2150bf23829d99ae6ecf361) &bull; Add basic support for custom fields  
+[view](https://github.com/sarumont/py-trello/commit/2ba36c399635eec07fd0284a0b49a153146254dd) &bull; Add set_organization method to Board object to work with organizations  
+[view](https://github.com/sarumont/py-trello/commit/1e3b313c0d964988438e616217ceddb68f72f986) &bull; commit check  
+[view](https://github.com/sarumont/py-trello/commit/47834a2a0b5efa0e4b3ef23f6e311d5ae009fca5) &bull; Fix lazy loading in Card  
+[view](https://github.com/sarumont/py-trello/commit/551e923d41b1952f3a88e51573c07cc21c6490ea) &bull; Inject request  
+[view](https://github.com/sarumont/py-trello/commit/df1b2903464456f732710187c1c1634e269cd547) &bull; Add get_boards method to Member object with organization support  
+[view](https://github.com/sarumont/py-trello/commit/2e1d93945f35301cfb2639cebe1d231ac3417cb2) &bull; Update trellolist.py  
+[view](https://github.com/sarumont/py-trello/commit/1a6b0e54689585e198dd6aa864dc8c70e9b44fd3) &bull; Added support to get subscription status for lists as well as subscribe/unsubscribe from lists  
+[view](https://github.com/sarumont/py-trello/commit/1699057ccddbc9f7261912beec05fd945453b72d) &bull; List, add, and delete stars.  
+[view](https://github.com/sarumont/py-trello/commit/006e7ab0b66c13f8f104de165fa3b96b7c01105b) &bull; add remove_member and add_member methods to Organization object  
+[view](https://github.com/sarumont/py-trello/commit/f9ceb4ee6e6000c67427d1f5b837571c36728bbf) &bull; untested star implementation  
+[view](https://github.com/sarumont/py-trello/commit/64a1de3863f6ecd3b0bada26b0f69c21bbb70cac) &bull; Adds method to delete label from board  
