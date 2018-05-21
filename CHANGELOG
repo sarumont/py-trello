@@ -308,3 +308,7 @@ List, add, and delete stars.
 add remove_member and add_member methods to Organization object
 untested star implementation
 Adds method to delete label from board
+
+v0.11.1
+
+Delete star string format hotfix for python 2.7 compatability

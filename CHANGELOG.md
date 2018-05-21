@@ -310,3 +310,8 @@
 [view](https://github.com/sarumont/py-trello/commit/006e7ab0b66c13f8f104de165fa3b96b7c01105b) &bull; add remove_member and add_member methods to Organization object  
 [view](https://github.com/sarumont/py-trello/commit/f9ceb4ee6e6000c67427d1f5b837571c36728bbf) &bull; untested star implementation  
 [view](https://github.com/sarumont/py-trello/commit/64a1de3863f6ecd3b0bada26b0f69c21bbb70cac) &bull; Adds method to delete label from board  
+
+
+**0.11.1**
+
+[view](https://github.com/sarumont/py-trello/commit/b2c25e6e94842ab761d2ac0918a9acb061e4bf1c) &bull; Delete star string format hotfix for python 2.7 compatability  
