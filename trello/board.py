@@ -251,36 +251,39 @@ class Board(TrelloBase):
 		    	post_args={'id': label_id}, )
 		return json_obj
 
-	def all_cards(self):
+	def all_cards(self, custom_field_items='true'):
 		"""Returns all cards on this board
 
 		:rtype: list of Card
 		"""
 		filters = {
 			'filter': 'all',
-			'fields': 'all'
+			'fields': 'all',
+			'customFieldItems': custom_field_items
 		}
 		return self.get_cards(filters)
 
-	def open_cards(self):
+	def open_cards(self, custom_field_items='true'):
 		"""Returns all open cards on this board
 
 		:rtype: list of Card
 		"""
 		filters = {
 			'filter': 'open',
-			'fields': 'all'
+			'fields': 'all',
+			'customFieldItems': custom_field_items
 		}
 		return self.get_cards(filters)
 
-	def closed_cards(self):
+	def closed_cards(self, custom_field_items='true'):
 		"""Returns all closed cards on this board
 
 		:rtype: list of Card
 		"""
 		filters = {
 			'filter': 'closed',
-			'fields': 'all'
+			'fields': 'all',
+			'customFieldItems': custom_field_items
 		}
 		return self.get_cards(filters)
 
