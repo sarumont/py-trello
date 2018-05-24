@@ -312,3 +312,7 @@ Adds method to delete label from board
 v0.11.1
 
 Delete star string format hotfix for python 2.7 compatability
+
+v0.11.2
+
+Fixes Issue #247 KeyError: 'customFieldItems'
