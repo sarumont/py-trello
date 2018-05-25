@@ -316,3 +316,7 @@ Delete star string format hotfix for python 2.7 compatability
 v0.11.2
 
 Fixes Issue #247 KeyError: 'customFieldItems'
+
+v0.11.3
+
+Modifies Cards.from_json to not require customFieldItems

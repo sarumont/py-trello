@@ -314,6 +314,7 @@
 
 **0.11.1**
 
+
 [view](https://github.com/sarumont/py-trello/commit/b2c25e6e94842ab761d2ac0918a9acb061e4bf1c) &bull; Delete star string format hotfix for python 2.7 compatability  
 
 
@@ -321,3 +322,9 @@
 
 
 [view](https://github.com/sarumont/py-trello/commit/6f0ea3ec9d3e10c83dac5f40505ebea32bc32191) &bull; Fixes Issue #247 KeyError: 'customFieldItems'  
+
+
+**0.11.3**
+
+
+[view](https://github.com/sarumont/py-trello/commit/6135d523ec2e76fdf202577cac4776c8cdc901ab) &bull; Modifies Cards.from_json to not require customFieldItems  
