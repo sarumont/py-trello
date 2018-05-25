@@ -154,7 +154,8 @@ class Card(TrelloBase):
         card.idBoard = json_obj['idBoard']
         card.idList = json_obj['idList']
         card.idShort = json_obj['idShort']
-        card.customFields = CustomField.from_json_list(card, json_obj['customFieldItems'])
+        card.customFields = CustomField.from_json_list(
+            card, json_obj.get('customFieldItems', {}))
         card.labels = Label.from_json_list(card.board, json_obj['labels'])
         card.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
         if "attachments" in json_obj:
