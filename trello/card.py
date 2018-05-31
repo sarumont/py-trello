@@ -70,6 +70,15 @@ class Card(TrelloBase):
         return None
 
     @property
+    def customFields(self):
+        """
+        Lazily loads and returns the custom fields
+        """
+        if self._customFields is None:
+            self._customFields = self.fetch_custom_fields()
+        return self._customFields
+
+    @property
     def comments(self):
         """
         Lazily loads and returns the comments
@@ -121,6 +130,7 @@ class Card(TrelloBase):
         self.id = card_id
         self.name = name
 
+        self._customFields = None
         self._checklists = None
         self._comments = None
         self._plugin_data = None
@@ -154,8 +164,7 @@ class Card(TrelloBase):
         card.idBoard = json_obj['idBoard']
         card.idList = json_obj['idList']
         card.idShort = json_obj['idShort']
-        card.customFields = CustomField.from_json_list(
-            card, json_obj.get('customFieldItems', {}))
+        card.customFields = card.fetch_custom_fields(json_obj=json_obj)
         card.labels = Label.from_json_list(card.board, json_obj['labels'])
         card.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
         if "attachments" in json_obj:
@@ -189,7 +198,6 @@ class Card(TrelloBase):
         self.idList = json_obj['idList']
         self.idBoard = json_obj['idBoard']
         self.idLabels = json_obj['idLabels']
-        self.customFields = CustomField.from_json_list(self, json_obj['customFieldItems'])
         self.labels = Label.from_json_list(self.board, json_obj['labels'])
         self.badges = json_obj['badges']
         self.pos = json_obj['pos']
@@ -200,10 +208,22 @@ class Card(TrelloBase):
         self.checked = json_obj['checkItemStates']
         self.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
 
+        self._customFields = self.fetch_custom_fields(json_obj=json_obj)
         self._plugin_data = self.fetch_plugin_data() if eager else None
         self._checklists = self.fetch_checklists() if eager else None
         self._comments = self.fetch_comments() if eager else None
         self._attachments = self.fetch_attachments() if eager else None
+
+    def fetch_custom_fields(self, json_obj=None):
+        """
+        Fetch current set of custom fields from card or json_obj.
+        """
+        if json_obj is None:
+            json_obj = self.client.fetch_json(
+                '/cards/' + self.id,
+                query_params={'badges': False, 'customFieldItems': 'true'})
+        return CustomField.from_json_list(
+            self, json_obj.get('customFieldItems', {}))
 
     def fetch_comments(self, force=False, limit=None):
         comments = []
