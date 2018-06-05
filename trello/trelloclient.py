@@ -19,6 +19,7 @@ try:
     # It is not a hard requirement, so it's not listed in requirements.txt
     # More info https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning
     import urllib3.contrib.pyopenssl
+
     urllib3.contrib.pyopenssl.inject_into_urllib3()
 except:
     pass
@@ -122,7 +123,8 @@ class TrelloClient(object):
         obj = self.fetch_json('/boards/' + board_id)
         return Board.from_json(self, json_obj=obj)
 
-    def add_board(self, board_name, source_board=None, organization_id=None, permission_level='private'):
+    def add_board(self, board_name, source_board=None, organization_id=None, permission_level='private',
+                  default_lists=True):
         """Create board
         :param board_name: Name of the board to create
         :param source_board: Optional Board to copy
@@ -134,6 +136,8 @@ class TrelloClient(object):
             post_args['idBoardSource'] = source_board.id
         if organization_id is not None:
             post_args['idOrganization'] = organization_id
+        if not default_lists:
+            post_args['defaultLists'] = False
 
         obj = self.fetch_json('/boards', http_method='POST',
                               post_args=post_args)
@@ -216,8 +220,8 @@ class TrelloClient(object):
 
         # perform the HTTP requests, if possible uses OAuth authentication
         response = self.http_service.request(http_method, url, params=query_params,
-                                    headers=headers, data=data,
-                                    auth=self.oauth, files=files)
+                                             headers=headers, data=data,
+                                             auth=self.oauth, files=files)
 
         if response.status_code == 401:
             raise Unauthorized("%s at %s" % (response.text, url), response)
@@ -371,7 +375,7 @@ class TrelloClient(object):
         json_obj = self.fetch_json('/members/me/boardStars')
         return [Star.from_json(json_obj=obj) for obj in json_obj]
 
-    def add_star(self, board_id, position = "bottom"):
+    def add_star(self, board_id, position="bottom"):
         """Create a star
         :param board_iid: Id of the board to star
         :param position: Optional position of the board star
