@@ -2,6 +2,7 @@
 from __future__ import with_statement, print_function, absolute_import
 
 import datetime
+from operator import itemgetter
 
 import pytz
 from dateutil import parser as dateparser
@@ -70,13 +71,13 @@ class Card(TrelloBase):
         return None
 
     @property
-    def customFields(self):
+    def custom_fields(self):
         """
         Lazily loads and returns the custom fields
         """
-        if self._customFields is None:
-            self._customFields = self.fetch_custom_fields()
-        return self._customFields
+        if self.customFields is None:
+            self.customFields = self.fetch_custom_fields()
+        return self.customFields
 
     @property
     def comments(self):
@@ -429,14 +430,7 @@ class Card(TrelloBase):
             # Changes in card are ordered to get the dates in order
             last_list = None
 
-            def change_cmp(change1, change2):
-                if change1["datetime"] < change2["datetime"]:
-                    return -1
-                if change1["datetime"] > change2["datetime"]:
-                    return 1
-                return 0
-
-            ordered_changes = sorted(changes, cmp=change_cmp)
+            ordered_changes = sorted(changes, key=itemgetter("datetime"))
             # For each arrival to a list, its datetime will be used to compute
             # the time this card is in that destination list
             for change in ordered_changes:
