@@ -52,22 +52,10 @@ class Card(TrelloBase):
     def date_last_activity(self):
         return self.dateLastActivity
 
-    @description.setter
-    def description(self, value):
-        self.desc = value
-
     @property
-    def idLabels(self):
-        return self.label_ids
-
-    @idLabels.setter
-    def idLabels(self, values):
-        self.label_ids = values
-
-    @property
-    def list_labels(self):
-        if self.labels:
-            return self.labels
+    def labels(self):
+        if self._labels:
+            return self._labels
         return None
 
     @property
@@ -131,11 +119,12 @@ class Card(TrelloBase):
         self.id = card_id
         self.name = name
 
-        self._customFields = None
+        self.customFields = None
         self._checklists = None
         self._comments = None
         self._plugin_data = None
         self._attachments = None
+        self._labels = None
 
     @classmethod
     def from_json(cls, parent, json_obj):
@@ -166,7 +155,7 @@ class Card(TrelloBase):
         card.idList = json_obj['idList']
         card.idShort = json_obj['idShort']
         card.customFields = card.fetch_custom_fields(json_obj=json_obj)
-        card.labels = Label.from_json_list(card.board, json_obj['labels'])
+        card._labels = Label.from_json_list(card.board, json_obj['labels'])
         card.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
         if "attachments" in json_obj:
             card._attachments = []
