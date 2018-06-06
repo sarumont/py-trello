@@ -2,6 +2,7 @@
 from __future__ import with_statement, print_function, absolute_import
 
 import datetime
+from operator import itemgetter
 
 import pytz
 from dateutil import parser as dateparser
@@ -51,32 +52,20 @@ class Card(TrelloBase):
     def date_last_activity(self):
         return self.dateLastActivity
 
-    @description.setter
-    def description(self, value):
-        self.desc = value
-
     @property
-    def idLabels(self):
-        return self.label_ids
-
-    @idLabels.setter
-    def idLabels(self, values):
-        self.label_ids = values
-
-    @property
-    def list_labels(self):
-        if self.labels:
-            return self.labels
+    def labels(self):
+        if self._labels:
+            return self._labels
         return None
 
     @property
-    def customFields(self):
+    def custom_fields(self):
         """
         Lazily loads and returns the custom fields
         """
-        if self._customFields is None:
-            self._customFields = self.fetch_custom_fields()
-        return self._customFields
+        if self.customFields is None:
+            self.customFields = self.fetch_custom_fields()
+        return self.customFields
 
     @property
     def comments(self):
@@ -130,11 +119,12 @@ class Card(TrelloBase):
         self.id = card_id
         self.name = name
 
-        self._customFields = None
+        self.customFields = None
         self._checklists = None
         self._comments = None
         self._plugin_data = None
         self._attachments = None
+        self._labels = None
 
     @classmethod
     def from_json(cls, parent, json_obj):
@@ -165,7 +155,7 @@ class Card(TrelloBase):
         card.idList = json_obj['idList']
         card.idShort = json_obj['idShort']
         card.customFields = card.fetch_custom_fields(json_obj=json_obj)
-        card.labels = Label.from_json_list(card.board, json_obj['labels'])
+        card._labels = Label.from_json_list(card.board, json_obj['labels'])
         card.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
         if "attachments" in json_obj:
             card._attachments = []
@@ -429,14 +419,7 @@ class Card(TrelloBase):
             # Changes in card are ordered to get the dates in order
             last_list = None
 
-            def change_cmp(change1, change2):
-                if change1["datetime"] < change2["datetime"]:
-                    return -1
-                if change1["datetime"] > change2["datetime"]:
-                    return 1
-                return 0
-
-            ordered_changes = sorted(changes, cmp=change_cmp)
+            ordered_changes = sorted(changes, key=itemgetter("datetime"))
             # For each arrival to a list, its datetime will be used to compute
             # the time this card is in that destination list
             for change in ordered_changes:
