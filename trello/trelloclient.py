@@ -281,7 +281,7 @@ class TrelloClient(object):
             return False
 
     def search(self, query, partial_match=False, models=[],
-               board_ids=[], org_ids=[], card_ids=[]):
+               board_ids=[], org_ids=[], card_ids=[], cards_limit=10):
         """
         Search trello given a query string.
 
@@ -294,6 +294,7 @@ class TrelloClient(object):
         :param list board_ids: Comma-separated list of boards to limit search
         :param org_ids: Comma-separated list of organizations to limit search
         :param card_ids: Comma-separated list of cards to limit search
+        :param cards_limit: The maximum number of cards to return (up to 1000)
 
         :return: All objects matching the search criterial.  These can
             be Cards, Boards, Organizations, and Members.  The attributes
@@ -319,6 +320,7 @@ class TrelloClient(object):
             query_params['idOrganizations'] = org_ids
         if card_ids:
             query_params['idCards'] = card_ids
+        query_params['cards_limit'] = cards_limit
 
         # Request result fields required to instantiate class objects
         query_params['board_fields'] = ['name,url,desc,closed']
