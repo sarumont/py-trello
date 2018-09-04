@@ -95,6 +95,8 @@ To run the tests, run ``python -m unittest discover``. Four environment variable
 * ``TRELLO_TEST_BOARD_COUNT``: the number of boards in your Trello account
 * ``TRELLO_TEST_BOARD_NAME``: name of the board to test card manipulation on. Must be unique, or the first match will be used
 
+*WARNING*: The tests will delete all cards on the board called `TRELLO_TEST_BOARD_NAME`!
+
 To run tests across various Python versions,
 `tox <https://tox.readthedocs.io/en/latest/>`_ is supported. Install it
 and simply run ``tox`` from the ``py-trello`` directory.
