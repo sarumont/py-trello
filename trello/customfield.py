@@ -2,8 +2,13 @@
 from __future__ import with_statement, print_function, absolute_import
 
 import time
+import sys
 from trello import TrelloBase
 from trello.compat import force_str
+
+is_python3 = sys.version_info.major == 3
+if is_python3:
+	unicode = str
 
 
 class CustomFieldDefinition(TrelloBase):
