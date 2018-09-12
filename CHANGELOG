@@ -320,3 +320,14 @@ Fixes Issue #247 KeyError: 'customFieldItems'
 v0.11.3
 
 Modifies Cards.from_json to not require customFieldItems
+
+v0.12.0
+
+Add check and fix for python3 unicode assertion
+Add warning that running tests will delete cards
+trelloclient: allow to customize cards_limit
+more card API consistency
+fixed customFields on cards
+added default_lists as parameter to add_board
+Add lazy loading for card.customFields
+Add function for accessing new/existing custom fields of a card by name

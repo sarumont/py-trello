@@ -328,3 +328,16 @@
 
 
 [view](https://github.com/sarumont/py-trello/commit/6135d523ec2e76fdf202577cac4776c8cdc901ab) &bull; Modifies Cards.from_json to not require customFieldItems  
+
+
+**0.12.0**
+
+
+[view](https://github.com/sarumont/py-trello/commit/aae3317efe5a146088246cd1db6cc81b8a91fcae) &bull; Add check and fix for python3 unicode assertion  
+[view](https://github.com/sarumont/py-trello/commit/4335327b6c32b6fab26c5ccd4332617367404060) &bull; Add warning that running tests will delete cards  
+[view](https://github.com/sarumont/py-trello/commit/2ae76752c56bfd252f57a33e088e5fe5d3baa024) &bull; trelloclient: allow to customize cards_limit  
+[view](https://github.com/sarumont/py-trello/commit/e6361cf691ebaf1ffbdcd5bf759714c5736a0ca6) &bull; more card API consistency  
+[view](https://github.com/sarumont/py-trello/commit/9887c1bc2e9a23ba4a4a4a63c9d448573a2d9530) &bull; fixed customFields on cards  
+[view](https://github.com/sarumont/py-trello/commit/758d133032bdb9b3d703058fb448dca2fd8592a5) &bull; added default_lists as parameter to add_board  
+[view](https://github.com/sarumont/py-trello/commit/11d2d0881da14f8ef36ae217f2d80c777d01738f) &bull; Add lazy loading for card.customFields  
+[view](https://github.com/sarumont/py-trello/commit/9cc1d5d8cafb3ccb7aae5e418d76e8bc8ab80756) &bull; Add function for accessing new/existing custom fields of a card by name  
