@@ -188,7 +188,7 @@ class Card(TrelloBase):
         self.idList = json_obj['idList']
         self.idBoard = json_obj['idBoard']
         self.idLabels = json_obj['idLabels']
-        self.labels = Label.from_json_list(self.board, json_obj['labels'])
+        self._labels = Label.from_json_list(self.board, json_obj['labels'])
         self.badges = json_obj['badges']
         self.pos = json_obj['pos']
         if json_obj.get('due', ''):
