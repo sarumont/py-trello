@@ -53,9 +53,9 @@ class List(TrelloBase):
         self.pos = json_obj['pos']
         self.subscribed = json_obj['subscribed']
 		
-    def list_cards(self, card_filter="open", actions=None):
+    def list_cards(self, card_filter="open", actions=None, query={}):
         """Lists all cards in this list"""
-        query_params = {}
+        query_params = query
         if card_filter:
             query_params['filter'] = card_filter
         if actions:
