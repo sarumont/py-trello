@@ -341,3 +341,10 @@
 [view](https://github.com/sarumont/py-trello/commit/758d133032bdb9b3d703058fb448dca2fd8592a5) &bull; added default_lists as parameter to add_board  
 [view](https://github.com/sarumont/py-trello/commit/11d2d0881da14f8ef36ae217f2d80c777d01738f) &bull; Add lazy loading for card.customFields  
 [view](https://github.com/sarumont/py-trello/commit/9cc1d5d8cafb3ccb7aae5e418d76e8bc8ab80756) &bull; Add function for accessing new/existing custom fields of a card by name  
+
+
+**0.13.0**
+
+
+[view](https://github.com/sarumont/py-trello/commit/b025d0f2e02da6c4e299642776ad9b9615df190a) &bull; Add ability to pass custom query parameters to get_cards  
+[view](https://github.com/sarumont/py-trello/commit/8e2737e6998fc523476e036484fdc0ee7e4c830f) &bull; fix #256 can't set attribute errror  

@@ -331,3 +331,8 @@ fixed customFields on cards
 added default_lists as parameter to add_board
 Add lazy loading for card.customFields
 Add function for accessing new/existing custom fields of a card by name
+
+v0.13.0
+
+Add ability to pass custom query parameters to get_cards
+fix #256 can't set attribute errror
