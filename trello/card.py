@@ -125,6 +125,7 @@ class Card(TrelloBase):
         self._plugin_data = None
         self._attachments = None
         self._labels = None
+        self._json_obj = None
 
     @classmethod
     def from_json(cls, parent, json_obj):
@@ -141,6 +142,7 @@ class Card(TrelloBase):
         card = cls(parent,
                    json_obj['id'],
                    name=json_obj['name'])
+        card._json_obj = json_obj
         card.desc = json_obj.get('desc', '')
         card.due = json_obj.get('due', '')
         card.is_due_complete = json_obj['dueComplete']
