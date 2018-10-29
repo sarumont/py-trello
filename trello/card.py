@@ -466,6 +466,8 @@ class Card(TrelloBase):
     def latestCardMove_date(self):
         """Returns the date of the last card transition"""
         self.fetch_actions('updateCard:idList')
+        if self.actions is None or len(self.actions) == 0:
+            return None
         date_str = self.actions[0]['date']
         return dateparser.parse(date_str)
 
