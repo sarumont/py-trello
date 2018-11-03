@@ -523,7 +523,7 @@ class Card(TrelloBase):
 
         :due: a datetime object
         """
-        datestr = due.strftime('%Y-%m-%dT%H:%M:%S')
+        datestr = due.isoformat()
         self._set_remote_attribute('due', datestr)
         self.due = datestr
 
