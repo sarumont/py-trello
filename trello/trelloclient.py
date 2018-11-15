@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
 import json
+import logging
 import requests
 from requests_oauthlib import OAuth1
 from trello.board import Board
@@ -52,6 +53,17 @@ class TrelloClient(object):
         self.resource_owner_key = token
         self.resource_owner_secret = token_secret
         self.http_service = http_service
+
+        self.setup_session()
+
+    def setup_session(self):
+        self.session = self.http_service.Session()
+        self.session.auth = self.oauth
+        self.session.params = {
+            'key': self.api_key,
+            'token': self.api_secret,
+        }
+        self.session.headers = {'Accept': 'application/json'}
 
     def info_for_all_boards(self, actions):
         """
@@ -200,33 +212,29 @@ class TrelloClient(object):
 
         # if files specified, we don't want any data
         data = None
-        if files is None:
+        if files is None and post_args:
             data = json.dumps(post_args)
 
         # set content type and accept headers to handle JSON
         if http_method in ("POST", "PUT", "DELETE") and not files:
             headers['Content-Type'] = 'application/json; charset=utf-8'
 
-        headers['Accept'] = 'application/json'
-
         # construct the full URL without query parameters
         if uri_path[0] == '/':
             uri_path = uri_path[1:]
         url = 'https://api.trello.com/1/%s' % uri_path
 
-        if self.oauth is None:
-            query_params['key'] = self.api_key
-            query_params['token'] = self.api_secret
-
         # perform the HTTP requests, if possible uses OAuth authentication
-        response = self.http_service.request(http_method, url, params=query_params,
-                                             headers=headers, data=data,
-                                             auth=self.oauth, files=files)
+        response = self.session.request(http_method, url, params=query_params,
+                                        headers=headers, data=data,
+                                        auth=self.oauth, files=files)
 
         if response.status_code == 401:
             raise Unauthorized("%s at %s" % (response.text, url), response)
-        if response.status_code != 200:
+        elif response.status_code != 200:
             raise ResourceUnavailable("%s at %s" % (response.text, url), response)
+        else:
+            response.raise_for_status()
 
         return response.json()
 
@@ -272,7 +280,7 @@ class TrelloClient(object):
         data = {'callbackURL': callback_url, 'idModel': id_model,
                 'description': desc}
 
-        response = self.http_service.post(url, data=data, auth=self.oauth)
+        response = self.session.post(url, data=data, auth=self.oauth)
 
         if response.status_code == 200:
             hook_id = response.json()['id']
