@@ -348,3 +348,11 @@
 
 [view](https://github.com/sarumont/py-trello/commit/b025d0f2e02da6c4e299642776ad9b9615df190a) &bull; Add ability to pass custom query parameters to get_cards  
 [view](https://github.com/sarumont/py-trello/commit/8e2737e6998fc523476e036484fdc0ee7e4c830f) &bull; fix #256 can't set attribute errror  
+
+
+**0.14.0**
+
+
+[view](https://github.com/sarumont/py-trello/commit/a1b637bd15bacdcd7f82eda92b06efd02f470234) &bull; Fix timezone problem with tz aware datetime  
+[view](https://github.com/sarumont/py-trello/commit/0313157aaa72482b2f0e64d0e93f22dc5fc63432) &bull; null/empty check for actions (closes #266)  
+[view](https://github.com/sarumont/py-trello/commit/b88cabca401af72e5ad6573ec98f77462d6f1aff) &bull; provide access to the raw card json  

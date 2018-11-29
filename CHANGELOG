@@ -336,3 +336,9 @@ v0.13.0
 
 Add ability to pass custom query parameters to get_cards
 fix #256 can't set attribute errror
+
+v0.14.0
+
+Fix timezone problem with tz aware datetime
+null/empty check for actions (closes #266)
+provide access to the raw card json
