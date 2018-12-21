@@ -342,7 +342,7 @@ class Card(TrelloBase):
 
     def listCardMove_date(self):
         """Will return the history of transitions of a card from one list to
-        another. The lower the index the more resent the historical item.
+        another. The lower the index the more recent the historical item.
 
         It returns a list of lists. The sublists are triplets of
         starting list, ending list and when the transition occurred.
@@ -351,10 +351,10 @@ class Card(TrelloBase):
 
     def list_movements(self, list_cmp=None, filter_by_date_interval=None):
         """Will return the history of transitions of a card from one list to
-        another. The lower the index the more resent the historical item.
+        another. The lower the index the more recent the historical item.
 
         It returns a list of dicts in date and time descending order (the
-        first movement is the earliest).
+        first movement is the most recent).
         Dicts are of the form source:
         <listobj> destination: <listobj> datetime: <datetimeobj>
 
