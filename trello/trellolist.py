@@ -52,7 +52,7 @@ class List(TrelloBase):
         self.closed = json_obj['closed']
         self.pos = json_obj['pos']
         self.subscribed = json_obj['subscribed']
-		
+
     def list_cards(self, card_filter="open", actions=None, query={}):
         """Lists all cards in this list"""
         query_params = query
@@ -64,6 +64,28 @@ class List(TrelloBase):
         json_obj = self.client.fetch_json('/lists/' + self.id + '/cards',
                                           query_params=query_params)
         return [Card.from_json(self, c) for c in json_obj]
+
+    def list_cards_iter(self, card_filter="open", actions=None, query={}, limit=None, batch=300):
+        """see https://trello.com/c/8MJOLSCs/10-limit-actions-for-cards-requests"""
+        query = query
+        before = None
+        total = 0
+        while True:
+            query['limit'] = batch
+            if before:
+                query['before'] = before
+            cards = self.list_cards(card_filter=card_filter, actions=actions, query=query)
+            n = len(cards)
+            if n == 0:
+                break
+            if limit:
+                cards = cards[:limit-total]
+            for c in cards:
+                yield c
+            total += n
+            before = '%x' % min([int(c.id, 16) for c in cards])
+            if limit and limit <= total:
+                break
 
     def add_card(self, name, desc=None, labels=None, due="null", source=None, position=None, assign=None):
         """Add a card to this list
