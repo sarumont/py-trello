@@ -96,7 +96,7 @@ class List(TrelloBase):
         :due: due date for the card
         :source: card ID from which to clone from
         :position: position of the card in the list. Must be "top", "bottom" or a positive number.
-        :keep_from_source: used with source parameter. Can be "attachments", "checklists", "comments", "due", "labels", "members", "stickers" or "all".
+        :keep_from_source: can be used with source parameter. Can be "attachments", "checklists", "comments", "due", "labels", "members", "stickers" or "all".
         :return: the card
         """
         labels_str = ""
