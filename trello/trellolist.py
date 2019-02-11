@@ -87,7 +87,7 @@ class List(TrelloBase):
             if limit and limit <= total:
                 break
 
-    def add_card(self, name, desc=None, labels=None, due="null", source=None, position=None, assign=None):
+    def add_card(self, name, desc=None, labels=None, due="null", source=None, position=None, assign=None, keep_from_source="all"):
         """Add a card to this list
 
         :name: name for the card
@@ -96,6 +96,7 @@ class List(TrelloBase):
         :due: due date for the card
         :source: card ID from which to clone from
         :position: position of the card in the list. Must be "top", "bottom" or a positive number.
+        :keep_from_source: can be used with source parameter. Can be "attachments", "checklists", "comments", "due", "labels", "members", "stickers" or "all".
         :return: the card
         """
         labels_str = ""
@@ -116,6 +117,7 @@ class List(TrelloBase):
             'due': due,
             'idMembers': members_str[:-1],
             'idCardSource': source,
+            'keepFromSource': keep_from_source if source else None,
         }
         if position is not None:
             post_args["pos"] = position
