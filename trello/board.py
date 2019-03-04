@@ -38,7 +38,7 @@ class Board(TrelloBase):
 			self.client = organization.client
 		self.id = board_id
 		self.name = name
-		self.date_last_activity = self.get_last_activity()
+		self._date_last_activity = None
 		self.customFieldDefinitions = None
 
 	@classmethod
@@ -422,6 +422,12 @@ class Board(TrelloBase):
 
 		self.actions = json_obj
 		return self.actions
+
+	@property
+	def date_last_activity(self):
+		if self._date_last_activity is None:
+			self._date_last_activity = self.get_last_activity()
+		return self._date_last_activity
 
 	def get_last_activity(self):
 		"""Return the date of the last action done on the board.
