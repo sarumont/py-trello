@@ -156,6 +156,7 @@ class Card(TrelloBase):
         card.idBoard = json_obj['idBoard']
         card.idList = json_obj['idList']
         card.idShort = json_obj['idShort']
+        card.badges = json_obj['badges']
         card.customFields = card.fetch_custom_fields(json_obj=json_obj)
         card._labels = Label.from_json_list(card.board, json_obj['labels'])
         card.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
