@@ -356,3 +356,18 @@
 [view](https://github.com/sarumont/py-trello/commit/a1b637bd15bacdcd7f82eda92b06efd02f470234) &bull; Fix timezone problem with tz aware datetime  
 [view](https://github.com/sarumont/py-trello/commit/0313157aaa72482b2f0e64d0e93f22dc5fc63432) &bull; null/empty check for actions (closes #266)  
 [view](https://github.com/sarumont/py-trello/commit/b88cabca401af72e5ad6573ec98f77462d6f1aff) &bull; provide access to the raw card json  
+
+
+**0.15.0**
+
+
+[view](https://github.com/sarumont/py-trello/commit/f0303805d292e5ed6cb803fa3c1634338c35dbf7) &bull; Add set_custom_field to card.py  
+[view](https://github.com/sarumont/py-trello/commit/6a57526bfa73a1b46495571fe14e8bc12cb6245e) &bull; Allow proxy usage  
+[view](https://github.com/sarumont/py-trello/commit/0ddd4bb79a3486775df6c8b32b5c2a480b7d068e) &bull; Fix card.badges unset for cards created by from_json()  
+[view](https://github.com/sarumont/py-trello/commit/6b39e3d1cc2df69f139e8de3085efd66351b89db) &bull; fixed KeyError / missing subscribed key in Trello lists  
+[view](https://github.com/sarumont/py-trello/commit/266bce5bcf4ff2c1864a029450186a9c8f6c94ea) &bull; Add documentation blurb about TRELLO_TEST_STAR_COUNT to README.rst  
+[view](https://github.com/sarumont/py-trello/commit/630f5f7154b8282f23d967ec1f3cf0fa6c92b358) &bull; Lazy load property trello.Board.date_last_activity, using property _date_last_activity  
+[view](https://github.com/sarumont/py-trello/commit/dd990f36381f4455d9107a68ab7b2379de21a852) &bull; fix typo  
+[view](https://github.com/sarumont/py-trello/commit/b14b770d8a22aec49818c4e07277f77ee1254b82) &bull; add keep_from_source to add_card in trelloList  
+[view](https://github.com/sarumont/py-trello/commit/0ffe8f22fba43e2d63a34a53b81948726deebd52) &bull; add list_cards_iter  
+[view](https://github.com/sarumont/py-trello/commit/aa31d1e63ce7567ddea8372ae5dc9bbafd43a15a) &bull; Clean list_movement docstrings  
