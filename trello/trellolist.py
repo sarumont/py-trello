@@ -66,9 +66,9 @@ class List(TrelloBase):
                                           query_params=query_params)
         return [Card.from_json(self, c) for c in json_obj]
 
-    def list_cards_iter(self, card_filter="open", actions=None, query={}, limit=None, batch=300):
+    def list_cards_iter(self, card_filter="open", actions=None, query=None, limit=None, batch=300):
         """see https://trello.com/c/8MJOLSCs/10-limit-actions-for-cards-requests"""
-        query = query
+        query = {} if query is None else query
         before = None
         total = 0
         while True:
