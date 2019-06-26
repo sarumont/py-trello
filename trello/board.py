@@ -287,6 +287,18 @@ class Board(TrelloBase):
 		}
 		return self.get_cards(filters)
 
+	def visible_cards(self, custom_field_items='true'):
+		"""Returns all visible cards on this board
+
+		:rtype: list of Card
+		"""
+		filters = {
+			'filter': 'visible',
+			'fields': 'all',
+			'customFieldItems': custom_field_items
+		}
+		return self.get_cards(filters)
+
 	def get_cards(self, filters=None, card_filter=""):
 		"""
 		:filters: dict containing query parameters. Eg. {'fields': 'all'}
