@@ -62,6 +62,7 @@ class TrelloBoardTestCase(unittest.TestCase):
         self.assertIsInstance(self._board.all_cards(), list)
         self.assertIsInstance(self._board.open_cards(), list)
         self.assertIsInstance(self._board.closed_cards(), list)
+        self.assertIsInstance(self._board.visible_cards(), list)
 
     def test_fetch_action_limit(self):
         card = self._add_card('For action limit testing')
