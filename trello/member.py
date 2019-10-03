@@ -31,6 +31,7 @@ class Member(TrelloBase):
         self.username = json_obj['username']
         self.full_name = json_obj['fullName']
         self.initials = json_obj['initials']
+        self.email = json_obj['email']
         return self
 
     def fetch_comments(self):
