@@ -38,7 +38,7 @@ class Board(TrelloBase):
 			self.client = organization.client
 		self.id = board_id
 		self.name = name
-		self.date_last_activity = self.get_last_activity()
+		self._date_last_activity = None
 		self.customFieldDefinitions = None
 
 	@classmethod
@@ -287,6 +287,18 @@ class Board(TrelloBase):
 		}
 		return self.get_cards(filters)
 
+	def visible_cards(self, custom_field_items='true'):
+		"""Returns all visible cards on this board
+
+		:rtype: list of Card
+		"""
+		filters = {
+			'filter': 'visible',
+			'fields': 'all',
+			'customFieldItems': custom_field_items
+		}
+		return self.get_cards(filters)
+
 	def get_cards(self, filters=None, card_filter=""):
 		"""
 		:filters: dict containing query parameters. Eg. {'fields': 'all'}
@@ -422,6 +434,12 @@ class Board(TrelloBase):
 
 		self.actions = json_obj
 		return self.actions
+
+	@property
+	def date_last_activity(self):
+		if self._date_last_activity is None:
+			self._date_last_activity = self.get_last_activity()
+		return self._date_last_activity
 
 	def get_last_activity(self):
 		"""Return the date of the last action done on the board.

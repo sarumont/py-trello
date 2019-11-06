@@ -156,6 +156,7 @@ class Card(TrelloBase):
         card.idBoard = json_obj['idBoard']
         card.idList = json_obj['idList']
         card.idShort = json_obj['idShort']
+        card.badges = json_obj['badges']
         card.customFields = card.fetch_custom_fields(json_obj=json_obj)
         card._labels = Label.from_json_list(card.board, json_obj['labels'])
         card.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
@@ -557,6 +558,26 @@ class Card(TrelloBase):
         """
         self._set_remote_attribute('pos', pos)
         self.pos = pos
+        
+    def set_custom_field(self, value, custom_field):
+        """Update card custom field
+        
+        Arguments:
+            value {[str, int, date, bool]} -- Value depending on the type of custom_field
+            custom_field {custom field object} -- Custom Field Object (board.get_custom_field_definitions()[0])
+
+        """
+        if custom_field.field_type in ['text', 'number', 'date', 'checked']: 
+            post_args = {'value': {str(custom_field.field_type): value}}
+        else: 
+            list_field_id = [
+                x for x, y in custom_field.list_options.items() if y == value][0]
+            post_args = {'idValue': list_field_id}
+
+        self.client.fetch_json(
+            '/card/' + self.id + '/customField/' + custom_field.id + '/item',
+            http_method='PUT',
+            post_args=post_args)
 
     def set_closed(self, closed):
         self._set_remote_attribute('closed', closed)

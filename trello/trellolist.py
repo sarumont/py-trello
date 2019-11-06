@@ -51,7 +51,8 @@ class List(TrelloBase):
         self.name = json_obj['name']
         self.closed = json_obj['closed']
         self.pos = json_obj['pos']
-        self.subscribed = json_obj['subscribed']
+        if 'subscribed' in json_obj:
+            self.subscribed = json_obj['subscribed']
 
     def list_cards(self, card_filter="open", actions=None, query={}):
         """Lists all cards in this list"""

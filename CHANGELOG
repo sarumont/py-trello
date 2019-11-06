@@ -342,3 +342,16 @@ v0.14.0
 Fix timezone problem with tz aware datetime
 null/empty check for actions (closes #266)
 provide access to the raw card json
+
+v0.15.0
+
+Add set_custom_field to card.py
+Allow proxy usage
+Fix card.badges unset for cards created by from_json()
+fixed KeyError / missing subscribed key in Trello lists
+Add documentation blurb about TRELLO_TEST_STAR_COUNT to README.rst
+Lazy load property trello.Board.date_last_activity, using property _date_last_activity
+fix typo
+add keep_from_source to add_card in trelloList
+add list_cards_iter
+Clean list_movement docstrings
