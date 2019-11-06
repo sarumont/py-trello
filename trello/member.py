@@ -24,7 +24,7 @@ class Member(TrelloBase):
         json_obj = self.client.fetch_json(
             '/members/' + self.id,
             query_params={'badges': False})
-        self.email = json_obj['email']
+        self.email = json_obj.get('email')
         self.status = json_obj['status']
         self.id = json_obj.get('id', '')
         self.bio = json_obj.get('bio', '')
