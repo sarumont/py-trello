@@ -11,3 +11,5 @@ dist
 .tox/
 .DS_Store
 example
+venv
+.env

@@ -78,7 +78,7 @@ Run
 
 ::
 
-    python ./trello/util.py
+    python -m trello oauth
 
 Required Python modules
 =======================
