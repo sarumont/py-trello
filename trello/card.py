@@ -222,7 +222,7 @@ class Card(TrelloBase):
         comments = []
 
         if (force is True) or (self.badges['comments'] > 0):
-            query_params = {'filter': 'commentCard'}
+            query_params = {'filter': 'commentCard,copyCommentCard'}
             if limit is not None:
                 query_params['limit'] = limit
             comments = self.client.fetch_json(
