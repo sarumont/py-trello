@@ -371,3 +371,13 @@
 [view](https://github.com/sarumont/py-trello/commit/b14b770d8a22aec49818c4e07277f77ee1254b82) &bull; add keep_from_source to add_card in trelloList  
 [view](https://github.com/sarumont/py-trello/commit/0ffe8f22fba43e2d63a34a53b81948726deebd52) &bull; add list_cards_iter  
 [view](https://github.com/sarumont/py-trello/commit/aa31d1e63ce7567ddea8372ae5dc9bbafd43a15a) &bull; Clean list_movement docstrings  
+
+
+**0.16.0**
+
+
+[view](https://github.com/sarumont/py-trello/commit/e6574fd28f4f6f1feb09948689e37052afb6f526) &bull; Add missing header and footer  
+[view](https://github.com/sarumont/py-trello/commit/c591a97c87d3e8c52622c53433a6437d08f64693) &bull; Add __main__.py for creating OAuth token  
+[view](https://github.com/sarumont/py-trello/commit/c94290425085c3cd2d6a26be28afec2c5d7c35b3) &bull; Fetch comments from copied cards  
+[view](https://github.com/sarumont/py-trello/commit/5a73dc4df93d977ab00854ecd622fe393764b388) &bull; Adding custom field items when getting single card  
+[view](https://github.com/sarumont/py-trello/commit/96cf17a91829ecef91ae772166338c2eb0707d91) &bull; add method for get all visible cards  

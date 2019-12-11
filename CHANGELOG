@@ -355,3 +355,11 @@ fix typo
 add keep_from_source to add_card in trelloList
 add list_cards_iter
 Clean list_movement docstrings
+
+v0.16.0
+
+Add missing header and footer
+Add __main__.py for creating OAuth token
+Fetch comments from copied cards
+Adding custom field items when getting single card
+add method for get all visible cards
