@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
+import re
 import json
 import requests
+import time
 from requests_oauthlib import OAuth1
 from trello.board import Board
 from trello.card import Card
@@ -27,6 +29,8 @@ except:
 
 class TrelloClient(object):
     """ Base class for Trello API access """
+
+    _last_response = None
 
     def __init__(self, api_key, api_secret=None, token=None, token_secret=None, http_service=requests, proxies={}):
         """
@@ -220,17 +224,86 @@ class TrelloClient(object):
             query_params['token'] = self.api_secret
 
         # perform the HTTP requests, if possible uses OAuth authentication
-        response = self.http_service.request(http_method, url, params=query_params,
-                                             headers=headers, data=data,
-                                             auth=self.oauth, files=files,
-                                             proxies=self.proxies)
+        url_no_params = url.split('?')[0].strip('/')
 
-        if response.status_code == 401:
-            raise Unauthorized("%s at %s" % (response.text, url), response)
-        if response.status_code != 200:
-            raise ResourceUnavailable("%s at %s" % (response.text, url), response)
+        # https://developers.trello.com/docs/rate-limits
+        is_special_request = re.match('.*/members/[a-z0-9A-Z_]*$', url_no_params) or \
+            url_no_params.endswith('/members') or \
+            url_no_params.endswith('/membersSearch') or \
+            url_no_params.endswith('/search')
 
+        if self.should_rate_wait(special=is_special_request):
+            secs = self.get_rate_wait_secs(special=is_special_request)
+            print('Trello waiting {} secs because of rate limit'.format(secs))
+            time.sleep(secs)
+
+        max_retries = 5
+        retries = 0
+        while 1:
+            retries += 1
+
+            response = self.http_service.request(http_method, url, params=query_params,
+                                                 headers=headers, data=data,
+                                                 auth=self.oauth, files=files,
+                                                 proxies=self.proxies)
+
+            if response.status_code == 401:
+                raise Unauthorized("%s at %s" % (response.text, url), response)
+            elif response.status_code == 429 and retries < max_retries:
+                # Rate limited
+                print("Trello Rate limited and", response.headers)
+                secs = self.get_rate_wait_secs(special=is_special_request)
+                print("Trello wait {} for retry".format(secs))
+                time.sleep(secs)
+                # continue while loop
+            elif response.status_code != 200:
+                raise ResourceUnavailable("%s at %s" % (response.text, url), response)
+            else:
+                break
+
+        self._last_response = response
         return response.json()
+
+    def should_rate_wait(self, special=False):
+        left = self.get_rate_left(special=special)
+        print ("\nleft:",left)
+        return left < 5
+
+    def get_rate_left(self, special=False):
+        """ How many more hits until we get rate limited """
+        stats = self.get_rate_limits()
+        left = min(stats.get('API-KEY-REMAINING'), stats.get('API-TOKEN-REMAINING'), stats.get('API-KEY-REMAINING'))
+        if special:
+            left = min(left, stats.get('MEMBER-REMAINING'))
+        return left
+
+    def get_rate_wait_secs(self, special=False):
+        """ How long to wait if rate limit is hit """
+        stats = self.get_rate_limits()
+        ms = max(stats.get('API-KEY-INTERVAL-MS'), stats.get('API-TOKEN-INTERVAL-MS'))
+        if special:
+            ms = min(ms, stats.get('MEMBER-INTERVAL-MS'))
+        # divide in half because the interval is a moving window
+        return float(ms) / 1000 / 2
+
+    def get_rate_limits(self):
+        stats = {
+            'API-KEY-INTERVAL-MS': 10000,
+            'API-KEY-MAX': 300,
+            'API-KEY-REMAINING': 300,
+            'API-TOKEN-INTERVAL-MS': 10000,
+            'API-TOKEN-MAX': 100,
+            'API-TOKEN-REMAINING': 100,
+            'MEMBER-INTERVAL-MS': 10000,
+            'MEMBER-MAX': 200,
+            'MEMBER-REMAINING': 200,
+        }
+
+        if self._last_response and self._last_response.headers:
+            for prop, default in stats.items():
+                stats[prop] = int(self._last_response.headers.get('X-RATE-LIMIT-%s' % prop, default))
+
+        return stats
 
     def list_hooks(self, token=None):
         """
@@ -398,3 +471,87 @@ class TrelloClient(object):
         """
         self.fetch_json('members/me/boardStars/{}'.format(star.id), http_method='DELETE')
         return star
+
+    def get_powerup_info(self, powerup_id):
+        # don't hit this API with oauth
+        oauth = self.oauth
+        self.oauth = None
+        r = self.fetch_json('plugins/%s/' % powerup_id)
+        self.oauth = oauth
+        return r
+
+    def get_compliance_member_privacy(self, powerup_id, since='1900-01-01 00:00:00Z', limit=1000):
+        """
+        https://developers.trello.com/docs/personal-data-storage
+
+        The following for event types are returned from the compliance polling route: accountDeleted,
+        tokenRevoked, tokenExpired, and accountUpdated. As a developer, you should take specific actions in your systems based on the event types. Below we'll outline the purpose of the event and the action we expect you to take.
+
+        [accountDeleted]
+        A Trello user's account has been deleted and should be forgotten.
+        Within a timely manner, you should remove all personal data you have stored for this user.
+
+        [accountUpdated]
+        A Trello user has updated their member profile.
+        Within a timely manner, you should ask the Trello API for updated information and delete any old data or data you no longer have access to.
+
+        [tokenRevoked]
+        A Trello user has revoked access to their data via Trello's API.
+        Within a timely manner, you should remove all personal data you have stored for this user.
+
+        [tokenExpired]
+        The API token you had for a user has expired.
+        You should ask the user to grant access again. If you are not granted access again in a timely manner, you should delete the personal data stored for that user.
+
+        e.g. results:
+        [
+          {
+            "id": "5bce1f1xxx3738bf4",
+            "date": "2018-11-11T21:19:57.671Z",
+            "event": "accountDeleted"
+          },
+          {
+            "id": "5be53xxxe19961",
+            "date": "2018-11-11T21:21:00.795Z",
+            "event": "accountDeleted"
+          },
+          {
+            "id": "5b575b2xxx743e8e04",
+            "date": "2019-04-04T21:48:36.811Z",
+            "event": "tokenRevoked",
+            "identifier": "Server Token"
+          },
+          {
+            "id": "5b575bxxx43e8e04",
+            "date": "2019-04-05T02:03:32.520Z",
+            "event": "accountUpdated",
+            "alteredFields": ["bio"]
+          },
+          {
+            "id": "5b57xxx8e04",
+            "date": "2019-04-06T10:48:36.111Z",
+            "event": "tokenExpired",
+            "identifier": "Person's App"
+          }
+        ]
+        """
+
+        all_results = []
+        while 1:
+            q = dict(
+                limit=limit,
+                since=since,
+                secret=self.api_secret,
+            )
+            results = self.http_service.request('GET', 'https://api.trello.com/1/plugins/%s/compliance/memberPrivacy' % powerup_id, params=q).json()
+            all_results += results
+
+            if len(results) < limit:
+                break
+            else:
+                next_date = results[-1]['date']
+                # go ahead one millisecond because 'since' is >= instead of >
+                next_date = '%s%sZ' % (next_date[0:-2], int(next_date[-2]) + 1)
+                since = next_date
+
+        return all_results
