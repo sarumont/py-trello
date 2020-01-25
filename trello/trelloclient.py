@@ -474,10 +474,10 @@ class TrelloClient(object):
 
     def get_powerup_info(self, powerup_id):
         # don't hit this API with oauth
-        oauth = self.oauth
-        self.oauth = None
+        # oauth = self.oauth
+        # self.oauth = None
         r = self.fetch_json('plugins/%s/' % powerup_id)
-        self.oauth = oauth
+        # self.oauth = oauth
         return r
 
     def get_compliance_member_privacy(self, powerup_id, since='1900-01-01 00:00:00Z', limit=1000):
