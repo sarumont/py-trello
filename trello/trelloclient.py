@@ -266,7 +266,7 @@ class TrelloClient(object):
 
     def should_rate_wait(self, special=False):
         left = self.get_rate_left(special=special)
-        print ("\nleft:",left)
+        # print ("\nleft:",left)
         return left < 5
 
     def get_rate_left(self, special=False):
