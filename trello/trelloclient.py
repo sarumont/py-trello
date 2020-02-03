@@ -480,7 +480,7 @@ class TrelloClient(object):
         # self.oauth = oauth
         return r
 
-    def get_compliance_member_privacy(self, powerup_id, since='1900-01-01 00:00:00Z', limit=1000):
+    def get_compliance_member_privacy(self, powerup_id, since=None, limit=1000):
         """
         https://developers.trello.com/docs/personal-data-storage
 
@@ -535,6 +535,8 @@ class TrelloClient(object):
           }
         ]
         """
+
+        since = since or '1900-01-01 00:00:00Z'
 
         all_results = []
         while 1:
