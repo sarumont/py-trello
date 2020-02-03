@@ -545,6 +545,7 @@ class TrelloClient(object):
                 since=since,
                 secret=self.api_secret,
             )
+            print("Trello.get_compliance_member_privacy:", q)
             results = self.http_service.request('GET', 'https://api.trello.com/1/plugins/%s/compliance/memberPrivacy' % powerup_id, params=q).json()
             all_results += results
 
