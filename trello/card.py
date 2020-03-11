@@ -158,6 +158,7 @@ class Card(TrelloBase):
         card.idShort = json_obj['idShort']
         card.badges = json_obj['badges']
         card.customFields = card.fetch_custom_fields(json_obj=json_obj)
+        card.countCheckItems = json_obj['badges']['checkItems']
         card._labels = Label.from_json_list(card.board, json_obj['labels'])
         card.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
         if "attachments" in json_obj:
@@ -243,6 +244,8 @@ class Card(TrelloBase):
 
     def fetch_checklists(self):
 
+        if card.
+        
         if not hasattr(self, "checked") or self.checked is None:
             self.fetch(eager=False)
 
