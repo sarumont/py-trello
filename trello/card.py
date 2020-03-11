@@ -204,8 +204,7 @@ class Card(TrelloBase):
 
         self._customFields = self.fetch_custom_fields(json_obj=json_obj)
         self._plugin_data = self.fetch_plugin_data() if eager else None
-        self._checklists = self.
-        sts() if eager else None
+        self._checklists = self.fetch_checklists() if eager else None
         self._comments = self.fetch_comments() if eager else None
         self._attachments = self.fetch_attachments() if eager else None
 
