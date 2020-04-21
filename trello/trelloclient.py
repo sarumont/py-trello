@@ -232,6 +232,12 @@ class TrelloClient(object):
             url_no_params.endswith('/membersSearch') or \
             url_no_params.endswith('/search')
 
+        # print("---\n[Trello API Request]")
+        # print("url:", url)
+        # print("query_params:", query_params)
+        # print("headers:", headers)
+        # print("data:", data)
+
         if self.should_rate_wait(special=is_special_request):
             secs = self.get_rate_wait_secs(special=is_special_request)
             print('Trello waiting {} secs because of rate limit'.format(secs))
@@ -545,7 +551,7 @@ class TrelloClient(object):
                 since=since,
                 secret=self.api_secret,
             )
-            print("Trello.get_compliance_member_privacy:", q)
+
             results = self.http_service.request('GET', 'https://api.trello.com/1/plugins/%s/compliance/memberPrivacy' % powerup_id, params=q).json()
             all_results += results
 
