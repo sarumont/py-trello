@@ -181,6 +181,42 @@ class Board(TrelloBase):
 			self.customFieldDefinitions = CustomFieldDefinition.from_json_list(self, json_obj)
 		return self.customFieldDefinitions
 
+	def add_custom_field_definition(self, name, type, options=None, display_on_card=None, pos=None):
+		"""Add a custom field definition to this board
+
+		:name: name for the field
+		:type: type of field: "checkbox", "list", "number", "text", "date"
+		:options: list of options for field, only valid for "list" type
+		:display_on_card: boolean whether this field should be shown on the front of cards 
+		:pos: position of the list: "bottom", "top" or a positive number
+		:return: the custom_field_definition
+		:rtype: CustomFieldDefinition
+		"""
+		arguments = {'idModel': self.id, "modelType": "board", 'name': name, 'type': type}
+		if options:
+			arguments["options"] = options
+		if display_on_card:
+			arguments["display_cardFront"] = display_on_card
+		if pos:
+			arguments["pos"] = pos
+		obj = self.client.fetch_json(
+				'/customFields',
+				http_method='POST',
+				post_args=arguments, )
+		return CustomFieldDefinition.from_json(board=self, json_obj=obj)
+
+	def delete_custom_field_definition(self, custom_field_definition_id):
+		"""Delete a custom_field_definition from this board
+
+		:custom_field_definition_id: the ID of the CustomFieldDefinition to delete.
+		:return: the custom field definition
+		:rtype: json
+		"""
+		json_obj = self.client.fetch_json(
+			    '/customFields/{0}'.format(custom_field_definition_id),
+			    http_method='DELETE', )
+		return json_obj
+
 	def get_labels(self, fields='all', limit=50):
 		"""Get label
 
