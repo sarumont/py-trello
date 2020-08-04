@@ -363,3 +363,13 @@ Add __main__.py for creating OAuth token
 Fetch comments from copied cards
 Adding custom field items when getting single card
 add method for get all visible cards
+
+v0.17.0
+
+Allow set_custom_field to accept an empty value
+add functions to add and delete custom field definitions from board
+setup.py: Add GitHub URL
+Update card.py
+Update card.py
+Update card.py
+Make consecutive calls work with default query arg
