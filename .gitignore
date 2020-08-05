@@ -12,4 +12,5 @@ dist
 .DS_Store
 example
 venv
-.env
+.env*
+.tags

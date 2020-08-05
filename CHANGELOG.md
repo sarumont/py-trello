@@ -393,3 +393,9 @@
 [view](https://github.com/sarumont/py-trello/commit/f38734d622ba01680da0f2bdc541198be16f6639) &bull; Update card.py  
 [view](https://github.com/sarumont/py-trello/commit/8f047ae62bc14ba44c058536292583d9f7b8dde3) &bull; Update card.py  
 [view](https://github.com/sarumont/py-trello/commit/005438e0e3e11dab379ef9f0fa3a7aed540125f8) &bull; Make consecutive calls work with default query arg  
+
+
+**0.17.1**
+
+
+[view](https://github.com/sarumont/py-trello/commit/bd23d383be371f11d0aa45125ea256a99094d4d6) &bull; Removes the unused try statement that broke the last version  

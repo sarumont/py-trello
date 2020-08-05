@@ -373,3 +373,7 @@ Update card.py
 Update card.py
 Update card.py
 Make consecutive calls work with default query arg
+
+v0.17.1
+
+Removes the unused try statement that broke the last version
