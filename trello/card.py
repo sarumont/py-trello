@@ -583,6 +583,8 @@ class Card(TrelloBase):
                 try:
                     list_field_id = [
                         x for x, y in custom_field.list_options.items() if y == value][0]
+                except:
+                    pass
             post_args = {'idValue': list_field_id}
 
         self.client.fetch_json(
