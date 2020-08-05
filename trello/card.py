@@ -580,9 +580,8 @@ class Card(TrelloBase):
             if value == "":
                 list_field_id = ""
             else:
-                try:
-                    list_field_id = [
-                        x for x, y in custom_field.list_options.items() if y == value][0]
+                list_field_id = [
+                    x for x, y in custom_field.list_options.items() if y == value][0]
             post_args = {'idValue': list_field_id}
 
         self.client.fetch_json(
