@@ -68,9 +68,9 @@ class Board(TrelloBase):
 		return board
 
 	def __repr__(self):
-		return force_str(f'<Board (name: {self.name}] [id: {self.id})'
-						+ ' (last_acitity: {self._date_last_activity})'
-						  ' (client: {self.client})')
+		return force_str(f'<Board (name: {self.name}) (id: {self.id})'
+						+ f' (last_acitity: {self._date_last_activity})'
+						  f' (client: {self.client}) >')
 
 	def fetch(self):
 		"""Fetch all attributes for this board"""
