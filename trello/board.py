@@ -68,7 +68,9 @@ class Board(TrelloBase):
 		return board
 
 	def __repr__(self):
-		return force_str(u'<Board %s>' % self.name)
+		return force_str(f'<Board (name: {self.name}) (id: {self.id})'
+						+ f' (last_acitity: {self._date_last_activity})'
+						  f' (client: {self.client}) >')
 
 	def fetch(self):
 		"""Fetch all attributes for this board"""
@@ -187,7 +189,7 @@ class Board(TrelloBase):
 		:name: name for the field
 		:type: type of field: "checkbox", "list", "number", "text", "date"
 		:options: list of options for field, only valid for "list" type
-		:display_on_card: boolean whether this field should be shown on the front of cards 
+		:display_on_card: boolean whether this field should be shown on the front of cards
 		:pos: position of the list: "bottom", "top" or a positive number
 		:return: the custom_field_definition
 		:rtype: CustomFieldDefinition
