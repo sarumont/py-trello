@@ -280,7 +280,7 @@ class TrelloClient(object):
             hook_id = response.json()['id']
             return WebHook(self, token, hook_id, desc, id_model, callback_url, True)
         else:
-            return False
+            raise Exception("Webhook creating failed: %s", response.data)
 
     def search(self, query, partial_match=False, models=[],
                board_ids=[], org_ids=[], card_ids=[], cards_limit=10):
