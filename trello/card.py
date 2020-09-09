@@ -567,7 +567,7 @@ class Card(TrelloBase):
             custom_field {custom field object} -- Custom Field Object (board.get_custom_field_definitions()[0])
 
         """
-        if custom_field.field_type in ['text', 'number', 'date', 'checked']: 
+        if custom_field.field_type in ['text', 'number', 'date', 'checked', 'checkbox']: 
             post_args = {'value': {str(custom_field.field_type): value}}
         else: 
             list_field_id = [
