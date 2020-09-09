@@ -567,7 +567,7 @@ class Card(TrelloBase):
             custom_field {custom field object} -- Custom Field Object (board.get_custom_field_definitions()[0])
 
         """
-        if custom_field.field_type in ['text', 'number', 'date', 'checked', 'checkbox']: 
+        if custom_field.field_type in ['text', 'number', 'date', 'checked']: 
             post_args = {'value': {str(custom_field.field_type): value}}
         else: 
             list_field_id = [
@@ -576,6 +576,29 @@ class Card(TrelloBase):
 
         self.client.fetch_json(
             '/card/' + self.id + '/customField/' + custom_field.id + '/item',
+            http_method='PUT',
+            post_args=post_args)
+
+    def set_custom_field_value(self, field_name, value):
+        fields = self.board.get_custom_field_definitions()
+        field_def = None
+        for f in fields:
+            if f.name.lower() == field_name.lower():
+                field_def = f
+                break
+
+        if field_def.field_type in ['text', 'number', 'date', 'checkbox']:
+            prop = 'checked' if field_def.field_type == 'checkbox' else str(field_def.field_type)
+            if isinstance(value, bool):
+                value = 'true' if value else 'false'
+            post_args = {'value': {prop: value}}
+        else:
+            list_field_id = [
+                x for x, y in field_def.list_options.items() if y == value][0]
+            post_args = {'idValue': list_field_id}
+
+        self.client.fetch_json(
+            '/card/' + self.id + '/customField/' + field_def.id + '/item',
             http_method='PUT',
             post_args=post_args)
 
