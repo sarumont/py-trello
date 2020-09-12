@@ -670,7 +670,7 @@ class Card(TrelloBase):
             '/cards/' + self.id + '/idMembers/' + member.id,
             http_method='DELETE')
 
-    def attach(self, name=None, mimeType=None, file=None, url=None):
+    def attach(self, name=None, mimeType=None, file=None, url=None, cover=None):
         """
         Add an attachment to the card. The attachment can be either a
         file or a url. Setting the name and/or mime type is optional.
@@ -678,6 +678,7 @@ class Card(TrelloBase):
         :param mimeType: mime type for the attachement
         :param file: a file-like, binary object that supports read()
         :param url: a URL pointing to the resource to be attached
+        :param cover: boolean
         """
         if (file and url) or (not file and not url):
             raise Exception('Please provide either a file or url, and not both!')
@@ -689,6 +690,7 @@ class Card(TrelloBase):
             kwargs['name'] = name
             kwargs['mimeType'] = mimeType
             kwargs['url'] = url
+            kwargs['setCover'] = cover
 
         return self._post_remote_data('attachments', **kwargs)
 
