@@ -56,6 +56,9 @@ class CustomFieldDefinition(TrelloBase):
 	def __repr__(self):
 		return force_str(u'<CustomFieldDefinition %s>' % (self.name,))
 
+	def delete(self):
+		self.client.fetch_json('/customFields/' + self.id, http_method='DELETE')
+
 
 class CustomField(TrelloBase):
 	"""
