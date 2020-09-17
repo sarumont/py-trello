@@ -181,6 +181,25 @@ class Board(TrelloBase):
 			self.customFieldDefinitions = CustomFieldDefinition.from_json_list(self, json_obj)
 		return self.customFieldDefinitions
 
+	def add_custom_field(self, name, field_type, pos=None, options=None):
+		"""
+		https://developer.atlassian.com/cloud/trello/guides/rest-api/getting-started-with-custom-fields/
+		"""
+		arguments = {
+			'idModel': self.id,
+			'modelType': 'board',
+			'name': name,
+			'options': options,
+			'pos': pos,
+			'type': field_type
+		}
+		json_obj = self.client.fetch_json(
+			'/customFields',
+			http_method='POST',
+			post_args=arguments)
+		self.customFieldDefinitions = None
+		return CustomFieldDefinition.from_json(self, json_obj)
+
 	def get_labels(self, fields='all', limit=50):
 		"""Get label
 
