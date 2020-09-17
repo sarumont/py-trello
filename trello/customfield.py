@@ -31,10 +31,14 @@ class CustomFieldDefinition(TrelloBase):
 		:param board: the parent board the custom field is on
 		:param json_obj: the board's customField json object
 		"""
-		list_options = {}
+		# list_options = {}
+		# if json_obj['type'] == 'list':
+		# 	for option in json_obj['options']:
+		# 		list_options[option['id']] = option['value']['text']
+
+		list_options = []
 		if json_obj['type'] == 'list':
-			for option in json_obj['options']:
-				list_options[option['id']] = option['value']['text']
+			list_options = json_obj['options']
 
 		customFieldDefinition = CustomFieldDefinition(
 			board.client,
