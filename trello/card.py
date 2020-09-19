@@ -591,16 +591,14 @@ class Card(TrelloBase):
             prop = 'checked' if field_def.field_type == 'checkbox' else str(field_def.field_type)
             if isinstance(value, bool):
                 value = 'true' if value else 'false'
-            post_args = {'value': {prop: value}}
+            post_args = {'value': {prop: str(value)}}
         else:
             list_field_id = [
-                x for x, y in field_def.list_options.items() if y == value][0]
+                i for i in field_def.list_options if i['value'] == value][0]['id']
             post_args = {'idValue': list_field_id}
 
-        self.client.fetch_json(
-            '/card/' + self.id + '/customField/' + field_def.id + '/item',
-            http_method='PUT',
-            post_args=post_args)
+        url = '/card/' + self.id + '/customField/' + field_def.id + '/item'
+        self.client.fetch_json(url, http_method='PUT', post_args=post_args)
 
     def set_closed(self, closed):
         self._set_remote_attribute('closed', closed)
@@ -714,6 +712,15 @@ class Card(TrelloBase):
         self.client.fetch_json(
             '/cards/' + self.id + '/attachments/' + attachment_id,
             http_method='DELETE')
+
+    def update_attachment(self, attachment_id, name, url=None):
+        data = dict(name=name)
+        if url:
+            data['url'] = url
+        self.client.fetch_json(
+            '/cards/' + self.id + '/attachments/' + attachment_id,
+            http_method='PUT',
+            post_args=data)
 
     def change_pos(self, position):
         self.client.fetch_json(

@@ -15,13 +15,14 @@ class CustomFieldDefinition(TrelloBase):
 	"""
 	Class representing a Trello CustomFieldDefinition.
 	"""
-	def __init__(self, client, customFieldDefinition_id, name, field_type, list_options):
+
+	_data = None
+	def __init__(self, client, **props):
 		super(CustomFieldDefinition, self).__init__()
+		self._data = props
 		self.client = client
-		self.id = customFieldDefinition_id
-		self.name = name
-		self.field_type = field_type
-		self.list_options = list_options
+		for k, v in props.items():
+			setattr(self, k, v)
 
 	@classmethod
 	def from_json(cls, board, json_obj):
@@ -36,16 +37,12 @@ class CustomFieldDefinition(TrelloBase):
 		# 	for option in json_obj['options']:
 		# 		list_options[option['id']] = option['value']['text']
 
-		list_options = []
-		if json_obj['type'] == 'list':
-			list_options = json_obj['options']
+		json_obj['list_options'] = json_obj.pop('options', [])
+		json_obj['field_type'] = json_obj.pop('type')
 
 		customFieldDefinition = CustomFieldDefinition(
 			board.client,
-			customFieldDefinition_id=json_obj['id'],
-			name=json_obj['name'],
-			field_type=json_obj['type'],
-			list_options=list_options,
+			**json_obj
 		)
 		return customFieldDefinition
 
@@ -59,6 +56,36 @@ class CustomFieldDefinition(TrelloBase):
 	def delete(self):
 		self.client.fetch_json('/customFields/' + self.id, http_method='DELETE')
 
+	def update(self, **props):
+		self.client.fetch_json(
+			'/customFields/' + self.id,
+			post_args=props,
+			http_method='PUT')
+
+	def add_list_option(self, name, color, pos):
+		return self.client.fetch_json(
+			'/customFields/' + self.id + '/options',
+			post_args=dict(
+				value=dict(text=name),
+				pos=pos,
+				color=color
+			),
+			http_method='POST')
+
+	def delete_list_option(self, option_id):
+		self.client.fetch_json(
+			'customFields/%s/options/%s' % (self.id, option_id),
+			http_method='DELETE')
+
+	def update_list_option(self, option_id, name, color, pos):
+		self.client.fetch_json(
+			'customFields/%s/options/%s' % (self.id, option_id),
+			post_args=dict(
+				color=color,
+				pos=pos,
+				value=dict(text=name)
+			),
+			http_method='PUT')
 
 class CustomField(TrelloBase):
 	"""
@@ -289,7 +316,9 @@ class CustomFieldList(CustomField):
 	def _id2str(self, _id):
 		for definition in self.card.board.get_custom_field_definitions():
 			if definition.id == self.definition_id:
-				return definition.list_options.get(_id)
+				for lo in definition.list_options:
+					if lo['id'] == _id:
+						return lo['value']
 		raise Exception('Definition not found')
 
 	def _str2id(self, text):
