@@ -62,6 +62,12 @@ class CustomFieldDefinition(TrelloBase):
 			post_args=props,
 			http_method='PUT')
 
+	def fetch_list_options(self):
+		options = self.client.fetch_json('/customFields/' + self.id + '/options', http_method='GET')
+		for o in options:
+			o['id'] = o.pop('_id')
+		return options
+
 	def add_list_option(self, name, color, pos):
 		return self.client.fetch_json(
 			'/customFields/' + self.id + '/options',
