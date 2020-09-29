@@ -587,11 +587,15 @@ class Card(TrelloBase):
                 field_def = f
                 break
 
-        if field_def.field_type in ['text', 'number', 'date', 'checkbox']:
+        if field_def.field_type in ('text', 'number', 'date', 'checkbox'):
             prop = 'checked' if field_def.field_type == 'checkbox' else str(field_def.field_type)
             if isinstance(value, bool):
                 value = 'true' if value else 'false'
-            post_args = {'value': {prop: str(value)}}
+
+            if (value is None or value == '') and field_def.field_type in ('text', 'number', 'date'):
+                post_args = {'value': ''}
+            else:
+                post_args = {'value': {prop: str(value)}}
         else:
             list_field_id = [
                 i for i in field_def.list_options if i['value'] == value][0]['id']
