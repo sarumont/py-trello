@@ -237,7 +237,7 @@ class TrelloClient(object):
         Returns a list of all hooks associated with a specific token. If you don't pass in a token,
         it tries to use the token associated with the TrelloClient object (if it exists)
         """
-        token = token or self.resource_owner_key
+        token = token or self.resource_owner_key or self.api_secret
 
         if token is None:
             raise TokenError("You need to pass an auth token in to list hooks.")
