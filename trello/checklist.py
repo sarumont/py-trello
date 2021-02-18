@@ -80,7 +80,52 @@ class Checklist(TrelloBase):
         json_obj['checked'] = checked
         self.items[ix] = json_obj
         return json_obj
+    def set_checklist_item_due(self,checklist_item, due):
+        """Set the state of an item on this checklist
+        :checklist_item: the checklist item object
+        :due: due date in isoformat
+        """
+        
+        datestr = due.isoformat()
+        json_obj = self.client.fetch_json(
+            '/cards/' + self.trello_card +
+            '/checklist/' + self.id +
+            '/checkItem/' + checklist_item['id'],
+            http_method='PUT',
+            post_args={'due': datestr})
 
+        ix = self._get_item_index(checklist_item['name'])
+        if ix is None:
+            return
+        self.items[ix] = json_obj
+        return json_obj
+    def set_checklist_item_member(self,checklist_item, member):
+        """Set the state of an item on this checklist
+        :checklist_item: the checklist item object
+        :member: the member to assign
+        """
+        json_obj = self.client.fetch_json(
+            '/cards/' + self.trello_card +
+            '/checklist/' + self.id +
+            '/checkItem/' + checklist_item['id'],
+            http_method='PUT',
+            post_args={'idMember': member.id})
+
+        ix = self._get_item_index(checklist_item['name'])
+        if ix is None:
+            return
+        self.items[ix] = json_obj
+        return json_obj
+    def _set_remote_attribute(self,name, attribute, value):
+        ix = self._get_item_index(name)
+        if ix is None:
+            return
+        self.client.fetch_json(
+            '/cards/' + self.trello_card +
+            '/checklist/' + self.id +
+            '/checkItem/' + self.items[ix]['id'] + attribute,
+            http_method='PUT',
+            post_args={'due': value}, )
     def rename(self, new_name):
         """Rename this checklist
 
