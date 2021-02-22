@@ -532,6 +532,26 @@ class Card(TrelloBase):
         self._set_remote_attribute('due', datestr)
         self.due = datestr
 
+    def set_start(self, start):
+        """Set the start time for the card
+
+        :start: a datetime object
+        """
+        datestr = start.isoformat()
+        self._set_remote_attribute('start', datestr)
+        self.start = datestr
+        
+    def set_reminder(self, reminder):
+        """Set a reminder time for the card
+
+        :reminder: total number of minutes before the due date as an int
+        """
+        # datestr = reminder.isoformat()
+        if isinstance(reminder,(float,str)):
+            reminder = int(reminder)
+        self._set_remote_attribute('dueReminder', reminder)
+        self.reminder = reminder
+
     def set_due_complete(self):
         """Set due complete
 
@@ -571,7 +591,7 @@ class Card(TrelloBase):
             custom_field {custom field object} -- Custom Field Object (board.get_custom_field_definitions()[0])
 
         """
-        if custom_field.field_type in ['text', 'number', 'date', 'checked']: 
+        if custom_field.field_type in ['text', 'number', 'date', 'checked','checkbox']: 
             post_args = {'value': {str(custom_field.field_type): value}}
         else: 
             list_field_id = [
