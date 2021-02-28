@@ -548,7 +548,7 @@ class Card(TrelloBase):
         """
         # datestr = reminder.isoformat()
         if isinstance(reminder,(float,str)):
-            reminder = int(reminder)
+            reminder = int(float(reminder))
         self._set_remote_attribute('dueReminder', reminder)
         self.reminder = reminder
 
