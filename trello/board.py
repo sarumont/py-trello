@@ -219,7 +219,7 @@ class Board(TrelloBase):
 		if name:
 			arguments["name"] = name
 		if not display_on_card is None:
-        	arguments["display/cardFront"] = u"true" if display_on_card else u"false"
+			arguments["display/cardFront"] = u"true" if display_on_card else u"false"
 		if pos:
 			arguments["pos"] = pos
 		
@@ -520,6 +520,8 @@ class Board(TrelloBase):
 		if board_id is None:
 			board_id = self.id
 		if filters:
+			if not filters in ("enabled", "available"):
+				filers = "enabled"
 			arguments['filter'] = filters
 		json_obj = self.client.fetch_json(
 			'/boards/' + board_id +'/plugins',
