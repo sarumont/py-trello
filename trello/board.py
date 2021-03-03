@@ -240,6 +240,73 @@ class Board(TrelloBase):
 			    '/customFields/{0}'.format(custom_field_definition_id),
 			    http_method='DELETE', )
 		return json_obj
+	
+	def get_custom_field_list_options(self,custom_field_definition_id,values_only=False):
+		"""Get custom field definition list options on this board
+
+		:custom_field_definition_id: the ID of the CustomFieldDefinition.
+		:values_only: Boolean to return only the values of the options, excluding color & position
+		:return: the custom_field_definition
+		:rtype: CustomFieldDefinition
+		"""
+
+		json_obj = self.client.fetch_json(
+				'customFields/{0}/options'.format(custom_field_definition_id),
+				http_method='GET',
+				)
+		if values_only:
+			return [v for jo in json_obj for v in jo['value'].values()]
+		return json_obj
+
+	def add_custom_field_list_option(self,custom_field_definition_id,new_option):
+		"""Update a custom field definition on this board
+
+		:custom_field_definition_id: the ID of the CustomFieldDefinition to update.
+		:new_option: The new option to add to the list
+		:return: the custom_field_definition
+		:rtype: CustomFieldDefinition
+		"""
+
+		json_obj = self.client.fetch_json(
+				'customFields/{0}/options'.format(custom_field_definition_id),
+				http_method='POST',
+				post_args={'value': {'text':new_option},
+						}, )
+		return json_obj
+	
+	def get_custom_field_list_option(self,custom_field_definition_id,option_id):
+		"""Get a specific custom field definition list option on this board
+
+		:custom_field_definition_id: the ID of the CustomFieldDefinition.
+		:option_id: the ID of the option
+		:return: the custom_field_definition
+		:rtype: CustomFieldDefinition
+		"""
+
+		json_obj = self.client.fetch_json(
+				'customFields/{0}/options/{0}'.format(custom_field_definition_id,option_id),
+				http_method='GET',
+				)
+		# if values_only:
+		# 	return [v for jo in json_obj for v in jo['value'].values()]
+		return json_obj
+
+	def delete_custom_field_list_option(self,custom_field_definition_id,option_id):
+		"""DELETE a specific custom field definition list option on this board
+
+		:custom_field_definition_id: the ID of the CustomFieldDefinition.
+		:option_id: the ID of the option
+		:return: the custom_field_definition
+		:rtype: CustomFieldDefinition
+		"""
+
+		json_obj = self.client.fetch_json(
+				'customFields/{0}/options/{0}'.format(custom_field_definition_id,option_id),
+				http_method='DELETE',
+				)
+		# if values_only:
+		# 	return [v for jo in json_obj for v in jo['value'].values()]
+		return json_obj
 
 	def get_labels(self, fields='all', limit=50):
 		"""Get label
