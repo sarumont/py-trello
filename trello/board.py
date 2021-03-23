@@ -69,7 +69,7 @@ class Board(TrelloBase):
 
 	def __repr__(self):
 		return force_str(f'<Board (name: {self.name}) (id: {self.id})'
-						+ f' (last_acitity: {self._date_last_activity})'
+						+ f' (last_activity: {self._date_last_activity})'
 						  f' (client: {self.client}) >')
 
 	def fetch(self):
