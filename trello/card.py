@@ -54,9 +54,7 @@ class Card(TrelloBase):
 
     @property
     def labels(self):
-        if self._labels:
-            return self._labels
-        return None
+        return self._labels if self._labels else []
 
     @property
     def custom_fields(self):
@@ -247,7 +245,7 @@ class Card(TrelloBase):
 
         if self.countCheckLists == 0:
             return []
-        
+
         if not hasattr(self, "checked") or self.checked is None:
             self.fetch(eager=False)
 
@@ -563,10 +561,10 @@ class Card(TrelloBase):
         """
         self._set_remote_attribute('pos', pos)
         self.pos = pos
-        
+
     def set_custom_field(self, value, custom_field):
         """Update card custom field
-        
+
         Arguments:
             value {[str, int, date, bool]} -- Value depending on the type of custom_field
             custom_field {custom field object} -- Custom Field Object (board.get_custom_field_definitions()[0])
@@ -691,7 +689,7 @@ class Card(TrelloBase):
             kwargs['name'] = name
             kwargs['mimeType'] = mimeType
             kwargs['url'] = url
-            kwargs['setCover'] = setCover 
+            kwargs['setCover'] = setCover
 
         return self._post_remote_data('attachments', **kwargs)
 
