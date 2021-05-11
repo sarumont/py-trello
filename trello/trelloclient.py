@@ -124,6 +124,22 @@ class TrelloClient(object):
         obj = self.fetch_json('/boards/' + board_id)
         return Board.from_json(self, json_obj=obj)
 
+    def add_organization(self, organization_name, description=None, name=None):
+        """Create organization
+        :param organization_name: Name of the organization to create
+        :param description: Optional Description of the organization
+        :param name: Unique name of the organization, like a slug
+        :rtype: Organization
+        """
+        post_args = {'displayName': organization_name}
+        if description is not None:
+            post_args['desc'] = description
+        if name is not None:
+            post_args['name'] = name
+
+        obj = self.fetch_json('/organizations', http_method='POST', post_args=post_args)
+        return Organization.from_json(self, json_obj=obj)
+
     def add_board(self, board_name, source_board=None, organization_id=None, permission_level='private',
                   default_lists=True):
         """Create board
