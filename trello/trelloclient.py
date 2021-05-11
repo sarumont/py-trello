@@ -124,6 +124,22 @@ class TrelloClient(object):
         obj = self.fetch_json('/boards/' + board_id)
         return Board.from_json(self, json_obj=obj)
 
+    def add_organization(self, organization_name, description=None, name=None):
+        """Create organization
+        :param organization_name: Name of the organization to create
+        :param description: Optional Description of the organization
+        :param name: Unique name of the organization, like a slug
+        :rtype: Organization
+        """
+        post_args = {'displayName': organization_name}
+        if description is not None:
+            post_args['desc'] = description
+        if name is not None:
+            post_args['name'] = name
+
+        obj = self.fetch_json('/organizations', http_method='POST', post_args=post_args)
+        return Organization.from_json(self, json_obj=obj)
+
     def add_board(self, board_name, source_board=None, organization_id=None, permission_level='private',
                   default_lists=True):
         """Create board
@@ -237,7 +253,7 @@ class TrelloClient(object):
         Returns a list of all hooks associated with a specific token. If you don't pass in a token,
         it tries to use the token associated with the TrelloClient object (if it exists)
         """
-        token = token or self.resource_owner_key
+        token = token or self.resource_owner_key or self.api_secret
 
         if token is None:
             raise TokenError("You need to pass an auth token in to list hooks.")
@@ -265,7 +281,7 @@ class TrelloClient(object):
         There seems to be some sort of bug that makes you unable to create a
         hook using httplib2, so I'm using urllib2 for that instead.
         """
-        token = token or self.resource_owner_key
+        token = token or self.resource_owner_key or self.api_secret
 
         if token is None:
             raise TokenError("You need to pass an auth token in to create a hook.")
@@ -274,13 +290,16 @@ class TrelloClient(object):
         data = {'callbackURL': callback_url, 'idModel': id_model,
                 'description': desc}
 
+        if self.api_key is not None:
+            data.update({'key': self.api_key})
+
         response = self.http_service.post(url, data=data, auth=self.oauth, proxies=self.proxies)
 
         if response.status_code == 200:
             hook_id = response.json()['id']
             return WebHook(self, token, hook_id, desc, id_model, callback_url, True)
         else:
-            return False
+            raise Exception("Webhook creating failed: %s" % response.text)
 
     def search(self, query, partial_match=False, models=[],
                board_ids=[], org_ids=[], card_ids=[], cards_limit=10):

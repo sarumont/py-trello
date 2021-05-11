@@ -37,7 +37,7 @@ class List(TrelloBase):
         list = List(board, json_obj['id'], name=json_obj['name'])
         list.closed = json_obj['closed']
         list.pos = json_obj['pos']
-	#this method is also called from board.py with a different json object, so we need to make sure 'subscribed' is there
+        #this method is also called from board.py with a different json object, so we need to make sure 'subscribed' is there
         if 'subscribed' in json_obj:
             list.subscribed = json_obj['subscribed']
         return list
@@ -187,13 +187,23 @@ class List(TrelloBase):
             post_args={'value': position, }, )
         self.pos = position
 
+    # Move this list to another board, with optional position
+    def move_to_board(self, board, position=None):
+        self.client.fetch_json(
+            '/lists/' + self.id + '/idBoard',
+            http_method='PUT',
+            post_args={'value': board.id, }, )
+        self.board = board
+        if position is not None:
+            self.move(position)
+
     # Subscribe to this list
     def subscribe(self):
         self.client.fetch_json(
         '/lists/' + self.id + '/subscribed',
         http_method='PUT',
             post_args={'value': 'true', }, )
-        self.subscribed = True	
+        self.subscribed = True
 
     # Unsubscribe from this list
     def unsubscribe(self):
@@ -201,8 +211,8 @@ class List(TrelloBase):
         '/lists/' + self.id + '/subscribed',
         http_method='PUT',
             post_args={'value': 'false', }, )
-        self.subscribed = False		
-	
+        self.subscribed = False
+
     def cardsCnt(self):
         return len(self.list_cards())
 

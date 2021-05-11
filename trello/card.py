@@ -54,9 +54,7 @@ class Card(TrelloBase):
 
     @property
     def labels(self):
-        if self._labels:
-            return self._labels
-        return None
+        return self._labels if self._labels else []
 
     @property
     def custom_fields(self):
@@ -159,6 +157,7 @@ class Card(TrelloBase):
         card.badges = json_obj['badges']
         card.customFields = card.fetch_custom_fields(json_obj=json_obj)
         card.countCheckItems = json_obj['badges']['checkItems']
+        card.countCheckLists = len(json_obj['idChecklists'])
         card._labels = Label.from_json_list(card.board, json_obj['labels'])
         card.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
         if "attachments" in json_obj:
@@ -244,9 +243,9 @@ class Card(TrelloBase):
 
     def fetch_checklists(self):
 
-        if self.countCheckItems == 0:
+        if self.countCheckLists == 0:
             return []
-        
+
         if not hasattr(self, "checked") or self.checked is None:
             self.fetch(eager=False)
 
@@ -582,20 +581,26 @@ class Card(TrelloBase):
         """
         self._set_remote_attribute('pos', pos)
         self.pos = pos
-        
+
     def set_custom_field(self, value, custom_field):
         """Update card custom field
-        
+
         Arguments:
             value {[str, int, date, bool]} -- Value depending on the type of custom_field
             custom_field {custom field object} -- Custom Field Object (board.get_custom_field_definitions()[0])
 
         """
-        if custom_field.field_type in ['text', 'number', 'date', 'checked','checkbox']: 
-            post_args = {'value': {str(custom_field.field_type): value}}
-        else: 
-            list_field_id = [
-                x for x, y in custom_field.list_options.items() if y == value][0]
+        if custom_field.field_type in ['text', 'number', 'date', 'checked']:
+            if value == "":
+                post_args = {'value': ""}
+            else:
+                post_args = {'value': {str(custom_field.field_type): value}}
+        else:
+            if value == "":
+                list_field_id = ""
+            else:
+                list_field_id = [
+                    x for x, y in custom_field.list_options.items() if y == value][0]
             post_args = {'idValue': list_field_id}
 
         self.client.fetch_json(
@@ -684,7 +689,7 @@ class Card(TrelloBase):
             '/cards/' + self.id + '/idMembers/' + member.id,
             http_method='DELETE')
 
-    def attach(self, name=None, mimeType=None, file=None, url=None):
+    def attach(self, name=None, mimeType=None, file=None, url=None, setCover=None):
         """
         Add an attachment to the card. The attachment can be either a
         file or a url. Setting the name and/or mime type is optional.
@@ -692,6 +697,7 @@ class Card(TrelloBase):
         :param mimeType: mime type for the attachement
         :param file: a file-like, binary object that supports read()
         :param url: a URL pointing to the resource to be attached
+        :param cover: boolean
         """
         if (file and url) or (not file and not url):
             raise Exception('Please provide either a file or url, and not both!')
@@ -703,6 +709,7 @@ class Card(TrelloBase):
             kwargs['name'] = name
             kwargs['mimeType'] = mimeType
             kwargs['url'] = url
+            kwargs['setCover'] = setCover
 
         return self._post_remote_data('attachments', **kwargs)
 
