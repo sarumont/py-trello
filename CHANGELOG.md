@@ -399,3 +399,30 @@
 
 
 [view](https://github.com/sarumont/py-trello/commit/bd23d383be371f11d0aa45125ea256a99094d4d6) &bull; Removes the unused try statement that broke the last version  
+
+
+**0.18.0**
+
+
+[view](https://github.com/sarumont/py-trello/commit/d2338d27c3fc7ff8822c0305a9b873be5eb2b33a) &bull; fix last_activity typo  
+[view](https://github.com/sarumont/py-trello/commit/fd01575bce6df6d1a64fd0ebbd3b8fc65695fd94) &bull; Add add_organization()  
+[view](https://github.com/sarumont/py-trello/commit/df889cb813018c80a6e2f928d3f8d79d10efb248) &bull; Custom field list updates  
+[view](https://github.com/sarumont/py-trello/commit/9b094dd3b9bbe6df6ca25587bb612148885a9223) &bull; Fixing TabError  
+[view](https://github.com/sarumont/py-trello/commit/520666f22d921162e48b4dd059c056155a1dce12) &bull; Added powerups  
+[view](https://github.com/sarumont/py-trello/commit/ec178fd13ba04fe3f5b407e57c491a832a883eef) &bull; Add files via upload  
+[view](https://github.com/sarumont/py-trello/commit/10f5f8f1baa686acc8d8a5957ce0b615d233a8b3) &bull; Update custom field definition  
+[view](https://github.com/sarumont/py-trello/commit/624c50c68b94c9f3443c4bec1048dc6d07437576) &bull; Updating set_reminder  
+[view](https://github.com/sarumont/py-trello/commit/61579fe11556897a6885663df68cc32bc4f06a60) &bull; Two new methods  
+[view](https://github.com/sarumont/py-trello/commit/e198d6abf47fd6f08325f1c399f1806a4ddc439e) &bull; Added two methods for checkitems  
+[view](https://github.com/sarumont/py-trello/commit/39c4c2d6c80b39cd946e85f06da3b7d6ddd576c4) &bull; Add OAuth2 support to webhook list  
+[view](https://github.com/sarumont/py-trello/commit/777b5daf7266af0df055b21799d00012074d4084) &bull; Add OAuth2 support to webhook creation  
+[view](https://github.com/sarumont/py-trello/commit/8892b1ab86e57aea5d3ce83f93fa7cc88ccbb2d0) &bull; Return empty cards  
+[view](https://github.com/sarumont/py-trello/commit/fa9d7f8a5b418f9f8edde21416841a6332c96c67) &bull; fixed a problem with fetching checklists  
+[view](https://github.com/sarumont/py-trello/commit/1b54a74a4ce7f9c0ebc31382fc75602123055395) &bull; Update card.py  
+[view](https://github.com/sarumont/py-trello/commit/7d9374d1fa93129e7f019814b29d8ade8d764f6f) &bull; Added setCover to the attach function  
+[view](https://github.com/sarumont/py-trello/commit/c4e8a8bcc38218c37ca4525cb09464583ca60d19) &bull; Update trelloclient.py  
+[view](https://github.com/sarumont/py-trello/commit/5ef931db0e7db7cf526c6ad7b302858d6df9ca42) &bull; Update trelloclient.py  
+[view](https://github.com/sarumont/py-trello/commit/a5004daa635dc495597f28df817a2d22978af776) &bull; Implement the Move List to Board API  
+[view](https://github.com/sarumont/py-trello/commit/e4290bd665cf99168a377fd23c4e9130ca06bd7d) &bull; update2 __repr__ to display all Board class attributes  
+[view](https://github.com/sarumont/py-trello/commit/7cd745c66ef5b4c20f2a30af0c0f08d3e5c3d06f) &bull; update __repr__ to display all Board class attributes  
+[view](https://github.com/sarumont/py-trello/commit/0b7ebdb718bf76fc94215964951b24597790bea8) &bull; fetch Member email  

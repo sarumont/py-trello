@@ -1,0 +1,465 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	//
+ALLSPHINXOPTS	docs/Makefile	/^ALLSPHINXOPTS   = -d $(BUILDDIR)\/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .$/;"	m
+ALLSPHINXOPTS	docs/make.bat	/^	set ALLSPHINXOPTS=-D latex_paper_size=%PAPER% %ALLSPHINXOPTS%$/;"	v
+ALLSPHINXOPTS	docs/make.bat	/^set ALLSPHINXOPTS=-d %BUILDDIR%\/doctrees %SPHINXOPTS% .$/;"	v
+Attachments	trello/attachments.py	/^class Attachments(TrelloBase):$/;"	c
+AttachmentsPreview	trello/attachments.py	/^class AttachmentsPreview(object):$/;"	c
+BUILDDIR	docs/Makefile	/^BUILDDIR      = _build$/;"	m
+BUILDDIR	docs/make.bat	/^set BUILDDIR=_build$/;"	v
+Board	trello/board.py	/^class Board(TrelloBase):$/;"	c
+Card	trello/card.py	/^class Card(TrelloBase):$/;"	c
+Checklist	trello/checklist.py	/^class Checklist(TrelloBase):$/;"	c
+CustomField	trello/customfield.py	/^class CustomField(TrelloBase):$/;"	c
+CustomFieldCheckbox	trello/customfield.py	/^class CustomFieldCheckbox(CustomField):$/;"	c
+CustomFieldDate	trello/customfield.py	/^class CustomFieldDate(CustomField):$/;"	c
+CustomFieldDefinition	trello/customfield.py	/^class CustomFieldDefinition(TrelloBase):$/;"	c
+CustomFieldList	trello/customfield.py	/^class CustomFieldList(CustomField):$/;"	c
+CustomFieldNumber	trello/customfield.py	/^class CustomFieldNumber(CustomField):$/;"	c
+CustomFieldText	trello/customfield.py	/^class CustomFieldText(CustomField):$/;"	c
+Getting your Trello OAuth Token	README.rst	/^Getting your Trello OAuth Token$/;"	c
+I18NSPHINXOPTS	docs/Makefile	/^I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .$/;"	m
+I18NSPHINXOPTS	docs/make.bat	/^	set I18NSPHINXOPTS=-D latex_paper_size=%PAPER% %I18NSPHINXOPTS%$/;"	v
+I18NSPHINXOPTS	docs/make.bat	/^set I18NSPHINXOPTS=%SPHINXOPTS% .$/;"	v
+Indices and tables	docs/index.rst	/^Indices and tables$/;"	c
+Install	README.rst	/^Install$/;"	c
+Label	trello/label.py	/^class Label(TrelloBase):$/;"	c
+List	trello/trellolist.py	/^class List(TrelloBase):$/;"	c
+Member	trello/member.py	/^class Member(TrelloBase):$/;"	c
+Module contents	docs/trello.rst	/^Module contents$/;"	s	chapter:trello package
+Modules	docs/index.rst	/^Modules$/;"	c
+Organization	trello/organization.py	/^class Organization(TrelloBase):$/;"	c
+PAPER	docs/Makefile	/^PAPER         =$/;"	m
+PAPER	docs/make.bat	/^	echo.  latex      to make LaTeX files, you can set PAPER=a4 or PAPER=letter$/;"	v
+PAPEROPT_a4	docs/Makefile	/^PAPEROPT_a4     = -D latex_paper_size=a4$/;"	m
+PAPEROPT_letter	docs/Makefile	/^PAPEROPT_letter = -D latex_paper_size=letter$/;"	m
+PY2	trello/compat.py	/^PY2 = sys.version_info < (3, 0)$/;"	v
+PowerUp	trello/powerup.py	/^class PowerUp(TrelloBase):$/;"	c
+Readme	docs/index.rst	/^Readme$/;"	c
+Required Python modules	README.rst	/^Required Python modules$/;"	c
+ResourceUnavailable	trello/exceptions.py	/^class ResourceUnavailable(Exception):$/;"	c
+SPHINXBUILD	docs/Makefile	/^SPHINXBUILD   = sphinx-build$/;"	m
+SPHINXBUILD	docs/make.bat	/^	set SPHINXBUILD=sphinx-build$/;"	v
+SPHINXBUILD	docs/make.bat	/^set SPHINXBUILD=python -m sphinx.__init__$/;"	v
+SPHINXOPTS	docs/Makefile	/^SPHINXOPTS    =$/;"	m
+Star	trello/star.py	/^class Star(TrelloBase):$/;"	c
+Submodules	docs/trello.rst	/^Submodules$/;"	s	chapter:trello package
+TIMEZONE	trello/organization.py	/^    TIMEZONE = 'UTC'$/;"	v	class:Organization
+Tests	README.rst	/^Tests$/;"	c
+TokenError	trello/exceptions.py	/^class TokenError(Exception):$/;"	c
+TrelloBase	trello/base.py	/^class TrelloBase(object):$/;"	c
+TrelloBoardTestCase	test/test_board.py	/^class TrelloBoardTestCase(unittest.TestCase):$/;"	c
+TrelloCardTestCase	test/test_card.py	/^class TrelloCardTestCase(unittest.TestCase):$/;"	c
+TrelloChecklistTestCase	test/test_checklist.py	/^class TrelloChecklistTestCase(unittest.TestCase):$/;"	c
+TrelloClient	trello/trelloclient.py	/^class TrelloClient(object):$/;"	c
+TrelloClientTestCase	test/test_trello_client.py	/^class TrelloClientTestCase(unittest.TestCase):$/;"	c
+TrelloClientTestCaseWithoutOAuth	test/test_trello_client.py	/^class TrelloClientTestCaseWithoutOAuth(unittest.TestCase):$/;"	c
+Unauthorized	trello/exceptions.py	/^class Unauthorized(ResourceUnavailable):$/;"	c
+Usage	README.rst	/^Usage$/;"	c
+WebHook	trello/webhook.py	/^class WebHook(object):$/;"	c
+Welcome to py-trello's documentation!	docs/index.rst	/^Welcome to py-trello's documentation!$/;"	c
+Working with boards	README.rst	/^Working with boards$/;"	s	chapter:Usage
+__eq__	trello/base.py	/^	def __eq__(self, other):$/;"	m	class:TrelloBase
+__eq__	trello/star.py	/^    def __eq__(self, other):$/;"	m	class:Star
+__hash__	trello/base.py	/^	def __hash__(self):$/;"	m	class:TrelloBase
+__init__	trello/attachments.py	/^    def __init__(self, bytes, url, width, height, is_scaled):$/;"	m	class:AttachmentsPreview
+__init__	trello/attachments.py	/^    def __init__(self, id, bytes, date, edge_color, idMember, is_upload, mime_type, name, previe/;"	m	class:Attachments
+__init__	trello/base.py	/^	def __init__(self):$/;"	m	class:TrelloBase
+__init__	trello/board.py	/^	def __init__(self, client=None, board_id=None, organization=None, name=''):$/;"	m	class:Board
+__init__	trello/card.py	/^    def __init__(self, parent, card_id, name=''):$/;"	m	class:Card
+__init__	trello/checklist.py	/^    def __init__(self, client, checked, obj, trello_card=None):$/;"	m	class:Checklist
+__init__	trello/customfield.py	/^	def __init__(self, card, customField_id, customFieldDefinition_id, value):$/;"	m	class:CustomField
+__init__	trello/customfield.py	/^	def __init__(self, client, customFieldDefinition_id, name, field_type, list_options):$/;"	m	class:CustomFieldDefinition
+__init__	trello/exceptions.py	/^    def __init__(self, msg, http_response):$/;"	m	class:ResourceUnavailable
+__init__	trello/label.py	/^    def __init__(self, client, label_id, name, color=""):$/;"	m	class:Label
+__init__	trello/member.py	/^    def __init__(self, client, member_id, full_name=''):$/;"	m	class:Member
+__init__	trello/organization.py	/^    def __init__(self, client, organization_id, name=''):$/;"	m	class:Organization
+__init__	trello/powerup.py	/^	def __init__(self,client=None,board=None, power_up_id=None, name='',author=''):$/;"	m	class:PowerUp
+__init__	trello/star.py	/^    def __init__(self, star_id, board_id, position):$/;"	m	class:Star
+__init__	trello/trelloclient.py	/^    def __init__(self, api_key, api_secret=None, token=None, token_secret=None, http_service=req/;"	m	class:TrelloClient
+__init__	trello/trellolist.py	/^    def __init__(self, board, list_id, name=''):$/;"	m	class:List
+__init__	trello/webhook.py	/^    def __init__(self, client, token, hook_id=None, desc=None, id_model=None,$/;"	m	class:WebHook
+__ne__	trello/star.py	/^    def __ne__(self, other):$/;"	m	class:Star
+__repr__	trello/attachments.py	/^    def __repr__(self):$/;"	m	class:Attachments
+__repr__	trello/attachments.py	/^    def __repr__(self):$/;"	m	class:AttachmentsPreview
+__repr__	trello/board.py	/^	def __repr__(self):$/;"	m	class:Board
+__repr__	trello/card.py	/^    def __repr__(self):$/;"	m	class:Card
+__repr__	trello/checklist.py	/^    def __repr__(self):$/;"	m	class:Checklist
+__repr__	trello/customfield.py	/^	def __repr__(self):$/;"	m	class:CustomField
+__repr__	trello/customfield.py	/^	def __repr__(self):$/;"	m	class:CustomFieldDefinition
+__repr__	trello/label.py	/^    def __repr__(self):$/;"	m	class:Label
+__repr__	trello/member.py	/^    def __repr__(self):$/;"	m	class:Member
+__repr__	trello/organization.py	/^    def __repr__(self):$/;"	m	class:Organization
+__repr__	trello/powerup.py	/^	def __repr__(self):$/;"	m	class:PowerUp
+__repr__	trello/star.py	/^    def __repr__(self):$/;"	m	class:Star
+__repr__	trello/trellolist.py	/^    def __repr__(self):$/;"	m	class:List
+__str__	trello/exceptions.py	/^    def __str__(self):$/;"	m	class:ResourceUnavailable
+_add_card	test/test_board.py	/^    def _add_card(self, name, description=None):$/;"	m	class:TrelloBoardTestCase
+_add_card	test/test_card.py	/^    def _add_card(self, name, description=None):$/;"	m	class:TrelloCardTestCase
+_add_card	test/test_checklist.py	/^    def _add_card(self, name, description=None):$/;"	m	class:TrelloChecklistTestCase
+_add_checklist	test/test_board.py	/^    def _add_checklist(self, card, name, items=[], itemstates=None):$/;"	m	class:TrelloBoardTestCase
+_add_checklist	test/test_checklist.py	/^    def _add_checklist(self, card, name, items=[]):$/;"	m	class:TrelloChecklistTestCase
+_existing_hook_objs	trello/trelloclient.py	/^    def _existing_hook_objs(self, hooks, token):$/;"	m	class:TrelloClient
+_get_item_index	trello/checklist.py	/^    def _get_item_index(self, name):$/;"	m	class:Checklist
+_id2str	trello/customfield.py	/^	def _id2str(self, _id):$/;"	m	class:CustomFieldList
+_list_movements	trello/card.py	/^    def _list_movements(self, movement_function, filter_by_date_interval=None):$/;"	m	class:Card
+_movement_as_dict	trello/card.py	/^    def _movement_as_dict(source_list, destination_list, movement_datetime):$/;"	m	class:Card
+_movement_as_triplet	trello/card.py	/^    def _movement_as_triplet(source_list, destination_list, movement_datetime):$/;"	m	class:Card
+_post_remote_data	trello/card.py	/^    def _post_remote_data(self, attribute, files=None, **kwargs):$/;"	m	class:Card
+_set_due_complete	trello/card.py	/^    def _set_due_complete(self, is_complete):$/;"	m	class:Card
+_set_remote_attribute	trello/card.py	/^    def _set_remote_attribute(self, attribute, value):$/;"	m	class:Card
+_set_remote_attribute	trello/checklist.py	/^    def _set_remote_attribute(self,name, attribute, value):$/;"	m	class:Checklist
+_set_remote_attribute	trello/trellolist.py	/^    def _set_remote_attribute(self, attribute, value):$/;"	m	class:List
+_str2id	trello/customfield.py	/^	def _str2id(self, text):$/;"	m	class:CustomFieldList
+_type	trello/customfield.py	/^	_type = ''$/;"	v	class:CustomField
+_type	trello/customfield.py	/^	_type = 'checkbox'$/;"	v	class:CustomFieldCheckbox
+_type	trello/customfield.py	/^	_type = 'date'$/;"	v	class:CustomFieldDate
+_type	trello/customfield.py	/^	_type = 'list'$/;"	v	class:CustomFieldList
+_type	trello/customfield.py	/^	_type = 'number'$/;"	v	class:CustomFieldNumber
+_type	trello/customfield.py	/^	_type = 'text'$/;"	v	class:CustomFieldText
+add_board	trello/trelloclient.py	/^    def add_board(self, board_name, source_board=None, organization_id=None, permission_level='p/;"	m	class:TrelloClient
+add_card	trello/trellolist.py	/^    def add_card(self, name, desc=None, labels=None, due="null", source=None, position=None, ass/;"	m	class:List
+add_checklist	trello/card.py	/^    def add_checklist(self, title, items, itemstates=None):$/;"	m	class:Card
+add_checklist_item	trello/checklist.py	/^    def add_checklist_item(self, name, checked=False):$/;"	m	class:Checklist
+add_custom_field_definition	trello/board.py	/^	def add_custom_field_definition(self, name, type, options=None, display_on_card=None, pos=None)/;"	m	class:Board
+add_custom_field_list_option	trello/board.py	/^	def add_custom_field_list_option(self,custom_field_definition_id,new_option):$/;"	m	class:Board
+add_label	trello/board.py	/^	def add_label(self, name, color):$/;"	m	class:Board
+add_label	trello/card.py	/^    def add_label(self, label):$/;"	m	class:Card
+add_list	trello/board.py	/^	def add_list(self, name, pos=None):$/;"	m	class:Board
+add_member	trello/board.py	/^	def add_member(self, member, member_type="normal"):$/;"	m	class:Board
+add_member	trello/card.py	/^    def add_member(self, member):$/;"	m	class:Card
+add_member	trello/organization.py	/^    def add_member(self, member, member_type="normal"):$/;"	m	class:Organization
+add_organization	trello/trelloclient.py	/^    def add_organization(self, organization_name, description=None, name=None):$/;"	m	class:TrelloClient
+add_star	trello/trelloclient.py	/^    def add_star(self, board_id, position="bottom"):$/;"	m	class:TrelloClient
+admin_members	trello/board.py	/^	def admin_members(self):$/;"	m	class:Board
+all_boards	trello/organization.py	/^    def all_boards(self):$/;"	m	class:Organization
+all_cards	trello/board.py	/^	def all_cards(self, custom_field_items='true'):$/;"	m	class:Board
+all_lists	trello/board.py	/^	def all_lists(self):$/;"	m	class:Board
+all_members	trello/board.py	/^	def all_members(self):$/;"	m	class:Board
+applehelp	docs/Makefile	/^applehelp:$/;"	t
+archive_all_cards	trello/trellolist.py	/^    def archive_all_cards(self):$/;"	m	class:List
+assign	trello/card.py	/^    def assign(self, member_id):$/;"	m	class:Card
+attach	trello/card.py	/^    def attach(self, name=None, mimeType=None, file=None, url=None, setCover=None):$/;"	m	class:Card
+attachments	trello/card.py	/^    def attachments(self):$/;"	m	class:Card
+attriExp	trello/card.py	/^    def attriExp(self, multiple):$/;"	m	class:Card
+author	docs/conf.py	/^author = u'Adrien Lemaire, Kyle Valade, Rick van Hattem'$/;"	v
+board_id	trello/card.py	/^    def board_id(self):$/;"	m	class:Card
+card_created_date	trello/card.py	/^    def card_created_date(self):$/;"	m	class:Card
+cardsCnt	trello/trellolist.py	/^    def cardsCnt(self):$/;"	m	class:List
+change_board	trello/card.py	/^    def change_board(self, board_id, list_id=None):$/;"	m	class:Card
+change_list	trello/card.py	/^    def change_list(self, list_id):$/;"	m	class:Card
+change_pos	trello/card.py	/^    def change_pos(self, position):$/;"	m	class:Card
+changes	docs/Makefile	/^changes:$/;"	t
+checklists	trello/card.py	/^    def checklists(self):$/;"	m	class:Card
+clean	docs/Makefile	/^clean:$/;"	t
+clear	trello/checklist.py	/^    def clear(self):$/;"	m	class:Checklist
+close	trello/board.py	/^	def close(self):$/;"	m	class:Board
+close	trello/trellolist.py	/^    def close(self):$/;"	m	class:List
+closed_cards	trello/board.py	/^	def closed_cards(self, custom_field_items='true'):$/;"	m	class:Board
+closed_lists	trello/board.py	/^	def closed_lists(self):$/;"	m	class:Board
+commands	tox.ini	/^commands =$/;"	k	section:testenv
+comment	trello/card.py	/^    def comment(self, comment_text):$/;"	m	class:Card
+comments	trello/card.py	/^    def comments(self):$/;"	m	class:Card
+copyright	docs/conf.py	/^copyright = u'2015, Adrien Lemaire, Kyle Valade, Rick van Hattem'$/;"	v
+coverage	docs/Makefile	/^coverage:$/;"	t
+create_hook	trello/trelloclient.py	/^    def create_hook(self, callback_url, id_model, desc=None, token=None):$/;"	m	class:TrelloClient
+create_label	trello/card.py	/^    def create_label(self, name, color):$/;"	m	class:Card
+create_oauth_token	trello/util.py	/^def create_oauth_token(expiration=None, scope=None, key=None, secret=None, name=None, output=Tru/;"	f
+created_date	trello/card.py	/^    def created_date(self):$/;"	m	class:Card
+custom_fields	trello/card.py	/^    def custom_fields(self):$/;"	m	class:Card
+date_last_activity	trello/board.py	/^	def date_last_activity(self):$/;"	m	class:Board
+date_last_activity	trello/card.py	/^    def date_last_activity(self):$/;"	m	class:Card
+dateparser	trello/attachments.py	/^from dateutil import parser as dateparser$/;"	x
+dateparser	trello/board.py	/^from dateutil import parser as dateparser$/;"	x
+dateparser	trello/card.py	/^from dateutil import parser as dateparser$/;"	x
+dateparser	trello/powerup.py	/^from dateutil import parser as dateparser$/;"	x
+delete	trello/card.py	/^    def delete(self):$/;"	m	class:Card
+delete	trello/checklist.py	/^    def delete(self):$/;"	m	class:Checklist
+delete	trello/webhook.py	/^    def delete(self):$/;"	m	class:WebHook
+delete_checklist_item	trello/checklist.py	/^    def delete_checklist_item(self, name):$/;"	m	class:Checklist
+delete_comment	trello/card.py	/^    def delete_comment(self, comment):$/;"	m	class:Card
+delete_custom_field_definition	trello/board.py	/^	def delete_custom_field_definition(self, custom_field_definition_id):$/;"	m	class:Board
+delete_custom_field_list_option	trello/board.py	/^	def delete_custom_field_list_option(self,custom_field_definition_id,option_id):$/;"	m	class:Board
+delete_label	trello/board.py	/^	def delete_label(self, label_id):$/;"	m	class:Board
+delete_star	trello/trelloclient.py	/^    def delete_star(self, star):$/;"	m	class:TrelloClient
+deps	tox.ini	/^deps =$/;"	k	section:testenv
+description	trello/card.py	/^    def description(self):$/;"	m	class:Card
+devhelp	docs/Makefile	/^devhelp:$/;"	t
+dirhtml	docs/Makefile	/^dirhtml:$/;"	t
+disable_power_up	trello/board.py	/^	def disable_power_up(self, powerup_id, board_id=None,):$/;"	m	class:Board
+doctest	docs/Makefile	/^doctest:$/;"	t
+due_date	trello/card.py	/^    def due_date(self):$/;"	m	class:Card
+enable_power_up	trello/board.py	/^	def enable_power_up(self, powerup_id,board_id=None):$/;"	m	class:Board
+end	docs/make.bat	/^:end$/;"	l
+envlist	tox.ini	/^envlist =$/;"	k	section:tox
+epub	docs/Makefile	/^epub:$/;"	t
+exclude_patterns	docs/conf.py	/^exclude_patterns = ['_build']$/;"	v
+extensions	docs/conf.py	/^extensions = [$/;"	v
+fetch	trello/board.py	/^	def fetch(self):$/;"	m	class:Board
+fetch	trello/card.py	/^    def fetch(self, eager=True):$/;"	m	class:Card
+fetch	trello/label.py	/^    def fetch(self):$/;"	m	class:Label
+fetch	trello/member.py	/^    def fetch(self):$/;"	m	class:Member
+fetch	trello/organization.py	/^    def fetch(self):$/;"	m	class:Organization
+fetch	trello/trellolist.py	/^    def fetch(self):$/;"	m	class:List
+fetch_actions	trello/board.py	/^	def fetch_actions(self, action_filter, action_limit=50, before=None, since=None):$/;"	m	class:Board
+fetch_actions	trello/card.py	/^    def fetch_actions(self, action_filter='createCard', since=None, before=None, action_limit=50/;"	m	class:Card
+fetch_actions	trello/trellolist.py	/^    def fetch_actions(self, action_filter):$/;"	m	class:List
+fetch_attachments	trello/card.py	/^    def fetch_attachments(self, force=False):$/;"	m	class:Card
+fetch_cards	trello/member.py	/^    def fetch_cards(self):$/;"	m	class:Member
+fetch_checklists	trello/card.py	/^    def fetch_checklists(self):$/;"	m	class:Card
+fetch_comments	trello/card.py	/^    def fetch_comments(self, force=False, limit=None):$/;"	m	class:Card
+fetch_comments	trello/member.py	/^    def fetch_comments(self):$/;"	m	class:Member
+fetch_custom_fields	trello/card.py	/^    def fetch_custom_fields(self, json_obj=None):$/;"	m	class:Card
+fetch_json	trello/trelloclient.py	/^    def fetch_json($/;"	m	class:TrelloClient
+fetch_notifications	trello/member.py	/^    def fetch_notifications(self, filters = []):$/;"	m	class:Member
+fetch_plugin_data	trello/card.py	/^    def fetch_plugin_data(self):$/;"	m	class:Card
+force_str	trello/compat.py	/^def force_str(s, encoding='utf-8'):$/;"	f
+from_json	trello/attachments.py	/^    def from_json(json_obj):$/;"	m	class:Attachments
+from_json	trello/attachments.py	/^    def from_json(json_obj):$/;"	m	class:AttachmentsPreview
+from_json	trello/board.py	/^	def from_json(cls, trello_client=None, organization=None, json_obj=None):$/;"	m	class:Board
+from_json	trello/card.py	/^    def from_json(cls, parent, json_obj):$/;"	m	class:Card
+from_json	trello/customfield.py	/^	def from_json(cls, board, json_obj):$/;"	m	class:CustomFieldDefinition
+from_json	trello/customfield.py	/^	def from_json(cls, card, json_obj):$/;"	m	class:CustomField
+from_json	trello/customfield.py	/^	def from_json(cls, card, json_obj):$/;"	m	class:CustomFieldCheckbox
+from_json	trello/customfield.py	/^	def from_json(cls, card, json_obj):$/;"	m	class:CustomFieldDate
+from_json	trello/customfield.py	/^	def from_json(cls, card, json_obj):$/;"	m	class:CustomFieldList
+from_json	trello/customfield.py	/^	def from_json(cls, card, json_obj):$/;"	m	class:CustomFieldNumber
+from_json	trello/customfield.py	/^	def from_json(cls, card, json_obj):$/;"	m	class:CustomFieldText
+from_json	trello/label.py	/^    def from_json(cls, board, json_obj):$/;"	m	class:Label
+from_json	trello/member.py	/^    def from_json(cls, trello_client, json_obj):$/;"	m	class:Member
+from_json	trello/organization.py	/^    def from_json(cls, trello_client, json_obj):$/;"	m	class:Organization
+from_json	trello/powerup.py	/^	def from_json(cls, trello_client=None,power_up_id=None, board=None, json_obj=None):$/;"	m	class:PowerUp
+from_json	trello/star.py	/^    def from_json(cls, json_obj):$/;"	m	class:Star
+from_json	trello/trellolist.py	/^    def from_json(cls, board, json_obj):$/;"	m	class:List
+from_json_list	trello/customfield.py	/^	def from_json_list(cls, board, json_objs):$/;"	m	class:CustomFieldDefinition
+from_json_list	trello/customfield.py	/^	def from_json_list(cls, card, json_objs):$/;"	m	class:CustomField
+from_json_list	trello/label.py	/^    def from_json_list(cls, board, json_objs):$/;"	m	class:Label
+from_json_list	trello/star.py	/^    def from_json_list(cls, json_objs):$/;"	m	class:Star
+get_attachments	trello/card.py	/^    def get_attachments(self):$/;"	m	class:Card
+get_board	trello/organization.py	/^    def get_board(self, field_name):$/;"	m	class:Organization
+get_board	trello/trelloclient.py	/^    def get_board(self, board_id):$/;"	m	class:TrelloClient
+get_boards	trello/member.py	/^    def get_boards(self, list_filter):$/;"	m	class:Member
+get_boards	trello/organization.py	/^    def get_boards(self, list_filter):$/;"	m	class:Organization
+get_card	trello/trelloclient.py	/^    def get_card(self, card_id):$/;"	m	class:TrelloClient
+get_cards	trello/board.py	/^	def get_cards(self, filters=None, card_filter=""):$/;"	m	class:Board
+get_checklists	trello/board.py	/^	def get_checklists(self, cards='all'):$/;"	m	class:Board
+get_class	trello/customfield.py	/^	def get_class(cls, board, json_obj):$/;"	m	class:CustomField
+get_comments	trello/card.py	/^    def get_comments(self):$/;"	m	class:Card
+get_custom_field_by_name	trello/card.py	/^    def get_custom_field_by_name(self, cf_name):$/;"	m	class:Card
+get_custom_field_definitions	trello/board.py	/^	def get_custom_field_definitions(self):$/;"	m	class:Board
+get_custom_field_list_option	trello/board.py	/^	def get_custom_field_list_option(self,custom_field_definition_id,option_id):$/;"	m	class:Board
+get_custom_field_list_options	trello/board.py	/^	def get_custom_field_list_options(self,custom_field_definition_id,values_only=False):$/;"	m	class:Board
+get_enabled_power_ups	trello/board.py	/^	def get_enabled_power_ups(self, board_id=None, name='',):$/;"	m	class:Board
+get_label	trello/trelloclient.py	/^    def get_label(self, label_id, board_id):$/;"	m	class:TrelloClient
+get_labels	trello/board.py	/^	def get_labels(self, fields='all', limit=50):$/;"	m	class:Board
+get_last_activity	trello/board.py	/^	def get_last_activity(self):$/;"	m	class:Board
+get_list	trello/board.py	/^	def get_list(self, list_id):$/;"	m	class:Board
+get_list	trello/card.py	/^    def get_list(self):$/;"	m	class:Card
+get_list	trello/trelloclient.py	/^    def get_list(self, list_id):$/;"	m	class:TrelloClient
+get_lists	trello/board.py	/^	def get_lists(self, list_filter):$/;"	m	class:Board
+get_member	trello/trelloclient.py	/^    def get_member(self, member_id):$/;"	m	class:TrelloClient
+get_members	trello/board.py	/^	def get_members(self, filters=None):$/;"	m	class:Board
+get_members	trello/organization.py	/^    def get_members(self):$/;"	m	class:Organization
+get_organization	trello/trelloclient.py	/^    def get_organization(self, organization_id):$/;"	m	class:TrelloClient
+get_power_ups	trello/board.py	/^	def get_power_ups(self, board_id=None, name='', filters=None):$/;"	m	class:Board
+get_stats_by_list	trello/card.py	/^    def get_stats_by_list(self, lists, list_cmp=None, done_list=None, time_unit="seconds", card_/;"	m	class:Card
+gettext	docs/Makefile	/^gettext:$/;"	t
+help	docs/Makefile	/^help:$/;"	t
+html	docs/Makefile	/^html:$/;"	t
+html_static_path	docs/conf.py	/^html_static_path = ['_static']$/;"	v
+html_theme	docs/conf.py	/^html_theme = 'default'$/;"	v
+htmlhelp	docs/Makefile	/^htmlhelp:$/;"	t
+htmlhelp_basename	docs/conf.py	/^htmlhelp_basename = 'py-trellodoc'$/;"	v
+info	docs/Makefile	/^info:$/;"	t
+info_for_all_boards	trello/trelloclient.py	/^    def info_for_all_boards(self, actions):$/;"	m	class:TrelloClient
+intersphinx_mapping	docs/conf.py	/^intersphinx_mapping = {'https:\/\/docs.python.org\/': None}$/;"	v
+is_python3	trello/customfield.py	/^is_python3 = sys.version_info.major == 3$/;"	v
+json	docs/Makefile	/^json:$/;"	t
+labels	trello/card.py	/^    def labels(self):$/;"	m	class:Card
+language	docs/conf.py	/^language = None$/;"	v
+latestCardMove_date	trello/card.py	/^    def latestCardMove_date(self):$/;"	m	class:Card
+latex	docs/Makefile	/^latex:$/;"	t
+latex_documents	docs/conf.py	/^latex_documents = [$/;"	v
+latex_elements	docs/conf.py	/^latex_elements = {$/;"	v
+latexpdf	docs/Makefile	/^latexpdf:$/;"	t
+latexpdfja	docs/Makefile	/^latexpdfja:$/;"	t
+linkcheck	docs/Makefile	/^linkcheck:$/;"	t
+listCardMove_date	trello/card.py	/^    def listCardMove_date(self):$/;"	m	class:Card
+list_boards	trello/trelloclient.py	/^    def list_boards(self, board_filter="all"):$/;"	m	class:TrelloClient
+list_cards	trello/trellolist.py	/^    def list_cards(self, card_filter="open", actions=None, query={}):$/;"	m	class:List
+list_cards_iter	trello/trellolist.py	/^    def list_cards_iter(self, card_filter="open", actions=None, query=None, limit=None, batch=30/;"	m	class:List
+list_hooks	trello/trelloclient.py	/^    def list_hooks(self, token=None):$/;"	m	class:TrelloClient
+list_id	trello/card.py	/^    def list_id(self):$/;"	m	class:Card
+list_lists	trello/board.py	/^	def list_lists(self, list_filter='all'):$/;"	m	class:Board
+list_movements	trello/card.py	/^    def list_movements(self, list_cmp=None, filter_by_date_interval=None):$/;"	m	class:Card
+list_organizations	trello/trelloclient.py	/^    def list_organizations(self):$/;"	m	class:TrelloClient
+list_stars	trello/trelloclient.py	/^    def list_stars(self):$/;"	m	class:TrelloClient
+logout	trello/trelloclient.py	/^    def logout(self):$/;"	m	class:TrelloClient
+main	trello/__main__.py	/^def main():$/;"	f
+man	docs/Makefile	/^man:$/;"	t
+man_pages	docs/conf.py	/^man_pages = [$/;"	v
+master_doc	docs/conf.py	/^master_doc = 'index'$/;"	v
+member_id	trello/card.py	/^    def member_id(self):$/;"	m	class:Card
+move	trello/trellolist.py	/^    def move(self, position):$/;"	m	class:List
+move_all_cards	trello/trellolist.py	/^    def move_all_cards(self, destination_list):$/;"	m	class:List
+move_to_board	trello/trellolist.py	/^    def move_to_board(self, board, position=None):$/;"	m	class:List
+movement_as_dict_function	trello/card.py	/^            def movement_as_dict_function(_source_list, _destination_list, _movement_datetime):$/;"	f	member:Card.list_movements	file:
+name	trello/customfield.py	/^	def name(self):$/;"	m	class:CustomField
+normal_members	trello/board.py	/^	def normal_members(self):$/;"	m	class:Board
+open	trello/board.py	/^	def open(self):$/;"	m	class:Board
+open	trello/trellolist.py	/^    def open(self):$/;"	m	class:List
+open_cards	trello/board.py	/^	def open_cards(self, custom_field_items='true'):$/;"	m	class:Board
+open_lists	trello/board.py	/^	def open_lists(self):$/;"	m	class:Board
+owner_members	trello/board.py	/^	def owner_members(self):$/;"	m	class:Board
+passenv	tox.ini	/^passenv = TRELLO_*$/;"	k	section:testenv
+pickle	docs/Makefile	/^pickle:$/;"	t
+plugin_data	trello/card.py	/^    def plugin_data(self):$/;"	m	class:Card
+project	docs/conf.py	/^project = u'py-trello'$/;"	v
+pseudoxml	docs/Makefile	/^pseudoxml:$/;"	t
+pygments_style	docs/conf.py	/^pygments_style = 'sphinx'$/;"	v
+qthelp	docs/Makefile	/^qthelp:$/;"	t
+release	docs/conf.py	/^release = '0.2.3'$/;"	v
+remove_attachment	trello/card.py	/^    def remove_attachment(self, attachment_id):$/;"	m	class:Card
+remove_due	trello/card.py	/^    def remove_due(self):$/;"	m	class:Card
+remove_due_complete	trello/card.py	/^    def remove_due_complete(self):$/;"	m	class:Card
+remove_label	trello/card.py	/^    def remove_label(self, label):$/;"	m	class:Card
+remove_member	trello/board.py	/^	def remove_member(self, member):$/;"	m	class:Board
+remove_member	trello/card.py	/^    def remove_member(self, member):$/;"	m	class:Card
+remove_member	trello/organization.py	/^    def remove_member(self, member):$/;"	m	class:Organization
+rename	trello/checklist.py	/^    def rename(self, new_name):$/;"	m	class:Checklist
+rename_checklist_item	trello/checklist.py	/^    def rename_checklist_item(self, name, new_name):$/;"	m	class:Checklist
+save	trello/board.py	/^	def save(self):$/;"	m	class:Board
+search	trello/trelloclient.py	/^    def search(self, query, partial_match=False, models=[],$/;"	m	class:TrelloClient
+seconds_to_time_unit	trello/card.py	/^            seconds_to_time_unit = lambda time: time \/ 3660.0$/;"	f	member:Card.get_stats_by_list	file:
+seconds_to_time_unit	trello/card.py	/^            seconds_to_time_unit = lambda time: time \/ 60.0$/;"	f	member:Card.get_stats_by_list	file:
+seconds_to_time_unit	trello/card.py	/^        seconds_to_time_unit = lambda time: time$/;"	f	member:Card.get_stats_by_list	file:
+setUp	test/test_trello_client.py	/^    def setUp(self):$/;"	m	class:TrelloClientTestCase
+setUp	test/test_trello_client.py	/^    def setUp(self):$/;"	m	class:TrelloClientTestCaseWithoutOAuth
+setUpClass	test/test_board.py	/^    def setUpClass(cls):$/;"	m	class:TrelloBoardTestCase
+setUpClass	test/test_card.py	/^    def setUpClass(cls):$/;"	m	class:TrelloCardTestCase
+setUpClass	test/test_checklist.py	/^    def setUpClass(cls):$/;"	m	class:TrelloChecklistTestCase
+set_checklist_item	trello/checklist.py	/^    def set_checklist_item(self, name, checked):$/;"	m	class:Checklist
+set_checklist_item_due	trello/checklist.py	/^    def set_checklist_item_due(self,checklist_item, due):$/;"	m	class:Checklist
+set_checklist_item_member	trello/checklist.py	/^    def set_checklist_item_member(self,checklist_item, member):$/;"	m	class:Checklist
+set_closed	trello/card.py	/^    def set_closed(self, closed):$/;"	m	class:Card
+set_custom_field	trello/card.py	/^    def set_custom_field(self, value, custom_field):$/;"	m	class:Card
+set_description	trello/board.py	/^	def set_description(self, desc):$/;"	m	class:Board
+set_description	trello/card.py	/^    def set_description(self, description):$/;"	m	class:Card
+set_due	trello/card.py	/^    def set_due(self, due):$/;"	m	class:Card
+set_due_complete	trello/card.py	/^    def set_due_complete(self):$/;"	m	class:Card
+set_name	trello/board.py	/^	def set_name(self, name):$/;"	m	class:Board
+set_name	trello/card.py	/^    def set_name(self, new_name):$/;"	m	class:Card
+set_name	trello/trellolist.py	/^    def set_name(self, name):$/;"	m	class:List
+set_organization	trello/board.py	/^	def set_organization(self, desc):$/;"	m	class:Board
+set_pos	trello/card.py	/^    def set_pos(self, pos):$/;"	m	class:Card
+set_pos	trello/trellolist.py	/^    def set_pos(self, position):$/;"	m	class:List
+set_reminder	trello/card.py	/^    def set_reminder(self, reminder):$/;"	m	class:Card
+set_start	trello/card.py	/^    def set_start(self, start):$/;"	m	class:Card
+setenv	tox.ini	/^setenv =$/;"	k	section:testenv
+short_id	trello/card.py	/^    def short_id(self):$/;"	m	class:Card
+short_url	trello/card.py	/^    def short_url(self):$/;"	m	class:Card
+singlehtml	docs/Makefile	/^singlehtml:$/;"	t
+source_suffix	docs/conf.py	/^source_suffix = '.rst'$/;"	v
+sphinx_ok	docs/make.bat	/^:sphinx_ok$/;"	l
+sphinx_python	docs/make.bat	/^:sphinx_python$/;"	l
+subscribe	trello/card.py	/^    def subscribe(self):$/;"	m	class:Card
+subscribe	trello/trellolist.py	/^    def subscribe(self):$/;"	m	class:List
+suite	test/test_board.py	/^def suite():$/;"	f
+suite	test/test_card.py	/^def suite():$/;"	f
+suite	test/test_checklist.py	/^def suite():$/;"	f
+suite	test/test_trello_client.py	/^def suite():$/;"	f
+templates_path	docs/conf.py	/^templates_path = ['_templates']$/;"	v
+test01_list_boards	test/test_trello_client.py	/^    def test01_list_boards(self):$/;"	m	class:TrelloClientTestCase
+test01_oauth_not_activated	test/test_trello_client.py	/^    def test01_oauth_not_activated(self):$/;"	m	class:TrelloClientTestCaseWithoutOAuth
+test100_add_board	test/test_board.py	/^    def test100_add_board(self):$/;"	m	class:TrelloBoardTestCase
+test10_board_attrs	test/test_trello_client.py	/^    def test10_board_attrs(self):$/;"	m	class:TrelloClientTestCase
+test110_copy_board	test/test_board.py	/^    def test110_copy_board(self):$/;"	m	class:TrelloBoardTestCase
+test120_close_board	test/test_board.py	/^    def test120_close_board(self):$/;"	m	class:TrelloBoardTestCase
+test130_get_checklists_board	test/test_board.py	/^    def test130_get_checklists_board(self):$/;"	m	class:TrelloBoardTestCase
+test20_board_all_lists	test/test_trello_client.py	/^    def test20_board_all_lists(self):$/;"	m	class:TrelloClientTestCase
+test21_board_open_lists	test/test_trello_client.py	/^    def test21_board_open_lists(self):$/;"	m	class:TrelloClientTestCase
+test22_board_closed_lists	test/test_trello_client.py	/^    def test22_board_closed_lists(self):$/;"	m	class:TrelloClientTestCase
+test30_list_attrs	test/test_trello_client.py	/^    def test30_list_attrs(self):$/;"	m	class:TrelloClientTestCase
+test40_add_card	test/test_card.py	/^    def test40_add_card(self):$/;"	m	class:TrelloCardTestCase
+test41_add_card_desc	test/test_card.py	/^    def test41_add_card_desc(self):$/;"	m	class:TrelloCardTestCase
+test42_add_card_with_comments_fetch	test/test_card.py	/^    def test42_add_card_with_comments_fetch(self):$/;"	m	class:TrelloCardTestCase
+test43_get_comments	test/test_card.py	/^    def test43_get_comments(self):$/;"	m	class:TrelloCardTestCase
+test44_attach_url_to_card	test/test_card.py	/^    def test44_attach_url_to_card(self):$/;"	m	class:TrelloCardTestCase
+test50_list_cards	test/test_trello_client.py	/^    def test50_list_cards(self):$/;"	m	class:TrelloClientTestCase
+test51_fetch_cards	test/test_trello_client.py	/^    def test51_fetch_cards(self):$/;"	m	class:TrelloClientTestCase
+test52_add_card_set_due	test/test_card.py	/^    def test52_add_card_set_due(self):$/;"	m	class:TrelloCardTestCase
+test52_list_hooks	test/test_trello_client.py	/^    def test52_list_hooks(self):$/;"	m	class:TrelloClientTestCase
+test53_unauthorized	test/test_trello_client.py	/^    def test53_unauthorized(self):$/;"	m	class:TrelloClientTestCase
+test54_resource_unavailable	test/test_trello_client.py	/^    def test54_resource_unavailable(self):$/;"	m	class:TrelloClientTestCase
+test70_all_members	test/test_board.py	/^    def test70_all_members(self):$/;"	m	class:TrelloBoardTestCase
+test71_normal_members	test/test_board.py	/^    def test71_normal_members(self):$/;"	m	class:TrelloBoardTestCase
+test72_admin_members	test/test_board.py	/^    def test72_admin_members(self):$/;"	m	class:TrelloBoardTestCase
+test73_owner_members	test/test_board.py	/^    def test73_owner_members(self):$/;"	m	class:TrelloBoardTestCase
+test81_resource_unavailable	test/test_card.py	/^    def test81_resource_unavailable(self):$/;"	m	class:TrelloCardTestCase
+test90_get_board	test/test_board.py	/^    def test90_get_board(self):$/;"	m	class:TrelloBoardTestCase
+test_add_delete_star	test/test_trello_client.py	/^    def test_add_delete_star(self):$/;"	m	class:TrelloClientTestCase
+test_all_cards_reachable	test/test_board.py	/^    def test_all_cards_reachable(self):$/;"	m	class:TrelloBoardTestCase
+test_checklist_rename	test/test_checklist.py	/^    def test_checklist_rename(self):$/;"	m	class:TrelloChecklistTestCase
+test_clear_checklist	test/test_checklist.py	/^    def test_clear_checklist(self):$/;"	m	class:TrelloChecklistTestCase
+test_close_cards	test/test_board.py	/^    def test_close_cards(self):$/;"	m	class:TrelloBoardTestCase
+test_delete_cards	test/test_board.py	/^    def test_delete_cards(self):$/;"	m	class:TrelloBoardTestCase
+test_delete_checklist	test/test_checklist.py	/^    def test_delete_checklist(self):$/;"	m	class:TrelloChecklistTestCase
+test_delete_checklist_item	test/test_checklist.py	/^    def test_delete_checklist_item(self):$/;"	m	class:TrelloChecklistTestCase
+test_delete_checklist_remaining	test/test_checklist.py	/^    def test_delete_checklist_remaining(self):$/;"	m	class:TrelloChecklistTestCase
+test_fetch_action_filter	test/test_board.py	/^    def test_fetch_action_filter(self):$/;"	m	class:TrelloBoardTestCase
+test_fetch_action_limit	test/test_board.py	/^    def test_fetch_action_limit(self):$/;"	m	class:TrelloBoardTestCase
+test_get_cards	test/test_board.py	/^    def test_get_cards(self):$/;"	m	class:TrelloBoardTestCase
+test_last_activity	test/test_board.py	/^    def test_last_activity(self):$/;"	m	class:TrelloBoardTestCase
+test_list_stars	test/test_trello_client.py	/^    def test_list_stars(self):$/;"	m	class:TrelloClientTestCase
+test_set_closed	test/test_card.py	/^    def test_set_closed(self):$/;"	m	class:TrelloCardTestCase
+test_set_desc	test/test_card.py	/^    def test_set_desc(self):$/;"	m	class:TrelloCardTestCase
+test_set_name	test/test_card.py	/^    def test_set_name(self):$/;"	m	class:TrelloCardTestCase
+testenv	tox.ini	/^[testenv]$/;"	s
+texinfo	docs/Makefile	/^texinfo:$/;"	t
+texinfo_documents	docs/conf.py	/^texinfo_documents = [$/;"	v
+text	docs/Makefile	/^text:$/;"	t
+todo_include_todos	docs/conf.py	/^todo_include_todos = True$/;"	v
+tox	tox.ini	/^[tox]$/;"	s
+trello	docs/modules.rst	/^trello$/;"	c
+trello package	docs/trello.rst	/^trello package$/;"	c
+trello\\.attachments module	docs/trello.rst	/^trello\\.attachments module$/;"	s	chapter:trello package
+trello\\.base module	docs/trello.rst	/^trello\\.base module$/;"	s	chapter:trello package
+trello\\.board module	docs/trello.rst	/^trello\\.board module$/;"	s	chapter:trello package
+trello\\.card module	docs/trello.rst	/^trello\\.card module$/;"	s	chapter:trello package
+trello\\.checklist module	docs/trello.rst	/^trello\\.checklist module$/;"	s	chapter:trello package
+trello\\.compat module	docs/trello.rst	/^trello\\.compat module$/;"	s	chapter:trello package
+trello\\.exceptions module	docs/trello.rst	/^trello\\.exceptions module$/;"	s	chapter:trello package
+trello\\.label module	docs/trello.rst	/^trello\\.label module$/;"	s	chapter:trello package
+trello\\.member module	docs/trello.rst	/^trello\\.member module$/;"	s	chapter:trello package
+trello\\.organization module	docs/trello.rst	/^trello\\.organization module$/;"	s	chapter:trello package
+trello\\.trelloclient module	docs/trello.rst	/^trello\\.trelloclient module$/;"	s	chapter:trello package
+trello\\.trellolist module	docs/trello.rst	/^trello\\.trellolist module$/;"	s	chapter:trello package
+trello\\.util module	docs/trello.rst	/^trello\\.util module$/;"	s	chapter:trello package
+trello\\.webhook module	docs/trello.rst	/^trello\\.webhook module$/;"	s	chapter:trello package
+type	trello/customfield.py	/^	def type(self):$/;"	m	class:CustomField
+unassign	trello/card.py	/^    def unassign(self, member_id):$/;"	m	class:Card
+unicode	trello/customfield.py	/^	unicode = str$/;"	v
+unsubscribe	trello/trellolist.py	/^    def unsubscribe(self):$/;"	m	class:List
+update_comment	trello/card.py	/^    def update_comment(self, comment_id, comment_text):$/;"	m	class:Card
+update_custom_field_definition	trello/board.py	/^	def update_custom_field_definition(self, custom_field_definition_id, name=None, display_on_card/;"	m	class:Board
+value	trello/customfield.py	/^	def value(self):$/;"	m	class:CustomField
+value	trello/customfield.py	/^	def value(self):$/;"	m	class:CustomFieldCheckbox
+value	trello/customfield.py	/^	def value(self):$/;"	m	class:CustomFieldDate
+value	trello/customfield.py	/^	def value(self):$/;"	m	class:CustomFieldList
+value	trello/customfield.py	/^	def value(self):$/;"	m	class:CustomFieldNumber
+value	trello/customfield.py	/^	def value(self):$/;"	m	class:CustomFieldText
+value	trello/customfield.py	/^	def value(self, value):$/;"	m	class:CustomField
+value	trello/customfield.py	/^	def value(self, value):$/;"	m	class:CustomFieldCheckbox
+value	trello/customfield.py	/^	def value(self, value):$/;"	m	class:CustomFieldDate
+value	trello/customfield.py	/^	def value(self, value):$/;"	m	class:CustomFieldList
+value	trello/customfield.py	/^	def value(self, value):$/;"	m	class:CustomFieldNumber
+value	trello/customfield.py	/^	def value(self, value):$/;"	m	class:CustomFieldText
+version	docs/conf.py	/^version = '0.2.3'$/;"	v
+visible_cards	trello/board.py	/^	def visible_cards(self, custom_field_items='true'):$/;"	m	class:Board
+working with board lists and cards	README.rst	/^working with board lists and cards$/;"	s	chapter:Usage
+xml	docs/Makefile	/^xml:$/;"	t

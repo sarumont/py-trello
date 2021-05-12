@@ -377,3 +377,28 @@ Make consecutive calls work with default query arg
 v0.17.1
 
 Removes the unused try statement that broke the last version
+
+v0.18.0
+
+fix last_activity typo
+Add add_organization()
+Custom field list updates
+Fixing TabError
+Added powerups
+Add files via upload
+Update custom field definition
+Updating set_reminder
+Two new methods
+Added two methods for checkitems
+Add OAuth2 support to webhook list
+Add OAuth2 support to webhook creation
+Return empty cards
+fixed a problem with fetching checklists
+Update card.py
+Added setCover to the attach function
+Update trelloclient.py
+Update trelloclient.py
+Implement the Move List to Board API
+update2 __repr__ to display all Board class attributes
+update __repr__ to display all Board class attributes
+fetch Member email
