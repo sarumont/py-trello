@@ -10,7 +10,7 @@ from trello.label import Label
 from trello.checklist import Checklist
 from trello.customfield import CustomFieldDefinition
 from dateutil import parser as dateparser
-
+from trello.powerup import PowerUp
 
 class Board(TrelloBase):
 	"""
@@ -207,6 +207,30 @@ class Board(TrelloBase):
 				post_args=arguments, )
 		return CustomFieldDefinition.from_json(board=self, json_obj=obj)
 
+	def update_custom_field_definition(self, custom_field_definition_id, name=None, display_on_card=None, pos=None):
+		"""Update a custom field definition on this board
+
+		:custom_field_definition_id: the ID of the CustomFieldDefinition to update.
+		:name: new name for the field
+		:display_on_card: boolean whether this field should be shown on the front of cards 
+		:pos: position of the list: "bottom", "top" or a positive number
+		:return: the custom_field_definition
+		:rtype: CustomFieldDefinition
+		"""
+		arguments = {}
+		if name:
+			arguments["name"] = name
+		if not display_on_card is None:
+			arguments["display/cardFront"] = u"true" if display_on_card else u"false"
+		if pos:
+			arguments["pos"] = pos
+		
+		json_obj = self.client.fetch_json(
+			    '/customFields/{0}'.format(custom_field_definition_id),
+			    http_method='PUT',
+				post_args=arguments, )
+		return json_obj
+
 	def delete_custom_field_definition(self, custom_field_definition_id):
 		"""Delete a custom_field_definition from this board
 
@@ -217,6 +241,73 @@ class Board(TrelloBase):
 		json_obj = self.client.fetch_json(
 			    '/customFields/{0}'.format(custom_field_definition_id),
 			    http_method='DELETE', )
+		return json_obj
+	
+	def get_custom_field_list_options(self,custom_field_definition_id,values_only=False):
+		"""Get custom field definition list options on this board
+
+		:custom_field_definition_id: the ID of the CustomFieldDefinition.
+		:values_only: Boolean to return only the values of the options, excluding color & position
+		:return: the custom_field_definition
+		:rtype: CustomFieldDefinition
+		"""
+
+		json_obj = self.client.fetch_json(
+				'customFields/{0}/options'.format(custom_field_definition_id),
+				http_method='GET',
+				)
+		if values_only:
+			return [v for jo in json_obj for v in jo['value'].values()]
+		return json_obj
+
+	def add_custom_field_list_option(self,custom_field_definition_id,new_option):
+		"""Update a custom field definition on this board
+
+		:custom_field_definition_id: the ID of the CustomFieldDefinition to update.
+		:new_option: The new option to add to the list
+		:return: the custom_field_definition
+		:rtype: CustomFieldDefinition
+		"""
+
+		json_obj = self.client.fetch_json(
+				'customFields/{0}/options'.format(custom_field_definition_id),
+				http_method='POST',
+				post_args={'value': {'text':new_option},
+						}, )
+		return json_obj
+	
+	def get_custom_field_list_option(self,custom_field_definition_id,option_id):
+		"""Get a specific custom field definition list option on this board
+
+		:custom_field_definition_id: the ID of the CustomFieldDefinition.
+		:option_id: the ID of the option
+		:return: the custom_field_definition
+		:rtype: CustomFieldDefinition
+		"""
+
+		json_obj = self.client.fetch_json(
+				'customFields/{0}/options/{0}'.format(custom_field_definition_id,option_id),
+				http_method='GET',
+				)
+		# if values_only:
+		# 	return [v for jo in json_obj for v in jo['value'].values()]
+		return json_obj
+
+	def delete_custom_field_list_option(self,custom_field_definition_id,option_id):
+		"""DELETE a specific custom field definition list option on this board
+
+		:custom_field_definition_id: the ID of the CustomFieldDefinition.
+		:option_id: the ID of the option
+		:return: the custom_field_definition
+		:rtype: CustomFieldDefinition
+		"""
+
+		json_obj = self.client.fetch_json(
+				'customFields/{0}/options/{0}'.format(custom_field_definition_id,option_id),
+				http_method='DELETE',
+				)
+		# if values_only:
+		# 	return [v for jo in json_obj for v in jo['value'].values()]
 		return json_obj
 
 	def get_labels(self, fields='all', limit=50):
@@ -488,3 +579,47 @@ class Board(TrelloBase):
                 '/boards/{0}/dateLastActivity'.format(self.id))
 		if json_obj['_value']:
 			return dateparser.parse(json_obj['_value'])
+	def get_power_ups(self, board_id=None, name='', filters=None):
+		'''
+		List the Power-Ups on a board
+		:filters: defaults to enabled
+		valid values: enabled, available
+		'''
+		arguments = {}
+		if board_id is None:
+			board_id = self.id
+		if filters:
+			if not filters in ("enabled", "available"):
+				filers = "enabled"
+			arguments['filter'] = filters
+		json_obj = self.client.fetch_json(
+			'/boards/' + board_id +'/plugins',
+			 http_method='GET',post_args=arguments, )
+		return list([PowerUp.from_json(self, json_obj=json) for json in json_obj])
+	def enable_power_up(self, powerup_id,board_id=None):
+		if board_id is None:
+			board_id = self.id
+		json_obj = self.client.fetch_json(
+			'boards/' + board_id + '/boardPlugins',
+			http_method='POST',
+			post_args={'idPlugin':powerup_id},)
+		return json_obj
+	def disable_power_up(self, powerup_id, board_id=None,):
+		if board_id is None:
+			board_id = self.id
+		json_obj = self.client.fetch_json(
+			'boards/' + board_id + '/boardPlugins' + powerup_id,
+			http_method='DELETE')
+		return json_obj
+	def get_enabled_power_ups(self, board_id=None, name='',):
+		'''
+		List the enabled Power-Ups on a board
+		'''
+		if board_id is None:
+			board_id = self.id
+		json_obj = self.client.fetch_json(
+			'boards/' + board_id + '/boardPlugins',
+			http_method='GET')
+		print(json_obj)
+		return list([PowerUp.from_json(self, json_obj=json) for json in json_obj])
+
