@@ -438,8 +438,11 @@ class Card(TrelloBase):
 
                 time_from_last_list_change = seconds_to_time_unit((change_datetime - last_action_datetime).total_seconds())
 
+                # Our last action has been this change
+                last_action_datetime = change_datetime
+
                 # In case the source or destination list is not a list of this board, ignore them
-                if source_list_id not in stats_by_list or not destination_list["id"] not in stats_by_list:
+                if source_list_id not in stats_by_list:
                     continue
 
                 stats_by_list[source_list_id]["time"] += time_from_last_list_change
@@ -451,18 +454,15 @@ class Card(TrelloBase):
                     else:
                         stats_by_list[source_list_id]["backward_moves"] += 1
 
-                # Our last action has been this change
-                last_action_datetime = change_datetime
-
                 # Store the last list
                 last_list = destination_list
 
             # Adding the number of seconds the card has been in its last column (until now)
             # only if the last column is not "Done" column
-                if done_list and last_list and last_list["id"] and last_list["id"] in stats_by_list and\
-                    last_list["id"] != done_list.id:
-                    time_card_has_spent_in_list_until_now = seconds_to_time_unit((datetime.datetime.now(tz) - last_action_datetime).total_seconds())
-                    stats_by_list[last_list["id"]]["time"] += time_card_has_spent_in_list_until_now
+            if done_list and last_list and last_list["id"] and last_list["id"] in stats_by_list and\
+                last_list["id"] != done_list.id:
+                time_card_has_spent_in_list_until_now = seconds_to_time_unit((datetime.datetime.now(tz) - last_action_datetime).total_seconds())
+                stats_by_list[last_list["id"]]["time"] += time_card_has_spent_in_list_until_now
 
         return stats_by_list
 
