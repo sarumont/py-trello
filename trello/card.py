@@ -441,7 +441,7 @@ class Card(TrelloBase):
                 # Our last action has been this change
                 last_action_datetime = change_datetime
 
-                # In case the source or destination list is not a list of this board, ignore them
+                # In case the source list id is not in a filter param list, ignore them
                 if source_list_id not in stats_by_list:
                     continue
 
