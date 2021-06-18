@@ -337,8 +337,11 @@ class Card(TrelloBase):
         for idx in self.actions:
             date_str = idx['date']
             movement_datetime = dateparser.parse(date_str)
-            source_list = idx['data']['listBefore']
-            destination_list = idx['data']['listAfter']
+            try:
+                source_list = idx['data']['listBefore']
+                destination_list = idx['data']['listAfter']
+            except KeyError:
+                continue
             movement = movement_function(source_list, destination_list, movement_datetime)
             movements.append(movement)
 
