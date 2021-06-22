@@ -40,12 +40,12 @@ class Checklist(TrelloBase):
         self.items.append(json_obj)
         return json_obj
 
-    def delete_checklist_item(self, name):
+    def delete_checklist_item(self, item_or_name):
         """Delete an item on this checklist
 
-        :name: name of the checklist item to delete
+        :item_or_name: name or item object of the checklist item to delete 
         """
-        ix = self._get_item_index(name)
+        ix = self._get_item_index(item_or_name)
         if ix is None:
             return
 
@@ -57,10 +57,12 @@ class Checklist(TrelloBase):
 
     def clear(self):
         """Clear checklist by removing all checklist items"""
-        # iterate over names as list is modified while iterating and this breaks
+        # copy item list to prevent modifying while iterating, which would break
         # for-loops behaviour
-        for name in [item['name'] for item in self.items]:
-            self.delete_checklist_item(name)
+        old_items = items[:] 
+        for item in old_items:
+            self.delete_checklist_item(item)
+
 
     def set_checklist_item(self, name, checked):
         """Set the state of an item on this checklist
@@ -169,11 +171,11 @@ class Checklist(TrelloBase):
             '/checklists/%s' % self.id,
             http_method='DELETE')
 
-    def _get_item_index(self, name):
+    def _get_item_index(self, item_or_name):
         """Locate the index of the checklist item"""
         try:
-            [ix] = [i for i in range(len(self.items)) if
-                    self.items[i]['name'] == name]
+            ix = [i for i, item in enumerate(self.items) if
+                    item['name'] == item_or_name or item == item_or_name][0]
             return ix
         except ValueError:
             return None
