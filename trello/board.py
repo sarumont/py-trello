@@ -444,6 +444,21 @@ class Board(TrelloBase):
 		)
 
 		return list([Card.from_json(self, json) for json in json_obj])
+	
+	def get_card(self, card_id):
+		"""
+		:card_id: str card id.
+
+		More info on card queries:
+		https://developer.atlassian.com/cloud/trello/rest/api-group-boards/#api-boards-id-cards-idcard-get
+
+		:rtype: instance of Card
+		"""
+		json_obj = self.client.fetch_json(
+				'/boards/' + self.id + '/cards/' + card_id
+		)
+
+		return Card.from_json(self, json_obj)
 
 	def all_members(self):
 		"""Returns all members on this board
