@@ -505,15 +505,7 @@ class Board(TrelloBase):
 				query_params=filters)
 		members = list()
 		for obj in json_obj:
-			m = Member(self.client, obj['id'])
-			m.status = obj.get('status', '')
-			m.id = obj.get('id', '')
-			m.bio = obj.get('bio', '')
-			m.url = obj.get('url', '')
-			m.username = obj['username']
-			m.full_name = obj['fullName']
-			m.initials = obj.get('initials', '')
-			m.member_type = obj.get('memberType', '')
+			m = Member.from_json(self.client, obj)
 			members.append(m)
 
 		return members
