@@ -319,6 +319,18 @@ class Board(TrelloBase):
 				'/boards/' + self.id + '/labels',
 				query_params={'fields': fields, 'limit': limit})
 		return Label.from_json_list(self, json_obj)
+	
+	def get_label(self, label_id):
+		"""
+		:label_id: str label id
+
+		:rtype: instance of Label
+		"""
+		json_obj = self.client.fetch_json(
+			'/boards/' + self.id + '/labels/' + label_id
+		)
+		
+		return Label.from_json(self, json_obj)
 
 	def get_checklists(self, cards='all'):
 		"""Get checklists
