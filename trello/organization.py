@@ -13,11 +13,12 @@ class Organization(TrelloBase):
     """
     Class representing an organization
     """
-    def __init__(self, client, organization_id, name=''):
+    def __init__(self, client, organization_id, name='', displayName=''):
         super(Organization, self).__init__()
         self.client = client
         self.id = organization_id
         self.name = name
+        self.displayName = displayName
 
     @classmethod
     def from_json(cls, trello_client, json_obj):
@@ -30,6 +31,7 @@ class Organization(TrelloBase):
         organization = Organization(trello_client, json_obj['id'], name=json_obj['name'])
         organization.description = json_obj.get('desc', '')
         organization.url = json_obj['url']
+        organization.displayName = json_obj['displayName']
         return organization
 
     def __repr__(self):
