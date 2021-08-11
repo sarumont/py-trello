@@ -68,7 +68,9 @@ class Board(TrelloBase):
 		return board
 
 	def __repr__(self):
-		return force_str(u'<Board %s>' % self.name)
+		return force_str(f'<Board (name: {self.name}) (id: {self.id})'
+						+ f' (last_activity: {self._date_last_activity})'
+						  f' (client: {self.client}) >')
 
 	def fetch(self):
 		"""Fetch all attributes for this board"""
@@ -224,8 +226,8 @@ class Board(TrelloBase):
 			arguments["pos"] = pos
 		
 		json_obj = self.client.fetch_json(
-			    '/customFields/{0}'.format(custom_field_definition_id),
-			    http_method='PUT',
+				'/customFields/{0}'.format(custom_field_definition_id),
+				http_method='PUT',
 				post_args=arguments, )
 		return json_obj
 
@@ -237,8 +239,8 @@ class Board(TrelloBase):
 		:rtype: json
 		"""
 		json_obj = self.client.fetch_json(
-			    '/customFields/{0}'.format(custom_field_definition_id),
-			    http_method='DELETE', )
+				'/customFields/{0}'.format(custom_field_definition_id),
+				http_method='DELETE', )
 		return json_obj
 	
 	def get_custom_field_list_options(self,custom_field_definition_id,values_only=False):
@@ -373,9 +375,9 @@ class Board(TrelloBase):
 		:rtype: json
 		"""
 		json_obj = self.client.fetch_json(
-			    '/labels/{0}'.format(label_id),
-			    http_method='DELETE',
-		    	post_args={'id': label_id}, )
+				'/labels/{0}'.format(label_id),
+				http_method='DELETE',
+				post_args={'id': label_id}, )
 		return json_obj
 
 	def all_cards(self, custom_field_items='true'):
@@ -574,7 +576,7 @@ class Board(TrelloBase):
 		:rtype: datetime.datetime
 		"""
 		json_obj = self.client.fetch_json(
-                '/boards/{0}/dateLastActivity'.format(self.id))
+				'/boards/{0}/dateLastActivity'.format(self.id))
 		if json_obj['_value']:
 			return dateparser.parse(json_obj['_value'])
 	def get_power_ups(self, board_id=None, name='', filters=None):
