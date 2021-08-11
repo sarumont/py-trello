@@ -68,9 +68,7 @@ class Board(TrelloBase):
 		return board
 
 	def __repr__(self):
-		return force_str(f'<Board (name: {self.name}) (id: {self.id})'
-						+ f' (last_activity: {self._date_last_activity})'
-						  f' (client: {self.client}) >')
+		return force_str(u'<Board %s>' % self.name)
 
 	def fetch(self):
 		"""Fetch all attributes for this board"""
@@ -189,7 +187,7 @@ class Board(TrelloBase):
 		:name: name for the field
 		:type: type of field: "checkbox", "list", "number", "text", "date"
 		:options: list of options for field, only valid for "list" type
-		:display_on_card: boolean whether this field should be shown on the front of cards
+		:display_on_card: boolean whether this field should be shown on the front of cards 
 		:pos: position of the list: "bottom", "top" or a positive number
 		:return: the custom_field_definition
 		:rtype: CustomFieldDefinition
@@ -286,7 +284,7 @@ class Board(TrelloBase):
 		"""
 
 		json_obj = self.client.fetch_json(
-				'customFields/{0}/options/{0}'.format(custom_field_definition_id,option_id),
+				'customFields/{0}/options/{1}'.format(custom_field_definition_id,option_id),
 				http_method='GET',
 				)
 		# if values_only:
@@ -303,7 +301,7 @@ class Board(TrelloBase):
 		"""
 
 		json_obj = self.client.fetch_json(
-				'customFields/{0}/options/{0}'.format(custom_field_definition_id,option_id),
+				'customFields/{0}/options/{1}'.format(custom_field_definition_id,option_id),
 				http_method='DELETE',
 				)
 		# if values_only:
@@ -597,6 +595,8 @@ class Board(TrelloBase):
 			 http_method='GET',post_args=arguments, )
 		return list([PowerUp.from_json(self, json_obj=json) for json in json_obj])
 	def enable_power_up(self, powerup_id,board_id=None):
+		from warnings import warn
+		warn("Atlassian has DEPRECATED enabling power ups! enable_power_up will be updated once an alternative becomes available",DeprecationWarning,stacklevel=2)
 		if board_id is None:
 			board_id = self.id
 		json_obj = self.client.fetch_json(
@@ -604,7 +604,9 @@ class Board(TrelloBase):
 			http_method='POST',
 			post_args={'idPlugin':powerup_id},)
 		return json_obj
-	def disable_power_up(self, powerup_id, board_id=None,):
+	def disable_power_up(self, powerup_id, board_id=None):
+		from warnings import warn
+		warn("Atlassian has DEPRECATED disabling power ups! disable_power_up will be updated once an alternative becomes available",DeprecationWarning,stacklevel=2)
 		if board_id is None:
 			board_id = self.id
 		json_obj = self.client.fetch_json(
