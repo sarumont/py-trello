@@ -54,7 +54,9 @@ class Card(TrelloBase):
 
     @property
     def labels(self):
-        return self._labels if self._labels else []
+        if self._labels:
+            return self._labels
+        return None
 
     @property
     def custom_fields(self):
@@ -98,7 +100,8 @@ class Card(TrelloBase):
         Lazily loads and returns the attachments
         """
         if self._attachments is None:
-            self._attachments = self.fetch_attachments()
+            # self._attachments = self.fetch_attachments()
+            self._attachments = self.get_attachments()
         return self._attachments
 
     def __init__(self, parent, card_id, name=''):
@@ -157,7 +160,6 @@ class Card(TrelloBase):
         card.badges = json_obj['badges']
         card.customFields = card.fetch_custom_fields(json_obj=json_obj)
         card.countCheckItems = json_obj['badges']['checkItems']
-        card.countCheckLists = len(json_obj['idChecklists'])
         card._labels = Label.from_json_list(card.board, json_obj['labels'])
         card.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
         if "attachments" in json_obj:
@@ -243,9 +245,9 @@ class Card(TrelloBase):
 
     def fetch_checklists(self):
 
-        if self.countCheckLists == 0:
+        if self.countCheckItems == 0:
             return []
-
+        
         if not hasattr(self, "checked") or self.checked is None:
             self.fetch(eager=False)
 
@@ -533,7 +535,7 @@ class Card(TrelloBase):
 
     def set_start(self, start):
         """Set the start time for the card
-
+        May only be available on Business class plans
         :start: a datetime object
         """
         datestr = start.isoformat()
@@ -542,7 +544,7 @@ class Card(TrelloBase):
         
     def set_reminder(self, reminder):
         """Set a reminder time for the card
-
+        May only be available on Business class plans
         :reminder: total number of minutes before the due date as an int
         """
         # datestr = reminder.isoformat()
@@ -581,26 +583,20 @@ class Card(TrelloBase):
         """
         self._set_remote_attribute('pos', pos)
         self.pos = pos
-
+        
     def set_custom_field(self, value, custom_field):
         """Update card custom field
-
+        
         Arguments:
             value {[str, int, date, bool]} -- Value depending on the type of custom_field
             custom_field {custom field object} -- Custom Field Object (board.get_custom_field_definitions()[0])
 
         """
-        if custom_field.field_type in ['text', 'number', 'date', 'checked']:
-            if value == "":
-                post_args = {'value': ""}
-            else:
-                post_args = {'value': {str(custom_field.field_type): value}}
-        else:
-            if value == "":
-                list_field_id = ""
-            else:
-                list_field_id = [
-                    x for x, y in custom_field.list_options.items() if y == value][0]
+        if custom_field.field_type in ['text', 'number', 'date', 'checked','checkbox']: 
+            post_args = {'value': {str(custom_field.field_type): value}}
+        else: 
+            list_field_id = [
+                x for x, y in custom_field.list_options.items() if y == value][0]
             post_args = {'idValue': list_field_id}
 
         self.client.fetch_json(
@@ -689,7 +685,7 @@ class Card(TrelloBase):
             '/cards/' + self.id + '/idMembers/' + member.id,
             http_method='DELETE')
 
-    def attach(self, name=None, mimeType=None, file=None, url=None, setCover=None):
+    def attach(self, name=None, mimeType=None, file=None, url=None):
         """
         Add an attachment to the card. The attachment can be either a
         file or a url. Setting the name and/or mime type is optional.
@@ -697,7 +693,6 @@ class Card(TrelloBase):
         :param mimeType: mime type for the attachement
         :param file: a file-like, binary object that supports read()
         :param url: a URL pointing to the resource to be attached
-        :param cover: boolean
         """
         if (file and url) or (not file and not url):
             raise Exception('Please provide either a file or url, and not both!')
@@ -709,7 +704,6 @@ class Card(TrelloBase):
             kwargs['name'] = name
             kwargs['mimeType'] = mimeType
             kwargs['url'] = url
-            kwargs['setCover'] = setCover
 
         return self._post_remote_data('attachments', **kwargs)
 
