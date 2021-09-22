@@ -286,7 +286,7 @@ class Board(TrelloBase):
 		"""
 
 		json_obj = self.client.fetch_json(
-				'customFields/{0}/options/{0}'.format(custom_field_definition_id,option_id),
+				'customFields/{0}/options/{1}'.format(custom_field_definition_id,option_id),
 				http_method='GET',
 				)
 		# if values_only:
@@ -303,7 +303,7 @@ class Board(TrelloBase):
 		"""
 
 		json_obj = self.client.fetch_json(
-				'customFields/{0}/options/{0}'.format(custom_field_definition_id,option_id),
+				'customFields/{0}/options/{1}'.format(custom_field_definition_id,option_id),
 				http_method='DELETE',
 				)
 		# if values_only:
