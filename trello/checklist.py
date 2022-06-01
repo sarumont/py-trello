@@ -19,7 +19,7 @@ class Checklist(TrelloBase):
         self.items = sorted(obj['checkItems'], key=lambda items: items.get('pos'))
         for i in self.items:
             i['checked'] = False
-            for cis in checked:
+            for cis in checked or []:
                 if cis['idCheckItem'] == i['id'] and cis['state'] == 'complete':
                     i['checked'] = True
 
