@@ -198,7 +198,6 @@ class Card(TrelloBase):
             self.due = json_obj.get('due', '')
         else:
             self.due = ''
-        self.checked = json_obj['checkItemStates']
         self.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
 
         self._customFields = self.fetch_custom_fields(json_obj=json_obj)
@@ -246,9 +245,6 @@ class Card(TrelloBase):
         if self.countCheckLists == 0:
             return []
 
-        if not hasattr(self, "checked") or self.checked is None:
-            self.fetch(eager=False)
-
         checklists = []
         json_obj = self.client.fetch_json(
             '/cards/' + self.id + '/checklists', )
@@ -256,7 +252,7 @@ class Card(TrelloBase):
         # were not sorted
         json_obj = sorted(json_obj, key=lambda checklist: checklist['pos'])
         for cl in json_obj:
-            checklists.append(Checklist(self.client, self.checked, cl,
+            checklists.append(Checklist(self.client, cl,
                                         trello_card=self.id))
         return checklists
 
@@ -760,7 +756,7 @@ class Card(TrelloBase):
             http_method='POST',
             post_args={'name': title}, )
 
-        cl = Checklist(self.client, [], json_obj, trello_card=self.id)
+        cl = Checklist(self.client, json_obj, trello_card=self.id)
         for i, name in enumerate(items):
             try:
                 checked = itemstates[i]
