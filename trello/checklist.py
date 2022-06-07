@@ -10,10 +10,9 @@ class Checklist(TrelloBase):
     Class representing a Trello checklist.
     """
 
-    def __init__(self, client, checked, obj, trello_card=None):
+    def __init__(self, client, obj, trello_card=None):
         """
         :client: Trello client object
-        :checked: List of completed checklist items on the card
         :obj: List of checklists on the card, sorted by position
         :trello_card: ID of the Trello card
         """
@@ -24,13 +23,7 @@ class Checklist(TrelloBase):
         self.name = obj['name']
         self.items = sorted(obj['checkItems'], key=lambda items: items.get('pos'))
         for i in self.items:
-            i['checked'] = False
-            # checked might be None if there were no completed items
-            if not checked:
-                continue
-            for cis in checked:
-                if cis['idCheckItem'] == i['id'] and cis['state'] == 'complete':
-                    i['checked'] = True
+            i['checked'] = i['state'] == "complete"
 
     def add_checklist_item(self, name, checked=False):
         """Add a checklist item to this checklist
