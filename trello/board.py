@@ -125,6 +125,11 @@ class Board(TrelloBase):
 				http_method='PUT',
 				post_args={'value': 'false', }, )
 		self.closed = False
+		
+	def delete(self):
+		self.client.fetch_json(
+				'/boards/' + self.id,
+				http_method='DELETE', )
 
 	def get_list(self, list_id):
 		"""Get list
