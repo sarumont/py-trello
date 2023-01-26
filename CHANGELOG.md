@@ -426,3 +426,20 @@
 [view](https://github.com/sarumont/py-trello/commit/e4290bd665cf99168a377fd23c4e9130ca06bd7d) &bull; update2 __repr__ to display all Board class attributes  
 [view](https://github.com/sarumont/py-trello/commit/7cd745c66ef5b4c20f2a30af0c0f08d3e5c3d06f) &bull; update __repr__ to display all Board class attributes  
 [view](https://github.com/sarumont/py-trello/commit/0b7ebdb718bf76fc94215964951b24597790bea8) &bull; fetch Member email  
+
+**0.19.0**
+
+[view](https://github.com/sarumont/py-trello/commit/4e4bcd7a4c84c54257d050ef6228364c44c2aace) &bull; Not all action has attributes related to movements (listBefore, listAfter), in that way it need to be checked.  
+[view](https://github.com/sarumont/py-trello/commit/c7df55a9beeab72b68f61a48002b47941f0d1cfe) &bull; Fixing typo reported in #315. Fixing identation when checking last_list (comment was idented correctly, but code not). Fixing the calculation of the time that card has been on a list, correcting last_action_datetime update value by putting it before if/continue statement.  
+[view](https://github.com/sarumont/py-trello/commit/1b74e5adb7766076e6bb8e8150442bec1fbe40c5) &bull; fix #325: allow working with duplicate checklist item names  
+[view](https://github.com/sarumont/py-trello/commit/719f5e0f236d44e0ad27e6e15772b9a69c7f865e) &bull; Minor improvement: add Board.get_card(card_id)  
+[view](https://github.com/sarumont/py-trello/commit/fbbbc727ed5b5e3aaa5ac4370bfe35d78f2dede6) &bull; Minor code improvement, instead of creating a member and updating field on Board class, using static factory Member.from_json. Adding Member.member_type; Adding Member.avatar_url;  
+[view](https://github.com/sarumont/py-trello/commit/6190bb1a79ca406c258637ab1f5a9b215248e605) &bull; add 'displayName'  property to 'organization' class  
+[view](https://github.com/sarumont/py-trello/commit/8715fc646b26a0c8f729c9e3ce6a1338adda830f) &bull; Adding get_label() into Board class  
+[view](https://github.com/sarumont/py-trello/commit/4af7182afa6b5dc53a018eb403ae8bd6002a9b3d) &bull; deprecate enable/disable power up  
+[view](https://github.com/sarumont/py-trello/commit/a66b525e7fdc8d4122bb9aba5b00fa9341e54818) &bull; fix: incorrect string format index  
+[view](https://github.com/sarumont/py-trello/commit/bef7c034409622fd79652e87e5a3527be442f1e9) &bull; adapt card checklists handling to new Trello payload  
+[view](https://github.com/sarumont/py-trello/commit/9817e97502d1822e2e58b5db562e05b60965cf93) &bull; Don't check completed checklist items if None  
+[view](https://github.com/sarumont/py-trello/commit/f4ac3fbe609779a37c3253549be26dc141b8e49f) &bull; adding urlSource field for adding cards, which works brilliantly  
+[view](https://github.com/sarumont/py-trello/commit/e7d50ea1aed0b3dd646af835b4438ae58a1b5342) &bull; Added Option To Delete Board  
+[view](https://github.com/sarumont/py-trello/commit/c711809a076aee3fc04784e26e6b0b9688229ebd) &bull; chore: cleanup  

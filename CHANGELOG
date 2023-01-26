@@ -402,3 +402,20 @@ Implement the Move List to Board API
 update2 __repr__ to display all Board class attributes
 update __repr__ to display all Board class attributes
 fetch Member email
+
+v0.19.0
+
+Not all action has attributes related to movements (listBefore, listAfter), in that way it need to be checked.
+Fixing typo reported in #315. Fixing identation when checking last_list (comment was idented correctly, but code not). Fixing the calculation of the time that card has been on a list, correcting last_action_datetime update value by putting it before if/continue statement.
+fix #325: allow working with duplicate checklist item names
+Minor improvement: add Board.get_card(card_id)
+Minor code improvement, instead of creating a member and updating field on Board class, using static factory Member.from_json. Adding Member.member_type; Adding Member.avatar_url;
+add 'displayName'  property to 'organization' class
+Adding get_label() into Board class
+deprecate enable/disable power up
+fix: incorrect string format index
+adapt card checklists handling to new Trello payload
+Don't check completed checklist items if None
+adding urlSource field for adding cards, which works brilliantly
+Added Option To Delete Board
+chore: cleanup
