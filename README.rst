@@ -1,5 +1,8 @@
-A wrapper around the Trello API written in Python. Each Trello object is
-represented by a corresponding Python object. The attributes of these objects
+==================================================
+py-trello - A Python wrapper around the Trello API
+==================================================
+
+Each Trello object is represented by a corresponding Python object. The attributes of these objects
 are cached, but the child objects are not. This can possibly be improved when
 the API allows for notification subscriptions; this would allow caching
 (assuming a connection was available to invalidate the cache as appropriate).
@@ -79,6 +82,10 @@ Run
 ::
 
     python -m trello oauth
+    
+Docs
+====
+`Check out the docs on readthedocs <https://py-trello-dev.readthedocs.io>`_
 
 Required Python modules
 =======================
