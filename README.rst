@@ -82,6 +82,10 @@ Run
 ::
 
     python -m trello oauth
+    
+Docs
+====
+`Check out the docs on readthedocs <https://py-trello-dev.readthedocs.io>`_
 
 Required Python modules
 =======================
