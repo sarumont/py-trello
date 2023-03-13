@@ -143,6 +143,8 @@ class Card(TrelloBase):
         card._json_obj = json_obj
         card.desc = json_obj.get('desc', '')
         card.due = json_obj.get('due', '')
+        card.start = json_obj.get('start', '')
+        card.reminder = json_obj['dueReminder']
         card.is_due_complete = json_obj['dueComplete']
         card.closed = json_obj['closed']
         card.url = json_obj['url']
@@ -198,6 +200,12 @@ class Card(TrelloBase):
             self.due = json_obj.get('due', '')
         else:
             self.due = ''
+        if json_obj.get('start', ''):
+            self.start = json_obj.get('start', '')
+        else:
+            self.start = ''
+        self.reminder = json_obj['dueReminder']
+        self.is_due_complete = json_obj['dueComplete']
         self.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
 
         self._customFields = self.fetch_custom_fields(json_obj=json_obj)
@@ -509,6 +517,18 @@ class Card(TrelloBase):
     def due_date(self):
         return dateparser.parse(self.due) if self.due else ''
 
+    @property
+    def start_date(self):
+        return dateparser.parse(self.start) if self.start else ''
+
+    @property
+    def reminder_time(self):
+        return self.reminder
+
+    @property
+    def due_complete(self):
+        return self.is_due_complete
+
     def set_name(self, new_name):
         """Update the name on the card to :new_name:
 
@@ -556,6 +576,7 @@ class Card(TrelloBase):
         :return: None
         """
         self._set_due_complete(True)
+        self.is_due_complete = True
 
     def remove_due_complete(self):
         """Remove due complete
@@ -563,7 +584,7 @@ class Card(TrelloBase):
         :return: None
         """
         self._set_due_complete(False)
-
+        self.is_due_complete = False
 
     def remove_due(self):
         """
@@ -571,6 +592,20 @@ class Card(TrelloBase):
         """
         self._set_remote_attribute('due', None)
         self.due = ''
+
+    def remove_start(self):
+        """
+        Remove the start datetime of this card.
+        """
+        self._set_remote_attribute('start', None)
+        self.start = ''
+
+    def remove_reminder(self):
+        """
+        Remove the reminder datetime of this card.
+        """
+        self._set_remote_attribute('dueReminder', None)
+        self.reminder = None
 
     def set_pos(self, pos):
         """
