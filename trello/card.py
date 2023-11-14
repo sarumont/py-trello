@@ -242,9 +242,6 @@ class Card(TrelloBase):
 
     def fetch_checklists(self):
 
-        if self.countCheckLists == 0:
-            return []
-
         checklists = []
         json_obj = self.client.fetch_json(
             '/cards/' + self.id + '/checklists', )
