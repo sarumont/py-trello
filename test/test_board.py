@@ -13,17 +13,19 @@ class TrelloBoardTestCase(unittest.TestCase):
     independently.
     """
 
+    _trello = None
+    _board = None
+
     @classmethod
     def setUpClass(cls):
         cls._trello = TrelloClient(os.environ['TRELLO_API_KEY'],
                                    token=os.environ['TRELLO_TOKEN'])
-        for b in cls._trello.list_boards():
-            if b.name == os.environ['TRELLO_TEST_BOARD_NAME']:
-                cls._board = b
-                break
-        if not cls._board:
-            cls.fail("Couldn't find test board")
+        cls._board = cls._trello.add_board("TEST BOARD")
         cls._list = cls._board.add_list(str(datetime.now()))
+
+    @classmethod
+    def tearDownClass(cls):
+        cls._board.delete()
 
     def _add_card(self, name, description=None):
         try:
