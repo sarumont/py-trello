@@ -98,5 +98,21 @@ To run tests across various Python versions,
 `tox <https://tox.readthedocs.io/en/latest/>`_ is supported. Install it
 and simply run ``tox`` from the ``ha-py-trello`` directory.
 
+## Publishing
+To publish, simply create a release on GitHub and a workflow will kick off to publish to PyPI. If you'd like to publish
+locally, follow the below instructions.
+
+First ensure the appropriate tools are installed locally:
+```shell
+python3 -m pip install --upgrade build
+python3 -m pip install --upgrade twine
+```
+Then build and publish:
+```shell
+python3 -m build
+python3 -m twine upload dist/*
+```
+For more information see the [official packaging and publishing docs](https://packaging.python.org/en/latest/tutorials/packaging-projects).
+
 ---
 *Forked from original: https://github.com/sarumont/py-trello*
