@@ -3,6 +3,9 @@ from __future__ import with_statement, print_function, absolute_import
 import json
 import requests
 from requests_oauthlib import OAuth1
+
+from trello.batch.batcherror import BatchError
+from trello.batch.batchresponse import BatchResponse
 from trello.board import Board
 from trello.card import Card
 from trello.trellolist import List
@@ -196,6 +199,20 @@ class TrelloClient(object):
         board = self.get_board(board_id)
         label_json = self.fetch_json('/labels/' + label_id)
         return Label.from_json(board, label_json)
+
+    def fetch_batch(self, batch_requests: list):
+        batch_responses = self.fetch_json(
+            "batch",
+            query_params={"urls": ",".join(batch_request.path() for batch_request in batch_requests)})
+
+        items = []
+        for response, request in zip(batch_responses, batch_requests):
+            if "200" in response:
+                item = BatchResponse(request.parse(response['200']), True)
+            else:
+                item = BatchResponse(BatchError.from_json(response), False)
+            items.append(item)
+        return items
 
     def fetch_json(
             self,

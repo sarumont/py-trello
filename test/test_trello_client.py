@@ -3,7 +3,9 @@ from __future__ import with_statement, print_function
 import os
 import unittest
 from datetime import datetime
-from trello import TrelloClient, Unauthorized, ResourceUnavailable
+from trello import TrelloClient, Unauthorized, ResourceUnavailable, Board, List
+from trello.batch.board import Board as BatchBoard
+from trello.batch.batcherror import BatchError
 
 
 class TrelloClientTestCase(unittest.TestCase):
@@ -18,6 +20,32 @@ class TrelloClientTestCase(unittest.TestCase):
     def setUp(self):
         self._trello = TrelloClient(os.environ['TRELLO_API_KEY'],
                                     token=os.environ['TRELLO_TOKEN'])
+
+    def test_fetch_batch(self):
+        board = self._trello.add_board("TEST BOARD")
+
+        batch_responses = self._trello.fetch_batch([
+            BatchBoard.GetLists(board.id, ['id', 'name'], 'open', ['idCard']),
+            BatchBoard.GetBoard(board.id, ['id', 'name']),
+            BatchBoard.GetLists('123', ['name'])
+        ])
+        board_lists = batch_responses[0]
+        boards = batch_responses[1]
+        batch_error = batch_responses[2]
+
+        self.assertTrue(board_lists.success)
+        self.assertIsInstance(board_lists.payload[0], List)
+        self.assertEqual(len(board_lists.payload), 3)
+
+        self.assertTrue(boards.success)
+        self.assertIsInstance(boards.payload, Board)
+        self.assertEqual(boards.payload.name, "TEST BOARD")
+
+        self.assertFalse(batch_error.success)
+        self.assertIsInstance(batch_error.payload, BatchError)
+        self.assertEqual(batch_error.payload.message, "invalid id")
+
+        board.delete()
 
     def test01_list_boards(self):
         board = self._trello.add_board("TEST BOARD")
