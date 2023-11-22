@@ -3,15 +3,15 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="py-trello",
-    version="0.19.0",
+    name="ha-py-trello",
+    version="0.20.0",
 
-    description='Python wrapper around the Trello API',
+    description='Python wrapper around the Trello API (Home Assistant specific)',
     long_description=open('README.rst').read(),
-    author='Richard Kolkovich',
-    author_email='richard@sigil.org',
-    url='https://trello.com/board/py-trello/4f145d87b2f9f15d6d027b53',
-    download_url='https://github.com/sarumont/py-trello',
+    author='Scott Giminiani (originally Richard Kolkovich)',
+    author_email='scottg489@gmail.com',
+    url='https://github.com/ScottG489/ha-py-trello',
+    download_url='https://github.com/ScottG489/ha-py-trello',
     keywords='python',
     license='BSD License',
     classifiers=[

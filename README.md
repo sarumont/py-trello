@@ -4,15 +4,12 @@ are cached, but the child objects are not. This can possibly be improved when
 the API allows for notification subscriptions; this would allow caching
 (assuming a connection was available to invalidate the cache as appropriate).
 
-I've created a `Trello Board <https://trello.com/board/py-trello/4f145d87b2f9f15d6d027b53>`_
-for feature requests, discussion and some development tracking.
-
 Install
 =======
 
 ::
 
-    pip install py-trello
+    pip install ha-py-trello
 
 Usage
 =====
@@ -99,4 +96,7 @@ Trello account with existing data.**
 
 To run tests across various Python versions,
 `tox <https://tox.readthedocs.io/en/latest/>`_ is supported. Install it
-and simply run ``tox`` from the ``py-trello`` directory.
+and simply run ``tox`` from the ``ha-py-trello`` directory.
+
+---
+*Forked from original: https://github.com/sarumont/py-trello*
