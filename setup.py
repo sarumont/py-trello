@@ -7,7 +7,7 @@ setup(
     version="0.20.0",
 
     description='Python wrapper around the Trello API (Home Assistant specific)',
-    long_description=open('README.rst').read(),
+    long_description=open('README.md').read(),
     author='Scott Giminiani (originally Richard Kolkovich)',
     author_email='scottg489@gmail.com',
     url='https://github.com/ScottG489/ha-py-trello',
