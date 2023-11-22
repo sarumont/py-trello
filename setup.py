@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="ha-py-trello",
-    version="0.20.0",
+    version="0.20.2",
 
     description='Python wrapper around the Trello API (Home Assistant specific)',
     long_description=open('README.md').read(),
