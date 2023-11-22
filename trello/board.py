@@ -57,13 +57,13 @@ class Board(TrelloBase):
 		:json_obj: the json board object
 		"""
 		if organization is None:
-			board = Board(client=trello_client, board_id=json_obj['id'], name=json_obj['name'])
+			board = Board(client=trello_client, board_id=json_obj['id'], name=json_obj.get('name', None))
 		else:
-			board = Board(organization=organization, board_id=json_obj['id'], name=json_obj['name'])
+			board = Board(organization=organization, board_id=json_obj['id'], name=json_obj.get('name', None))
 
 		board.description = json_obj.get('desc', '')
-		board.closed = json_obj['closed']
-		board.url = json_obj['url']
+		board.closed = json_obj.get('closed', None)
+		board.url = json_obj.get('url', None)
 
 		return board
 

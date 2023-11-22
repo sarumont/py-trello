@@ -34,13 +34,13 @@ class List(TrelloBase):
         :board: the board object that the list belongs to
         :json_obj: the json list object
         """
-        list = List(board, json_obj['id'], name=json_obj['name'])
-        list.closed = json_obj['closed']
-        list.pos = json_obj['pos']
+        list_ = List(board, json_obj['id'], name=json_obj.get('name', None))
+        list_.closed = json_obj.get('closed', None)
+        list_.pos = json_obj.get('pos', None)
         #this method is also called from board.py with a different json object, so we need to make sure 'subscribed' is there
         if 'subscribed' in json_obj:
-            list.subscribed = json_obj['subscribed']
-        return list
+            list_.subscribed = json_obj['subscribed']
+        return list_
 
     def __repr__(self):
         return force_str(u'<List %s>' % self.name)
