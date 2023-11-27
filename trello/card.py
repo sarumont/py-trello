@@ -139,27 +139,30 @@ class Card(TrelloBase):
             raise Exception("key 'id' is not in json_obj")
         card = cls(parent,
                    json_obj['id'],
-                   name=json_obj['name'])
+                   name=json_obj.get('name'))
         card._json_obj = json_obj
         card.desc = json_obj.get('desc', '')
         card.due = json_obj.get('due', '')
-        card.is_due_complete = json_obj['dueComplete']
-        card.closed = json_obj['closed']
-        card.url = json_obj['url']
-        card.pos = json_obj['pos']
-        card.shortUrl = json_obj['shortUrl']
-        card.idMembers = json_obj['idMembers']
-        card.member_ids = json_obj['idMembers']
-        card.idLabels = json_obj['idLabels']
-        card.idBoard = json_obj['idBoard']
-        card.idList = json_obj['idList']
-        card.idShort = json_obj['idShort']
-        card.badges = json_obj['badges']
+        card.is_due_complete = json_obj.get('dueComplete')
+        card.closed = json_obj.get('closed')
+        card.url = json_obj.get('url')
+        card.pos = json_obj.get('pos')
+        card.shortUrl = json_obj.get('shortUrl')
+        card.idMembers = json_obj.get('idMembers')
+        card.member_ids = json_obj.get('idMembers')
+        card.idLabels = json_obj.get('idLabels')
+        card.idBoard = json_obj.get('idBoard')
+        card.idList = json_obj.get('idList')
+        card.idShort = json_obj.get('idShort')
+        card.badges = json_obj.get('badges')
         card.customFields = card.fetch_custom_fields(json_obj=json_obj)
-        card.countCheckItems = json_obj['badges']['checkItems']
-        card.countCheckLists = len(json_obj['idChecklists'])
-        card._labels = Label.from_json_list(card.board, json_obj['labels'])
-        card.dateLastActivity = dateparser.parse(json_obj['dateLastActivity'])
+        if json_obj.get('badges'):
+            card.countCheckItems = json_obj['badges']['checkItems']
+        if json_obj.get('idChecklists'):
+            card.countCheckLists = len(json_obj['idChecklists'])
+        card._labels = Label.from_json_list(card.board, json_obj.get('labels', []))
+        if json_obj.get('dateLastActivity'):
+            card.dateLastActivity = dateparser.parse(json_obj.get('dateLastActivity'))
         if "attachments" in json_obj:
             card._attachments = []
             for attachment_json in json_obj["attachments"]:

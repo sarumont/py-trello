@@ -40,6 +40,8 @@ class List(TrelloBase):
         #this method is also called from board.py with a different json object, so we need to make sure 'subscribed' is there
         if 'subscribed' in json_obj:
             list_.subscribed = json_obj['subscribed']
+        if 'cards' in json_obj:
+            list_.cards = [Card.from_json(list_, card) for card in json_obj['cards']]
         return list_
 
     def __repr__(self):
