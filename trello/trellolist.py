@@ -25,6 +25,7 @@ class List(TrelloBase):
         self.closed = None
         self.pos = None
         self.subscribed = None
+        self.cards = []
 
     @classmethod
     def from_json(cls, board, json_obj):
