@@ -59,7 +59,7 @@ class Checklist(TrelloBase):
         """Clear checklist by removing all checklist items"""
         # copy item list to prevent modifying while iterating, which would break
         # for-loops behaviour
-        old_items = items[:] 
+        old_items = self.items[:]
         for item in old_items:
             self.delete_checklist_item(item)
 

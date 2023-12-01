@@ -57,13 +57,13 @@ class Board(TrelloBase):
 		:json_obj: the json board object
 		"""
 		if organization is None:
-			board = Board(client=trello_client, board_id=json_obj['id'], name=json_obj['name'])
+			board = Board(client=trello_client, board_id=json_obj['id'], name=json_obj.get('name', None))
 		else:
-			board = Board(organization=organization, board_id=json_obj['id'], name=json_obj['name'])
+			board = Board(organization=organization, board_id=json_obj['id'], name=json_obj.get('name', None))
 
 		board.description = json_obj.get('desc', '')
-		board.closed = json_obj['closed']
-		board.url = json_obj['url']
+		board.closed = json_obj.get('closed', None)
+		board.url = json_obj.get('url', None)
 
 		return board
 
@@ -123,7 +123,7 @@ class Board(TrelloBase):
 				http_method='PUT',
 				post_args={'value': 'false', }, )
 		self.closed = False
-		
+
 	def delete(self):
 		self.client.fetch_json(
 				'/boards/' + self.id,
@@ -192,7 +192,7 @@ class Board(TrelloBase):
 		:name: name for the field
 		:type: type of field: "checkbox", "list", "number", "text", "date"
 		:options: list of options for field, only valid for "list" type
-		:display_on_card: boolean whether this field should be shown on the front of cards 
+		:display_on_card: boolean whether this field should be shown on the front of cards
 		:pos: position of the list: "bottom", "top" or a positive number
 		:return: the custom_field_definition
 		:rtype: CustomFieldDefinition
@@ -215,7 +215,7 @@ class Board(TrelloBase):
 
 		:custom_field_definition_id: the ID of the CustomFieldDefinition to update.
 		:name: new name for the field
-		:display_on_card: boolean whether this field should be shown on the front of cards 
+		:display_on_card: boolean whether this field should be shown on the front of cards
 		:pos: position of the list: "bottom", "top" or a positive number
 		:return: the custom_field_definition
 		:rtype: CustomFieldDefinition
@@ -227,7 +227,7 @@ class Board(TrelloBase):
 			arguments["display/cardFront"] = u"true" if display_on_card else u"false"
 		if pos:
 			arguments["pos"] = pos
-		
+
 		json_obj = self.client.fetch_json(
 			    '/customFields/{0}'.format(custom_field_definition_id),
 			    http_method='PUT',
@@ -245,7 +245,7 @@ class Board(TrelloBase):
 			    '/customFields/{0}'.format(custom_field_definition_id),
 			    http_method='DELETE', )
 		return json_obj
-	
+
 	def get_custom_field_list_options(self,custom_field_definition_id,values_only=False):
 		"""Get custom field definition list options on this board
 
@@ -278,7 +278,7 @@ class Board(TrelloBase):
 				post_args={'value': {'text':new_option},
 						}, )
 		return json_obj
-	
+
 	def get_custom_field_list_option(self,custom_field_definition_id,option_id):
 		"""Get a specific custom field definition list option on this board
 
@@ -322,7 +322,7 @@ class Board(TrelloBase):
 				'/boards/' + self.id + '/labels',
 				query_params={'fields': fields, 'limit': limit})
 		return Label.from_json_list(self, json_obj)
-	
+
 	def get_label(self, label_id):
 		"""
 		:label_id: str label id
@@ -332,7 +332,7 @@ class Board(TrelloBase):
 		json_obj = self.client.fetch_json(
 			'/boards/' + self.id + '/labels/' + label_id
 		)
-		
+
 		return Label.from_json(self, json_obj)
 
 	def get_checklists(self, cards='all'):
@@ -458,7 +458,7 @@ class Board(TrelloBase):
 		)
 
 		return list([Card.from_json(self, json) for json in json_obj])
-	
+
 	def get_card(self, card_id):
 		"""
 		:card_id: str card id.

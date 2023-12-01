@@ -23,7 +23,7 @@ def create_oauth_token(expiration=None, scope=None, key=None, secret=None, name=
     scope = scope or os.environ.get('TRELLO_SCOPE', 'read,write')
     trello_key = key or os.environ['TRELLO_API_KEY']
     trello_secret = secret or os.environ['TRELLO_API_SECRET']
-    name = name or os.environ.get('TRELLO_NAME', 'py-trello')
+    name = name or os.environ.get('TRELLO_NAME', 'ha-py-trello')
 
     # Step 1: Get a request token. This is a temporary token that is used for
     # having the user authorize an access token and to sign the request to obtain

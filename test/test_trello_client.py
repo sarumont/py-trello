@@ -3,7 +3,9 @@ from __future__ import with_statement, print_function
 import os
 import unittest
 from datetime import datetime
-from trello import TrelloClient, Unauthorized, ResourceUnavailable
+from trello import TrelloClient, Unauthorized, ResourceUnavailable, Board, List
+from trello.batch.board import Board as BatchBoard
+from trello.batch.batcherror import BatchError
 
 
 class TrelloClientTestCase(unittest.TestCase):
@@ -19,10 +21,38 @@ class TrelloClientTestCase(unittest.TestCase):
         self._trello = TrelloClient(os.environ['TRELLO_API_KEY'],
                                     token=os.environ['TRELLO_TOKEN'])
 
+    def test_fetch_batch(self):
+        board = self._trello.add_board("TEST BOARD")
+
+        batch_responses = self._trello.fetch_batch([
+            BatchBoard.GetLists(board.id, ['id', 'name'], 'open', ['idCard']),
+            BatchBoard.GetBoard(board.id, ['id', 'name']),
+            BatchBoard.GetLists('123', ['name'])
+        ])
+        board_lists = batch_responses[0]
+        boards = batch_responses[1]
+        batch_error = batch_responses[2]
+
+        self.assertTrue(board_lists.success)
+        self.assertIsInstance(board_lists.payload[0], List)
+        self.assertEqual(len(board_lists.payload), 3)
+
+        self.assertTrue(boards.success)
+        self.assertIsInstance(boards.payload, Board)
+        self.assertEqual(boards.payload.name, "TEST BOARD")
+
+        self.assertFalse(batch_error.success)
+        self.assertIsInstance(batch_error.payload, BatchError)
+        self.assertEqual(batch_error.payload.message, "invalid id")
+
+        board.delete()
+
     def test01_list_boards(self):
-        self.assertEqual(
-            len(self._trello.list_boards(board_filter="open")),
-            int(os.environ['TRELLO_TEST_BOARD_COUNT']))
+        board = self._trello.add_board("TEST BOARD")
+        boards = self._trello.list_boards(board_filter="open")
+        self.assertGreater(len(boards), 0)
+        self.assertIn(board, boards)
+        board.delete()
 
     def test10_board_attrs(self):
         boards = self._trello.list_boards()
@@ -111,23 +141,18 @@ class TrelloClientTestCase(unittest.TestCase):
         self.assertRaises(ResourceUnavailable,
                           self._trello.get_card, '0')
 
-    def test_list_stars(self):
-        """
-        Test trello client star list
-        """
-        self.assertEqual(len(self._trello.list_stars()), int(os.environ["TRELLO_TEST_STAR_COUNT"]), "Number of stars does not match TRELLO_TEST_STAR_COUNT")
-
     def test_add_delete_star(self):
         """
         Test add and delete star to/from test board
         """
-        test_board_id = self._trello.search(os.environ["TRELLO_TEST_BOARD_NAME"])[0].id
-        new_star = self._trello.add_star(test_board_id)
+        board = self._trello.add_board("TEST BOARD")
+        new_star = self._trello.add_star(board.id)
         star_list = self._trello.list_stars()
         self.assertTrue(new_star in star_list, "Star id was not added in list of starred boards")
         deleted_star = self._trello.delete_star(new_star)
         star_list = self._trello.list_stars()
         self.assertFalse(deleted_star in star_list, "Star id was not deleted from list of starred boards")
+        board.delete()
 
 class TrelloClientTestCaseWithoutOAuth(unittest.TestCase):
     """

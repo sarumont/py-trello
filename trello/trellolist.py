@@ -25,6 +25,7 @@ class List(TrelloBase):
         self.closed = None
         self.pos = None
         self.subscribed = None
+        self.cards = []
 
     @classmethod
     def from_json(cls, board, json_obj):
@@ -34,13 +35,15 @@ class List(TrelloBase):
         :board: the board object that the list belongs to
         :json_obj: the json list object
         """
-        list = List(board, json_obj['id'], name=json_obj['name'])
-        list.closed = json_obj['closed']
-        list.pos = json_obj['pos']
+        list_ = List(board, json_obj['id'], name=json_obj.get('name', None))
+        list_.closed = json_obj.get('closed', None)
+        list_.pos = json_obj.get('pos', None)
         #this method is also called from board.py with a different json object, so we need to make sure 'subscribed' is there
         if 'subscribed' in json_obj:
-            list.subscribed = json_obj['subscribed']
-        return list
+            list_.subscribed = json_obj['subscribed']
+        if 'cards' in json_obj:
+            list_.cards = [Card.from_json(list_, card) for card in json_obj['cards']]
+        return list_
 
     def __repr__(self):
         return force_str(u'<List %s>' % self.name)

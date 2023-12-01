@@ -13,17 +13,33 @@ class TrelloBoardTestCase(unittest.TestCase):
     independently.
     """
 
+    _test_board_guid = "c0b8eaf5-d63e-4586-a2be-5d1567e22cc9"
+
     @classmethod
     def setUpClass(cls):
-        cls._trello = TrelloClient(os.environ['TRELLO_API_KEY'],
-                                   token=os.environ['TRELLO_TOKEN'])
-        for b in cls._trello.list_boards():
-            if b.name == os.environ['TRELLO_TEST_BOARD_NAME']:
-                cls._board = b
-                break
-        if not cls._board:
-            cls.fail("Couldn't find test board")
-        cls._list = cls._board.add_list(str(datetime.now()))
+        cls.clean_boards()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.clean_boards()
+
+    @classmethod
+    def clean_boards(cls):
+        trello = TrelloClient(os.environ['TRELLO_API_KEY'],
+                              token=os.environ['TRELLO_TOKEN'])
+        for board in trello.list_boards():
+            if cls._test_board_guid in board.name:
+                board.delete()
+
+    def setUp(self):
+        self._trello = TrelloClient(os.environ['TRELLO_API_KEY'],
+                                    token=os.environ['TRELLO_TOKEN'])
+        self._board = self._trello.add_board(f"TEST BOARD ({TrelloBoardTestCase._test_board_guid})")
+        self._list = self._board.add_list(str(datetime.now()))
+        self._add_card("test_card")
+
+    def tearDown(self):
+        self._board.delete()
 
     def _add_card(self, name, description=None):
         try:
@@ -142,36 +158,28 @@ class TrelloBoardTestCase(unittest.TestCase):
         self.assertEqual(self._board.name, board.name)
 
     def test100_add_board(self):
-        test_board = self._trello.add_board("test_create_board")
-        test_list = test_board.add_list("test_list")
+        test_list = self._board.add_list("test_list")
         test_list.add_card("test_card")
-        open_boards = self._trello.list_boards(board_filter="open")
-        self.assertEqual(len([x for x in open_boards if x.name == "test_create_board"]), 1)
+        self.assertEqual(self._trello.get_board(self._board.id).id, self._board.id)
 
     def test110_copy_board(self):
-        boards = self._trello.list_boards(board_filter="open")
-        source_board = next( x for x in boards if x.name == "test_create_board")
-        self._trello.add_board("copied_board", source_board=source_board)
-        listed_boards = self._trello.list_boards(board_filter="open")
-        copied_board = next(iter([x for x in listed_boards if x.name == "copied_board"]), None)
+        copied_board = self._trello.add_board("Copied " + self._board.name, source_board=self._board)
         self.assertIsNotNone(copied_board)
         open_lists = copied_board.open_lists()
         self.assertEqual(len(open_lists), 4) # default lists plus mine
         test_list = open_lists[0]
         self.assertEqual(len(test_list.list_cards()), 1)
-        test_card = next ( iter([ x for x in test_list.list_cards() if x.name == "test_card"]), None )
+        test_card = next(iter([x for x in test_list.list_cards() if x.name == "test_card"]), None)
         self.assertIsNotNone(test_card)
+        copied_board.delete()
 
     def test120_close_board(self):
         boards = self._trello.list_boards(board_filter="open")
         open_count = len(boards)
-        test_create_board = next( x for x in boards if x.name == "test_create_board") # type: Board
-        copied_board = next( x for x in boards if x.name == "copied_board") # type: Board
-        test_create_board.close()
-        copied_board.close()
+        self._board.close()
         still_open_boards = self._trello.list_boards(board_filter="open")
         still_open_count = len(still_open_boards)
-        self.assertEqual(still_open_count, open_count - 2)
+        self.assertEqual(still_open_count, open_count - 1)
 
     def test130_get_checklists_board(self):
         chklists = self._board.get_checklists(cards = 'open')

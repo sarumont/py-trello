@@ -4,15 +4,12 @@ are cached, but the child objects are not. This can possibly be improved when
 the API allows for notification subscriptions; this would allow caching
 (assuming a connection was available to invalidate the cache as appropriate).
 
-I've created a `Trello Board <https://trello.com/board/py-trello/4f145d87b2f9f15d6d027b53>`_
-for feature requests, discussion and some development tracking.
-
 Install
 =======
 
 ::
 
-    pip install py-trello
+    pip install ha-py-trello
 
 Usage
 =====
@@ -92,12 +89,30 @@ To run the tests, run ``python -m unittest discover``. Four environment variable
 
 * ``TRELLO_API_KEY``: your Trello API key
 * ``TRELLO_TOKEN``: your Trello OAuth token
-* ``TRELLO_TEST_BOARD_COUNT``: the number of boards in your Trello account
-* ``TRELLO_TEST_BOARD_NAME``: name of the board to test card manipulation on. Must be unique, or the first match will be used
-* ``TRELLO_TEST_STAR_COUNT``: the number of stars on your test Trello board
 
-*WARNING*: The tests will delete all cards on the board called `TRELLO_TEST_BOARD_NAME`!
+*NOTE*: **It's recommended to create a separate Trello account for testing. While the tests try to only modify or delete
+resources they've created, to remove all possibility of unintentional data loss, we recommend not using a personal
+Trello account with existing data.**
 
 To run tests across various Python versions,
 `tox <https://tox.readthedocs.io/en/latest/>`_ is supported. Install it
-and simply run ``tox`` from the ``py-trello`` directory.
+and simply run ``tox`` from the ``ha-py-trello`` directory.
+
+## Publishing
+To publish, simply create a release on GitHub and a workflow will kick off to publish to PyPI. If you'd like to publish
+locally, follow the below instructions.
+
+First ensure the appropriate tools are installed locally:
+```shell
+python3 -m pip install --upgrade build
+python3 -m pip install --upgrade twine
+```
+Then build and publish:
+```shell
+python3 -m build
+python3 -m twine upload dist/*
+```
+For more information see the [official packaging and publishing docs](https://packaging.python.org/en/latest/tutorials/packaging-projects).
+
+---
+*Forked from original: https://github.com/sarumont/py-trello*
