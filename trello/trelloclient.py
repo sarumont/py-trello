@@ -213,7 +213,7 @@ class TrelloClient(object):
         if query_params is None:
             query_params = {}
 
-        # Per trello api specificacion payload should not be present on get requests.
+        # Per trello api specification payload should not be present on get requests.
         data = None
         
         # if files specified, we don't want any data
