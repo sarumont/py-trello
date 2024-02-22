@@ -212,13 +212,14 @@ class TrelloClient(object):
             headers = {}
         if query_params is None:
             query_params = {}
-        if post_args is None:
-            post_args = {}
 
-        # if files specified, we don't want any data
+        # Per trello api specificacion payload should not be present on get requests.
         data = None
+        
+        # if files specified, we don't want any data
         if files is None:
-            data = json.dumps(post_args)
+            if post_args is not None:
+                data = json.dumps(post_args)
 
         # set content type and accept headers to handle JSON
         if http_method in ("POST", "PUT", "DELETE") and not files:
