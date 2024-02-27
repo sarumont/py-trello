@@ -12,6 +12,7 @@ from trello.webhook import WebHook
 from trello.exceptions import *
 from trello.label import Label
 from trello.star import Star
+from trello.util import generate_user_agent
 
 try:
     # PyOpenSSL works around some issues in python ssl modules
@@ -214,6 +215,9 @@ class TrelloClient(object):
             query_params = {}
         if post_args is None:
             post_args = {}
+
+        # add user agent header to fetch_json requests
+        headers['User-Agent'] = generate_user_agent()
 
         # if files specified, we don't want any data
         data = None
