@@ -443,3 +443,9 @@
 [view](https://github.com/sarumont/py-trello/commit/f4ac3fbe609779a37c3253549be26dc141b8e49f) &bull; adding urlSource field for adding cards, which works brilliantly  
 [view](https://github.com/sarumont/py-trello/commit/e7d50ea1aed0b3dd646af835b4438ae58a1b5342) &bull; Added Option To Delete Board  
 [view](https://github.com/sarumont/py-trello/commit/c711809a076aee3fc04784e26e6b0b9688229ebd) &bull; chore: cleanup  
+
+
+**v0.20.0**
+
+[view](https://github.com/sarumont/py-trello/commit/89115fdd35ee16d50d8a909f3d619bfa1fd58a5f) &bull; Add HTTP User-Agent to fetchJSON (#375)  
+[view](https://github.com/sarumont/py-trello/commit/4ff6f9667dce8514817f84d3ac8e99371fa980fb) &bull; Fix regression with trello api get requests. (#374)  

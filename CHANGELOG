@@ -419,3 +419,8 @@ Don't check completed checklist items if None
 adding urlSource field for adding cards, which works brilliantly
 Added Option To Delete Board
 chore: cleanup
+
+v0.20.0
+
+Add HTTP User-Agent to fetchJSON (#375)
+Fix regression with trello api get requests. (#374)
