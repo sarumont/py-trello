@@ -1,7 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, print_function, absolute_import
 import os
+import platform
 from requests_oauthlib import OAuth1Session
+
+def generate_user_agent():
+    sys_platform = platform.system()
+
+    user_agent = f"py-trello/{sys_platform}"
+    
+    return user_agent
 
 
 def create_oauth_token(expiration=None, scope=None, key=None, secret=None, name=None, output=True):
