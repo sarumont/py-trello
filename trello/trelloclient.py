@@ -214,15 +214,8 @@ class TrelloClient(object):
         if query_params is None:
             query_params = {}
 
-<<<<<<< jsadowski/feature/http-user-agent
         # add user agent header to fetch_json requests
         headers['User-Agent'] = generate_user_agent()
-
-        # if files specified, we don't want any data
-=======
-        # Per trello api specification payload should not be present on get requests.
->>>>>>> master
-        data = None
         
         # if files specified, we don't want any data
         if files is None:
