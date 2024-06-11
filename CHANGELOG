@@ -424,3 +424,7 @@ v0.20.0
 
 Add HTTP User-Agent to fetchJSON (#375)
 Fix regression with trello api get requests. (#374)
+
+v0.20.1
+
+Update trelloclient.py (#379)

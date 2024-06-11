@@ -449,3 +449,7 @@
 
 [view](https://github.com/sarumont/py-trello/commit/89115fdd35ee16d50d8a909f3d619bfa1fd58a5f) &bull; Add HTTP User-Agent to fetchJSON (#375)  
 [view](https://github.com/sarumont/py-trello/commit/4ff6f9667dce8514817f84d3ac8e99371fa980fb) &bull; Fix regression with trello api get requests. (#374)  
+
+**v0.20.1**
+
+[view](https://github.com/sarumont/py-trello/commit/06db120ca318bc50f6d87f123c1b2ecb8b4bfadf) &bull; Update trelloclient.py (#379)  
